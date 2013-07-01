@@ -35,3 +35,5 @@ License
 
 Extensions are provided under the zlib/libpng License.
 See the notice at the top of each source file of an extension for any particular information.
+External libraries can be used by extensions ( Box2D, Dlib or SPARK for example ). See their
+licenses in their directories.
