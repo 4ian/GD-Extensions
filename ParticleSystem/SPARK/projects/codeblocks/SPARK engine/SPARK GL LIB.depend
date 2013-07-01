@@ -1,0 +1,155 @@
+# depslib dependency file v1.0
+1257110596 source:d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\spk_gl_all.cpp
+	"RenderingAPIs/OpenGL/SPK_GLExtHandler.cpp"
+	"RenderingAPIs/OpenGL/SPK_GLRenderer.cpp"
+	"RenderingAPIs/OpenGL/SPK_GLLineRenderer.cpp"
+	"RenderingAPIs/OpenGL/SPK_GLPointRenderer.cpp"
+	"RenderingAPIs/OpenGL/SPK_GLQuadRenderer.cpp"
+	"RenderingAPIs/OpenGL/SPK_GLLineTrailRenderer.cpp"
+
+1300218722 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\renderingapis\opengl\spk_glexthandler.cpp
+	"RenderingAPIs/OpenGL/SPK_GLExtHandler.h"
+	<mach-o/dyld.h>
+	<stdlib.h>
+	<string.h>
+
+1295049514 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_glexthandler.h
+	"Core/SPK_DEF.h"
+	"RenderingAPIs/OpenGL/SPK_GL_DEF.h"
+
+1283366574 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_def.h
+	<cstdlib>
+	<cmath>
+	<algorithm>
+	<deque>
+	<list>
+	<iostream>
+	<vector>
+	<limits>
+	<map>
+	<set>
+	<string>
+	<cstring>
+
+1294778976 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_gl_def.h
+	<windows.h>
+	<OpenGL/gl.h>
+	<gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+
+1266850214 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\renderingapis\opengl\spk_glrenderer.cpp
+	"RenderingAPIs/OpenGL/SPK_GLRenderer.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_glrenderer.h
+	"RenderingAPIs/OpenGL/SPK_GL_DEF.h"
+	"Core/SPK_Renderer.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_renderer.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Registerable.h"
+	"Core/SPK_BufferHandler.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_registerable.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Vector3D.h"
+
+1300218112 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_vector3d.h
+	"Core/SPK_DEF.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_bufferhandler.h
+	"Core/SPK_DEF.h"
+
+1257110596 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\renderingapis\opengl\spk_gllinerenderer.cpp
+	"RenderingAPIs/OpenGL/SPK_GLLineRenderer.h"
+	"Core/SPK_Particle.h"
+	"Core/SPK_Group.h"
+	"Core/SPK_ArrayBuffer.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_gllinerenderer.h
+	"RenderingAPIs/OpenGL/SPK_GLRenderer.h"
+	"Extensions/Renderers/SPK_LineRendererInterface.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\extensions\renderers\spk_linerendererinterface.h
+	"Core/SPK_DEF.h"
+
+1299794136 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_particle.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Pool.h"
+	"Core/SPK_Model.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_pool.h
+	"Core/SPK_DEF.h"
+
+1299794136 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_model.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Registerable.h"
+	"Core/SPK_Interpolator.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_interpolator.h
+	"Core/SPK_DEF.h"
+
+1300217780 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_group.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Registerable.h"
+	"Core/SPK_Transformable.h"
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Pool.h"
+	"Core/SPK_Particle.h"
+
+1300218112 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_transformable.h
+	"Core/SPK_Vector3D.h"
+
+1300218112 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_arraybuffer.h
+	"Core/SPK_Buffer.h"
+
+1300217780 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\core\spk_buffer.h
+
+1257110596 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\renderingapis\opengl\spk_glpointrenderer.cpp
+	"RenderingAPIs/OpenGL/SPK_GLPointRenderer.h"
+	"Core/SPK_Particle.h"
+	"Core/SPK_Group.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_glpointrenderer.h
+	"RenderingAPIs/OpenGL/SPK_GLRenderer.h"
+	"RenderingAPIs/OpenGL/SPK_GLExtHandler.h"
+	"Extensions/Renderers/SPK_PointRendererInterface.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\extensions\renderers\spk_pointrendererinterface.h
+	"Core/SPK_DEF.h"
+
+1371752248 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\renderingapis\opengl\spk_glquadrenderer.cpp
+	"RenderingAPIs/OpenGL/SPK_GLQuadRenderer.h"
+	"Core/SPK_Particle.h"
+	"Core/SPK_Group.h"
+	"Core/SPK_ArrayBuffer.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_glquadrenderer.h
+	"RenderingAPIs/OpenGL/SPK_GLRenderer.h"
+	"RenderingAPIs/OpenGL/SPK_GLExtHandler.h"
+	"Extensions/Renderers/SPK_QuadRendererInterface.h"
+	"Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Particle.h"
+	"Core/SPK_Model.h"
+
+1299794136 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\extensions\renderers\spk_quadrendererinterface.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Particle.h"
+
+1300218112 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\extensions\renderers\spk_oriented3drendererinterface.h
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Group.h"
+
+1300218112 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\src\renderingapis\opengl\spk_gllinetrailrenderer.cpp
+	"RenderingAPIs/OpenGL/SPK_GLLineTrailRenderer.h"
+	"Core/SPK_Particle.h"
+	"Core/SPK_Group.h"
+	"Core/SPK_ArrayBuffer.h"
+
+1292269144 d:\florian\programmation\gamedevelop2\extensions\particlesystem\spark\include\renderingapis\opengl\spk_gllinetrailrenderer.h
+	"RenderingAPIs/OpenGL/SPK_GLRenderer.h"
+	"Core/SPK_Particle.h"
+	"Core/SPK_Model.h"
+

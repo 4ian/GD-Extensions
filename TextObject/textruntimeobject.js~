@@ -1,0 +1,116 @@
+/*
+ *  Game Develop JS Platform
+ *  2013 Florian Rival (Florian.Rival@gmail.com)
+ */
+
+/**
+ * The textRuntimeObject displays a text on the screen.
+ *
+ * @class textRuntimeObject
+ * @extends runtimeObject
+ */
+gdjs.textRuntimeObject = function(runtimeScene, objectXml)
+{
+    var that = gdjs.runtimeObject(runtimeScene, objectXml);
+    var my = {};
+    
+    style = {};
+    style.font = "Arial "; //TODO
+    style.font += $(objectXml).find("CharacterSize").attr("value")+"pt";
+    if ( $(objectXml).attr("bold") == "true" ) style.font += "bold ";
+    if ( $(objectXml).attr("italic") == "true" ) style.font += "italic ";
+    //if ( $(objectXml).attr("underlined") == "true" ) style.font += "underlined "; Not supported :/
+     
+    style.fill = "#"+gdjs.rgbToHex(parseInt($(objectXml).attr("r")), 
+	                                parseInt($(objectXml).attr("v")),
+		                            parseInt($(objectXml).attr("b")));
+    style.align = "left";
+    my.text = new PIXI.Text($(objectXml).find("String").attr("value"));
+    runtimeScene.getLayer("").addChildToPIXIContainer(my.sprite, that.zOrder);
+
+    that.deleteFromScene = function(runtimeScene) {
+        runtimeScene.markObjectForDeletion(that);
+        runtimeScene.getLayer(that.layer).removePIXIContainerChild(my.sprite);
+    }
+
+    that.setX = function(x) {
+        that.x = x;
+        that.hitBoxesDirty = true;
+        my.sprite.position.x = x;
+    }
+
+    that.setY = function(y) {
+        that.y = y;
+        that.hitBoxesDirty = true;
+        my.sprite.position.y = y;
+    }
+
+    that.setAngle = function(angle) {
+        if ( my.currentAnimation >= my.animations.length ) {
+            return;
+        }
+
+        if ( !my.animations[my.currentAnimation].hasMultipleDirections ) {
+            that.angle = angle;
+        }
+        else {
+            angle = angle % 360;
+            if ( angle < 0 ) angle += 360;
+            that.setDirectionOrAngle(Math.round(angle/45) % 8);
+        }
+
+        my.spriteDirty = true;
+    }
+
+    that.setOpacity = function(opacity) {
+        if ( opacity < 0 ) opacity = 0;
+        if ( opacity > 255 ) opacity = 255;
+
+        that.opacity = opacity;
+        my.spriteDirty = true;
+    }
+
+    that.getOpacity = function() {
+        return that.opacity;
+    }
+
+    that.hide = function(enable) {
+        my.hidden = enable;
+        my.sprite.visible = !enable;
+    }
+
+    that.setLayer = function(name) {
+        //We need to move the object from the pixi container of the layer
+        runtimeScene.getLayer(that.layer).removePIXIContainerChild(my.sprite);
+        that.layer = name;
+        runtimeScene.getLayer(that.layer).addChildToPIXIContainer(my.sprite, that.zOrder);
+    }
+
+    that.getWidth = function() {
+        if ( my.spriteDirty ) my.updatePIXISprite();
+        return my.sprite.width;
+    }
+
+    that.getHeight = function() {
+        if ( my.spriteDirty ) my.updatePIXISprite();
+        return my.sprite.height;
+    }
+
+    /**
+     * Set the Z order of the object.
+     *
+     * @method setZOrder
+     * @param z {Number} The new Z order position of the object
+     */
+    that.setZOrder = function(z) {
+        if ( z != that.zOrder ) {
+            runtimeScene.getLayer(that.layer).changePIXIContainerChildZOrder(my.sprite, z);
+            that.zOrder = z;
+        }
+    }
+
+    return that;
+}
+
+//Notify gdjs that the textRuntimeObject exists.
+gdjs.textRuntimeObject.thisIsARuntimeObjectConstructor = "TextObject::Text";
