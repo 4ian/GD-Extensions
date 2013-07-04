@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
+	<File name="libtheoraplayer\include\TheoraVideoFrame.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2316" topLine="2" />
+		</Cursor>
+	</File>
 	<File name="libtheoraplayer\include\TheoraVideoManager.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="4105" topLine="49" />
@@ -31,9 +36,19 @@
 			<Cursor1 position="3149" topLine="47" />
 		</Cursor>
 	</File>
+	<File name="Extension.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2233" topLine="42" />
+		</Cursor>
+	</File>
 	<File name="libtheoraplayer\src\TheoraException.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="729" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="OpenAL_AudioInterface.cpp" open="0" top="0" tabpos="30" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5731" topLine="142" />
 		</Cursor>
 	</File>
 	<File name="libtheoraplayer\src\TheoraFrameQueue.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -81,11 +96,6 @@
 			<Cursor1 position="9180" topLine="250" />
 		</Cursor>
 	</File>
-	<File name="Extension.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2233" topLine="42" />
-		</Cursor>
-	</File>
 	<File name="VideoObject.h" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="4313" topLine="120" />
@@ -94,11 +104,6 @@
 	<File name="libtheoraplayer\src\TheoraVideoManager.cpp" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="6355" topLine="177" />
-		</Cursor>
-	</File>
-	<File name="OpenAL_AudioInterface.cpp" open="0" top="0" tabpos="30" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5731" topLine="142" />
 		</Cursor>
 	</File>
 	<File name="VideoObjectEditor.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -174,11 +179,6 @@
 	<File name="libtheoraplayer\include\TheoraVideoClip.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="7678" topLine="185" />
-		</Cursor>
-	</File>
-	<File name="libtheoraplayer\include\TheoraVideoFrame.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2316" topLine="2" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

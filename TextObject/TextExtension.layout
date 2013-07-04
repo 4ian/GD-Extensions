@@ -11,6 +11,11 @@
 			<Cursor1 position="1424" topLine="38" />
 		</Cursor>
 	</File>
+	<File name="TextObjectEditor.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3161" topLine="49" />
+		</Cursor>
+	</File>
 	<File name="TextObject.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1102" topLine="31" />
@@ -19,11 +24,6 @@
 	<File name="TextObjectEditor.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1255" topLine="39" />
-		</Cursor>
-	</File>
-	<File name="TextObjectEditor.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3161" topLine="49" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

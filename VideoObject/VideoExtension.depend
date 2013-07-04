@@ -43,7 +43,7 @@
 	<string>
 	"TheoraExport.h"
 
-1366813403 source:d:\florian\programmation\gamedevelop2\extensions\videoobject\videoobjecteditor.cpp
+1372598884 source:d:\florian\programmation\gamedevelop2\extensions\videoobject\videoobjecteditor.cpp
 	"VideoObjectEditor.h"
 	<wx/intl.h>
 	<wx/string.h>
@@ -52,7 +52,7 @@
 	<wx/colordlg.h>
 	<wx/filename.h>
 	<wx/filedlg.h>
-	"GDL/Project.h"
+	"GDCpp/Project.h"
 	"VideoObject.h"
 	"GDCore/IDE/Dialogs/MainFrameWrapper.h"
 	<wx/progdlg.h>
@@ -1342,13 +1342,13 @@
 1370023073 d:\florian\programmation\gamedevelop2\core\gdcore\platformdefinition\variable.h
 	<string>
 
-1370023073 d:\florian\programmation\gamedevelop2\core\gdcore\platformdefinition\resourcesmanager.h
+1372773768 d:\florian\programmation\gamedevelop2\core\gdcore\platformdefinition\resourcesmanager.h
 	<boost/shared_ptr.hpp>
 	<string>
 	<vector>
 
-1370965880 d:\florian\programmation\gamedevelop2\extensions\videoobject\videoobject.h
-	"GDL/Object.h"
+1372598877 d:\florian\programmation\gamedevelop2\extensions\videoobject\videoobject.h
+	"GDCpp/Object.h"
 	"VideoWrapper.h"
 
 1370022972 d:\florian\programmation\gamedevelop2\gdl\gdl\object.h
@@ -1375,10 +1375,10 @@
 	<vector>
 	<wx/infobar.h>
 
-1365863040 source:d:\florian\programmation\gamedevelop2\extensions\videoobject\videowrapper.cpp
+1372598884 source:d:\florian\programmation\gamedevelop2\extensions\videoobject\videowrapper.cpp
 	"VideoWrapper.h"
 	<SFML/Graphics.hpp>
-	<GDL/RessourcesLoader.h>
+	<GDCpp/RessourcesLoader.h>
 	<TheoraPlayer.h>
 	<TheoraVideoManager.h>
 	"OpenAL_AudioInterface.h"
@@ -1807,4 +1807,21 @@
 
 1284229476 d:\florian\programmation\gamedevelop2\extlibs\libtheoraplayer\trunk\include\theoraexception.h
 	<string>
+
+1370022968 d:\florian\programmation\gamedevelop2\gdcpp\gdcpp\project.h
+	"GDCore/PlatformDefinition/Project.h"
+
+1370022972 d:\florian\programmation\gamedevelop2\gdcpp\gdcpp\object.h
+	"GDCore/PlatformDefinition/Object.h"
+
+1372598879 d:\florian\programmation\gamedevelop2\gdcpp\gdcpp\ressourcesloader.h
+	"GDCore/PlatformDefinition/RessourcesLoader.h"
+	"GDCpp/DatFile.h"
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<string>
+
+1348170290 d:\florian\programmation\gamedevelop2\gdcpp\gdcpp\datfile.h
+	<string>
+	<vector>
 

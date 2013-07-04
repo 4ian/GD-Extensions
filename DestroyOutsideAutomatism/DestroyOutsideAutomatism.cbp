@@ -319,7 +319,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-fno-stack-protector" />
+					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
 					<Add option='-DGD_CORE_API=&quot;&quot;' />
@@ -358,8 +358,8 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-fno-stack-protector" />
-					<Add option="-finput-charset=iso-8859-1" />
+					
+					
 					<Add option="-m32" />
 					<Add option="`wx-config --cppflags`" />
 					<Add option="`pkg-config gtk+-2.0 --cflags`" />
@@ -403,8 +403,8 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add option="-fno-stack-protector" />
-					<Add option="-finput-charset=iso-8859-1" />
+					
+					
 					<Add option="-m32" />
 					<Add option="`wx-config --cppflags`" />
 					<Add option="`pkg-config gtk+-2.0 --cflags`" />
@@ -447,7 +447,7 @@
 					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="-fno-stack-protector" />
+					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
 					<Add option='-DGD_CORE_API=&quot;&quot;' />
@@ -485,7 +485,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-fno-stack-protector" />
+					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
 					<Add option='-DGD_CORE_API=&quot;&quot;' />
@@ -527,7 +527,7 @@
 					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add option="-fno-stack-protector" />
+					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
 					<Add option='-DGD_CORE_API=&quot;&quot;' />
