@@ -9,24 +9,24 @@
  * @class textRuntimeObject
  * @extends runtimeObject
  */
-gdjs.textRuntimeObject = function(runtimeScene, objectXml)
+gdjs.textRuntimeObject = function(runtimeScene, objectData)
 {
-    var that = gdjs.runtimeObject(runtimeScene, objectXml);
+    var that = gdjs.runtimeObject(runtimeScene, objectData);
     var my = {};
     
-    my.characterSize = parseInt($(objectXml).find("CharacterSize").attr("value"));
+    my.characterSize = parseInt(objectData.CharacterSize.attr.value);
     my.fontName = "Arial";
-    my.bold = $(objectXml).attr("bold") == "true";
-    my.italic = $(objectXml).attr("italic") == "true";
-    my.underlined = $(objectXml).attr("underlined") == "true";
-    my.color = [parseInt($(objectXml).find("Color").attr("r")), 
-                parseInt($(objectXml).find("Color").attr("g")),
-                parseInt($(objectXml).find("Color").attr("b"))];
-    if ( $(objectXml).find("Font").attr("value") != "" ) {
-        my.fontName = "\"gdjs_font_"+$(objectXml).find("Font").attr("value")+"\"";
+    my.bold = objectData.attr.bold === "true";
+    my.italic = objectData.attr.italic === "true";
+    my.underlined = objectData.attr.underlined === "true";
+    my.color = [parseInt(objectData.Color.attr.r), 
+                parseInt(objectData.Color.attr.g),
+                parseInt(objectData.Color.attr.b)];
+    if ( objectData.Font.attr.value !== "" ) {
+        my.fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
     }
      
-    var text = $(objectXml).find("String").attr("value");
+    var text = objectData.String.attr.value;
     if ( text.length === 0 ) text = " ";
     my.text = new PIXI.Text(text, {align:"left"});
     my.text.anchor.x = 0.5;
