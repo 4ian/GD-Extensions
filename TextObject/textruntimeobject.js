@@ -6,161 +6,160 @@
 /**
  * The textRuntimeObject displays a text on the screen.
  *
- * @class textRuntimeObject
- * @extends runtimeObject
+ * @class TextRuntimeObject
+ * @extends RuntimeObject
  */
-gdjs.textRuntimeObject = function(runtimeScene, objectData)
+gdjs.TextRuntimeObject = function(runtimeScene, objectData)
 {
-    var that = gdjs.runtimeObject(runtimeScene, objectData);
-    var my = {};
+    gdjs.RuntimeObject.call(this, runtimeScene, objectData);
     
-    my.characterSize = parseInt(objectData.CharacterSize.attr.value);
-    my.fontName = "Arial";
-    my.bold = objectData.attr.bold === "true";
-    my.italic = objectData.attr.italic === "true";
-    my.underlined = objectData.attr.underlined === "true";
-    my.color = [parseInt(objectData.Color.attr.r), 
+    this._characterSize = parseInt(objectData.CharacterSize.attr.value);
+    this._fontName = "Arial";
+    this._bold = objectData.attr.bold === "true";
+    this._italic = objectData.attr.italic === "true";
+    this._underlined = objectData.attr.underlined === "true";
+    this._color = [parseInt(objectData.Color.attr.r), 
                 parseInt(objectData.Color.attr.g),
                 parseInt(objectData.Color.attr.b)];
     if ( objectData.Font.attr.value !== "" ) {
-        my.fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
+        this._fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
     }
      
     var text = objectData.String.attr.value;
     if ( text.length === 0 ) text = " ";
-    my.text = new PIXI.Text(text, {align:"left"});
-    my.text.anchor.x = 0.5;
-    my.text.anchor.y = 0.5;
-    runtimeScene.getLayer("").addChildToPIXIContainer(my.text, that.zOrder);
-
-    that.deleteFromScene = function(runtimeScene) {
-        runtimeScene.markObjectForDeletion(that);
-        runtimeScene.getLayer(that.layer).removePIXIContainerChild(my.text);
-    }
+    this._text = new PIXI.Text(text, {align:"left"});
+    this._text.anchor.x = 0.5;
+    this._text.anchor.y = 0.5;
+    this._runtimeScene = runtimeScene;
+    runtimeScene.getLayer("").addChildToPIXIContainer(this._text, this.zOrder);
     
-    my.updateTextStyle = function() {
-        style = {align:"left"};
-        style.font = my.characterSize+"px"+" "+my.fontName;
-        if ( my.bold ) style.font += " bold";
-        if ( my.italic ) style.font += " italic";
-        //if ( my.underlined ) style.font += " underlined"; Not supported :/
-        style.fill = "#"+gdjs.rgbToHex(my.color[0], my.color[1], my.color[2]);
-        my.text.setStyle(style);
-    }
-    my.updateTextStyle();
-    
-    my.updateTextPosition = function() {
-        my.text.position.x = that.x+my.text.width/2;
-        my.text.position.y = that.y+my.text.height/2;
-        that.hitBoxesDirty = true;
-    }
-    my.updateTextPosition();
-
-    that.setX = function(x) {
-        that.x = x;
-        my.updateTextPosition();
-    }
-
-    that.setY = function(y) {
-        that.y = y;
-        my.updateTextPosition();
-    }
-
-    that.setAngle = function(angle) {
-        that.angle = angle;
-		my.text.rotation = gdjs.toRad(angle);
-    }
-
-    that.setOpacity = function(opacity) {
-        if ( opacity < 0 ) opacity = 0;
-        if ( opacity > 255 ) opacity = 255;
-
-        that.opacity = opacity;
-        my.text.alpha = opacity/255; 
-    }
-
-    that.getOpacity = function() {
-        return that.opacity;
-    }
-    
-    that.getString = function() {
-        return my.text.text;
-    }
-    
-    that.setString = function(str) {
-        if ( str.length === 0 ) str = " ";
-        my.text.setText(str);
-        my.updateTextPosition();
-    }
-    
-    that.getCharacterSize = function() {
-        return my.characterSize;
-    }
-    
-    that.setCharacterSize = function(newSize) {
-        my.characterSize = newSize;
-        my.updateTextStyle();
-    }
-    
-    that.isBold = function() {
-        return my.bold;
-    }
-    
-    that.setBold = function(enable) {
-        my.bold = enable;
-        my.updateTextStyle();
-    }
-    
-    that.isItalic = function() {
-        return my.italic;
-    }
-    
-    that.setItalic = function(enable) {
-        my.italic = enable;
-        my.updateTextStyle();
-    }
-
-    that.hide = function(enable) {
-        if ( enable == undefined ) enable = true;
-        my.hidden = enable;
-        my.text.visible = !enable;
-    }
-
-    that.setLayer = function(name) {
-        //We need to move the object from the pixi container of the layer
-        runtimeScene.getLayer(that.layer).removePIXIContainerChild(my.text);
-        that.layer = name;
-        runtimeScene.getLayer(that.layer).addChildToPIXIContainer(my.text, that.zOrder);
-    }
-
-    that.getWidth = function() {
-        return my.text.width;
-    }
-
-    that.getHeight = function() {
-        return my.text.height;
-    }
-    
-    that.setColor = function(str) {
-        my.color = str.split(";");
-        my.updateTextStyle();
-    }
-
-    /**
-     * Set the Z order of the object.
-     *
-     * @method setZOrder
-     * @param z {Number} The new Z order position of the object
-     */
-    that.setZOrder = function(z) {
-        if ( z != that.zOrder ) {
-            runtimeScene.getLayer(that.layer).changePIXIContainerChildZOrder(my.text, z);
-            that.zOrder = z;
-        }
-    }
-
-    return that;
+    this._updateTextStyle();
+    this._updateTextPosition();
 }
 
-//Notify gdjs that the textRuntimeObject exists.
-gdjs.textRuntimeObject.thisIsARuntimeObjectConstructor = "TextObject::Text";
+gdjs.TextRuntimeObject.prototype = Object.create( gdjs.RuntimeObject.prototype );
+gdjs.TextRuntimeObject.thisIsARuntimeObjectConstructor = "TextObject::Text";
+
+gdjs.TextRuntimeObject.prototype.deleteFromScene = function(runtimeScene) {
+    runtimeScene.markObjectForDeletion(that);
+    runtimeScene.getLayer(this.layer).removePIXIContainerChild(this._text);
+}
+
+gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
+    style = {align:"left"};
+    style.font = this._characterSize+"px"+" "+this._fontName;
+    if ( this._bold ) style.font += " bold";
+    if ( this._italic ) style.font += " italic";
+    //if ( this._underlined ) style.font += " underlined"; Not supported :/
+    style.fill = "#"+gdjs.rgbToHex(this._color[0], this._color[1], this._color[2]);
+    this._text.setStyle(style);
+}
+
+gdjs.TextRuntimeObject.prototype._updateTextPosition = function() {
+    this._text.position.x = this.x+this._text.width/2;
+    this._text.position.y = this.y+this._text.height/2;
+    this.hitBoxesDirty = true;
+}
+
+gdjs.TextRuntimeObject.prototype.setX = function(x) {
+    this.x = x;
+    this._updateTextPosition();
+}
+
+gdjs.TextRuntimeObject.prototype.setY = function(y) {
+    this.y = y;
+    this._updateTextPosition();
+}
+
+gdjs.TextRuntimeObject.prototype.setAngle = function(angle) {
+    this.angle = angle;
+    this._text.rotation = gdjs.toRad(angle);
+}
+
+gdjs.TextRuntimeObject.prototype.setOpacity = function(opacity) {
+    if ( opacity < 0 ) opacity = 0;
+    if ( opacity > 255 ) opacity = 255;
+
+    this.opacity = opacity;
+    this._text.alpha = opacity/255; 
+}
+
+gdjs.TextRuntimeObject.prototype.getOpacity = function() {
+    return this.opacity;
+}
+
+gdjs.TextRuntimeObject.prototype.getString = function() {
+    return this._text.text;
+}
+
+gdjs.TextRuntimeObject.prototype.setString = function(str) {
+    if ( str.length === 0 ) str = " ";
+    this._text.setText(str);
+    this._updateTextPosition();
+}
+
+gdjs.TextRuntimeObject.prototype.getCharacterSize = function() {
+    return this._characterSize;
+}
+
+gdjs.TextRuntimeObject.prototype.setCharacterSize = function(newSize) {
+    this._characterSize = newSize;
+    this._updateTextStyle();
+}
+
+gdjs.TextRuntimeObject.prototype.isBold = function() {
+    return this._bold;
+}
+
+gdjs.TextRuntimeObject.prototype.setBold = function(enable) {
+    this._bold = enable;
+    this._updateTextStyle();
+}
+
+gdjs.TextRuntimeObject.prototype.isItalic = function() {
+    return this._italic;
+}
+
+gdjs.TextRuntimeObject.prototype.setItalic = function(enable) {
+    this._italic = enable;
+    this._updateTextStyle();
+}
+
+gdjs.TextRuntimeObject.prototype.hide = function(enable) {
+    if ( enable == undefined ) enable = true;
+    this._hidden = enable;
+    this._text.visible = !enable;
+}
+
+gdjs.TextRuntimeObject.prototype.setLayer = function(name) {
+    //We need to move the object from the pixi container of the layer
+    this._runtimeScene.getLayer(this.layer).removePIXIContainerChild(this._text);
+    this.layer = name;
+    this._runtimeScene.getLayer(this.layer).addChildToPIXIContainer(this._text, this.zOrder);
+}
+
+gdjs.TextRuntimeObject.prototype.getWidth = function() {
+    return this._text.width;
+}
+
+gdjs.TextRuntimeObject.prototype.getHeight = function() {
+    return this._text.height;
+}
+
+gdjs.TextRuntimeObject.prototype.setColor = function(str) {
+    this._color = str.split(";");
+    this._updateTextStyle();
+}
+
+/**
+ * Set the Z order of the object.
+ *
+ * @method setZOrder
+ * @param z {Number} The new Z order position of the object
+ */
+gdjs.TextRuntimeObject.prototype.setZOrder = function(z) {
+    if ( z != this.zOrder ) {
+        this._runtimeScene.getLayer(this.layer).changePIXIContainerChildZOrder(this._text, z);
+        this.zOrder = z;
+    }
+}

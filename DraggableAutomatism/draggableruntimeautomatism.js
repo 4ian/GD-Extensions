@@ -7,77 +7,74 @@ Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
  * The draggableRuntimeAutomatism represents an automatism allowing objects to be
  * moved using the mouse.
  *
- * @class draggableRuntimeAutomatism
+ * @class DraggableRuntimeAutomatism
  * @constructor 
  */
-gdjs.draggableRuntimeAutomatism = function(runtimeScene, automatismXml)
+gdjs.DraggableRuntimeAutomatism = function(runtimeScene, automatismData)
 {
-    var that = gdjs.runtimeAutomatism(runtimeScene, automatismXml);
-    var my = {};
+    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData);
     
-    my.dragged = false;
-    my.xOffset = 0;
-    my.yOffset = 0;
+    this._dragged = false;
+    this._xOffset = 0;
+    this._yOffset = 0;
+}
+
+gdjs.DraggableRuntimeAutomatism.prototype = Object.create( gdjs.RuntimeAutomatism.prototype );
+gdjs.DraggableRuntimeAutomatism.thisIsARuntimeAutomatismConstructor = "DraggableAutomatism::Draggable";
     
-    that.onDeActivate = function() {
-        my.dragged = false;
-    }
-    
-    that.doStepPreEvents = function(runtimeScene) {
-        var mousePos = null;
+gdjs.DraggableRuntimeAutomatism.prototype.onDeActivate = function() {
+    this._dragged = false;
+}
+
+gdjs.DraggableRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene) {
+    var mousePos = null;
+        
+    //Begin drag ?
+    if ( !this._dragged && runtimeScene.getGame().isMouseButtonPressed(0) &&
+         !gdjs.DraggableRuntimeAutomatism.draggingSomething ) {
+         
+        mousePos = runtimeScene.getLayer(this.owner.getLayer()).convertCoords(
+            runtimeScene.getGame().getMouseX(), 
+            runtimeScene.getGame().getMouseY());
             
-        //Begin drag ?
-        if ( !my.dragged && runtimeScene.getGame().isMouseButtonPressed(0) &&
-             !gdjs.draggableRuntimeAutomatism.draggingSomething ) {
-             
-            mousePos = runtimeScene.getLayer(that.owner.getLayer()).convertCoords(
+        if (this.owner.getDrawableX() <= mousePos[0] 
+            && this.owner.getDrawableX() + this.owner.getWidth() >= mousePos[0] 
+            && this.owner.getDrawableY() <= mousePos[1] 
+            && this.owner.getDrawableY() + this.owner.getHeight() >= mousePos[1] ) {
+            
+            mousePos = runtimeScene.getLayer(this.owner.getLayer()).convertCoords(
                 runtimeScene.getGame().getMouseX(), 
                 runtimeScene.getGame().getMouseY());
                 
-            if (that.owner.getDrawableX() <= mousePos[0] 
-                && that.owner.getDrawableX() + that.owner.getWidth() >= mousePos[0] 
-                && that.owner.getDrawableY() <= mousePos[1] 
-                && that.owner.getDrawableY() + that.owner.getHeight() >= mousePos[1] ) {
-                
-                mousePos = runtimeScene.getLayer(that.owner.getLayer()).convertCoords(
-                    runtimeScene.getGame().getMouseX(), 
-                    runtimeScene.getGame().getMouseY());
-                    
-                my.dragged = true;
-                gdjs.draggableRuntimeAutomatism.draggingSomething = true;
-                my.xOffset = mousePos[0] - that.owner.getX();
-                my.yOffset = mousePos[1] - that.owner.getY();
-            }
+            this._dragged = true;
+            gdjs.DraggableRuntimeAutomatism.draggingSomething = true;
+            this._xOffset = mousePos[0] - this.owner.getX();
+            this._yOffset = mousePos[1] - this.owner.getY();
         }
-        //End dragging ?
-        else if ( my.dragged && !runtimeScene.getGame().isMouseButtonPressed(0) ) {
-            my.dragged = false;
-            gdjs.draggableRuntimeAutomatism.draggingSomething = false;
+    }
+    //End dragging ?
+    else if ( this._dragged && !runtimeScene.getGame().isMouseButtonPressed(0) ) {
+        this._dragged = false;
+        gdjs.DraggableRuntimeAutomatism.draggingSomething = false;
+    }
+    
+    //Being dragging ?
+    if ( this._dragged ) {
+        if ( mousePos == null ) {
+            mousePos = runtimeScene.getLayer(this.owner.getLayer()).convertCoords(
+                runtimeScene.getGame().getMouseX(), 
+                runtimeScene.getGame().getMouseY());
         }
         
-        //Being dragging ?
-        if ( my.dragged ) {
-            if ( mousePos == null ) {
-                mousePos = runtimeScene.getLayer(that.owner.getLayer()).convertCoords(
-                    runtimeScene.getGame().getMouseX(), 
-                    runtimeScene.getGame().getMouseY());
-            }
-            
-            that.owner.setX(mousePos[0]-my.xOffset);
-            that.owner.setY(mousePos[1]-my.yOffset);
-            
-        }
+        this.owner.setX(mousePos[0]-this._xOffset);
+        this.owner.setY(mousePos[1]-this._yOffset);
+        
     }
-    
-    that.isDragged = function(runtimeScene) {
-        return my.dragged;
-    }
-    
-    return that;
+}
+
+gdjs.DraggableRuntimeAutomatism.prototype.isDragged = function(runtimeScene) {
+    return this._dragged;
 }
 
 //Static property used to avoid start dragging an object while another is dragged.
-gdjs.draggableRuntimeAutomatism.draggingSomething = false;
-
-//Notify gdjs that the draggableRuntimeAutomatism exists.
-gdjs.draggableRuntimeAutomatism.thisIsARuntimeAutomatismConstructor = "DraggableAutomatism::Draggable";
+gdjs.DraggableRuntimeAutomatism.draggingSomething = false;
