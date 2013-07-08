@@ -13,6 +13,7 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
 {
     gdjs.RuntimeObject.call(this, runtimeScene, objectData);
     
+    this._runtimeScene = runtimeScene;
     this._characterSize = parseInt(objectData.CharacterSize.attr.value);
     this._fontName = "Arial";
     this._bold = objectData.attr.bold === "true";
@@ -27,10 +28,10 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
      
     var text = objectData.String.attr.value;
     if ( text.length === 0 ) text = " ";
-    this._text = new PIXI.Text(text, {align:"left"});
+    
+    if ( this._text == undefined ) this._text = new PIXI.Text(text, {align:"left"});
     this._text.anchor.x = 0.5;
     this._text.anchor.y = 0.5;
-    this._runtimeScene = runtimeScene;
     runtimeScene.getLayer("").addChildToPIXIContainer(this._text, this.zOrder);
     
     this._updateTextStyle();
@@ -47,10 +48,11 @@ gdjs.TextRuntimeObject.prototype.deleteFromScene = function(runtimeScene) {
 
 gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
     style = {align:"left"};
-    style.font = this._characterSize+"px"+" "+this._fontName;
-    if ( this._bold ) style.font += " bold";
-    if ( this._italic ) style.font += " italic";
-    //if ( this._underlined ) style.font += " underlined"; Not supported :/
+	style.font = "";
+    if ( this._italic ) style.font += "italic ";
+    if ( this._bold ) style.font += "bold ";
+    //if ( this._underlined ) style.font += "underlined "; Not supported :/
+    style.font += this._characterSize+"px"+" "+this._fontName;
     style.fill = "#"+gdjs.rgbToHex(this._color[0], this._color[1], this._color[2]);
     this._text.setStyle(style);
 }
