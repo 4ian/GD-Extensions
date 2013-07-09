@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 //*)
 #include <wx/log.h>
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
+#include "GDCore/IDE/wxTools/SkinHelper.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
@@ -216,11 +217,14 @@ object(object_)
 
 	//Init wxAuiManager with two pane : the editor and the image bank editor
     m_mgr.SetManagedWindow( this );
+    gd::SkinHelper::ApplyCurrentSkin(m_mgr);
     m_mgr.AddPane( Core, wxAuiPaneInfo().Name( wxT( "Core" ) ).Center().CaptionVisible(false) );
-    m_mgr.AddPane( resourcesEditor, wxAuiPaneInfo().Name( wxT( "EI" ) ).Left().Caption( _T( "Editeur de la banque d'images" ) ).MaximizeButton( true ).MinimizeButton( false ).Show(false).MinSize(150, 100) );
+    m_mgr.AddPane( resourcesEditor, wxAuiPaneInfo().Name( wxT( "EI" ) ).Left().Caption( _T( "Editeur de la banque d'images" ) ).MaximizeButton( true ).MinimizeButton( false ).Show(true).MinSize(210, 100) );
     m_mgr.SetFlags( wxAUI_MGR_ALLOW_FLOATING | wxAUI_MGR_ALLOW_ACTIVE_PANE | wxAUI_MGR_TRANSPARENT_HINT
                     | wxAUI_MGR_TRANSPARENT_DRAG | wxAUI_MGR_HINT_FADE | wxAUI_MGR_NO_VENETIAN_BLINDS_FADE );
     m_mgr.Update();
+
+    SetSize(800,640);
 }
 
 PanelSpriteObjectEditor::~PanelSpriteObjectEditor()
@@ -266,7 +270,8 @@ void PanelSpriteObjectEditor::OnfrontAddFromBtClick(wxCommandEvent& event)
         return;
     }
 
-    frontTextureEdit->ChangeValue(resourcesEditor->resourcesTree->GetItemText(resourcesEditor->m_itemSelected));
+    if ( resourcesEditor->m_itemSelected.IsOk() )
+        frontTextureEdit->ChangeValue(resourcesEditor->resourcesTree->GetItemText(resourcesEditor->m_itemSelected));
 }
 
 /**
