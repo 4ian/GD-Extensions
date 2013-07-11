@@ -321,9 +321,9 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
+					<Add option='-DGD_CORE_API=&quot;&quot;' />
 					<Add option='-DGD_EXTENSION_API=&quot;&quot;' />
 					<Add option="-DRELEASE" />
 					<Add option="-DLINUX" />
@@ -359,8 +359,6 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					
-					
 					<Add option="-m32" />
 					<Add option="`wx-config --cppflags`" />
 					<Add option="`pkg-config gtk+-2.0 --cflags`" />
@@ -404,8 +402,6 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
-					
-					
 					<Add option="-m32" />
 					<Add option="`wx-config --cppflags`" />
 					<Add option="`pkg-config gtk+-2.0 --cflags`" />
@@ -448,9 +444,9 @@
 					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
-					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
+					<Add option='-DGD_CORE_API=&quot;&quot;' />
 					<Add option='-DGD_EXTENSION_API=&quot;&quot;' />
 					<Add option="-DDEBUG" />
 					<Add option="-DLINUX" />
@@ -485,7 +481,6 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
 					<Add option='-DGD_EXTENSION_API=&quot;&quot;' />
@@ -526,7 +521,6 @@
 					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
-					
 					<Add option="-m32" />
 					<Add option='-DGD_API=&quot;&quot;' />
 					<Add option='-DGD_EXTENSION_API=&quot;&quot;' />

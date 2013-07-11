@@ -36,6 +36,7 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
     
     this._updateTextStyle();
     this._updateTextPosition();
+    this._text.updateText(); //Work around a PIXI.js bug.
 }
 
 gdjs.TextRuntimeObject.prototype = Object.create( gdjs.RuntimeObject.prototype );
@@ -59,7 +60,7 @@ gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
 
 gdjs.TextRuntimeObject.prototype._updateTextPosition = function() {
     this._text.position.x = this.x+this._text.width/2;
-    this._text.position.y = this.y+this._text.height/2;
+    this._text.position.y = this.y+this._text.height/2;  
     this.hitBoxesDirty = true;
 }
 
@@ -97,6 +98,7 @@ gdjs.TextRuntimeObject.prototype.getString = function() {
 gdjs.TextRuntimeObject.prototype.setString = function(str) {
     if ( str.length === 0 ) str = " ";
     this._text.setText(str);
+    this._text.updateText(); //Work around a PIXI.js bug.
     this._updateTextPosition();
 }
 
