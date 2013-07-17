@@ -1,6 +1,6 @@
 /**
 
-Game Develop - Physic Automatism Extension
+Game Develop - Physics Automatism Extension
 Copyright (c) 2010-2013 Florian Rival (Florian.Rival@gmail.com)
 
 This software is provided 'as-is', without any express or implied
@@ -71,7 +71,7 @@ PhysicsAutomatism::~PhysicsAutomatism()
 #if defined(GD_IDE_ONLY)
 void PhysicsAutomatism::EditAutomatism( wxWindow* parent, gd::Project & project_, gd::Layout * layout_, gd::MainFrameWrapper & mainFrameWrapper_ )
 {
-    PhysicsAutomatismEditor editor(parent, dynamic_cast<Game&>(project_), dynamic_cast<Scene*>(layout_), *this, mainFrameWrapper_);
+    PhysicsAutomatismEditor editor(parent, project_, layout_, *this, mainFrameWrapper_);
     editor.ShowModal();
 }
 #endif
@@ -685,7 +685,9 @@ void PhysicsAutomatism::LoadFromXml(const TiXmlElement * elem)
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("fixedRotation", fixedRotation);
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("isBullet", isBullet);
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("massDensity", massDensity);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("averageFriction", averageFriction);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("averageFriction", averageFriction)
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("averageRestitution", averageRestitution);
+
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("linearDamping", linearDamping);
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angularDamping", angularDamping);
 
@@ -715,8 +717,6 @@ void PhysicsAutomatism::LoadFromXml(const TiXmlElement * elem)
     std::string coordsStr;
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("coordsList", coordsStr);
     SetPolygonCoords(PhysicsAutomatism::GetCoordsVectorFromString(coordsStr, '/', ';'));
-
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("averageRestitution", averageRestitution);
 }
 
 

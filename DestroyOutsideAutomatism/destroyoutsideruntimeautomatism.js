@@ -10,9 +10,9 @@ Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
  * @class DestroyOutsideRuntimeAutomatism
  * @constructor 
  */
-gdjs.DestroyOutsideRuntimeAutomatism = function(runtimeScene, automatismData)
+gdjs.DestroyOutsideRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
-    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData);
+    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
     
     this._extraBorder = parseFloat(automatismData.attr.extraBorder);
 }

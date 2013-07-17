@@ -42,3 +42,7 @@
 /SoundObject/obj
 /SoundObject/SoundObject.depend
 /VideoObject/VideoExtension.layout
+/VideoObject/VideoExtension.depend
+*.js~
+*.depend
+*.cpp~

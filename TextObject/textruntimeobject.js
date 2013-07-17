@@ -42,8 +42,7 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
 gdjs.TextRuntimeObject.prototype = Object.create( gdjs.RuntimeObject.prototype );
 gdjs.TextRuntimeObject.thisIsARuntimeObjectConstructor = "TextObject::Text";
 
-gdjs.TextRuntimeObject.prototype.deleteFromScene = function(runtimeScene) {
-    runtimeScene.markObjectForDeletion(that);
+gdjs.TextRuntimeObject.prototype.onDeletedFromScene = function(runtimeScene) {
     runtimeScene.getLayer(this.layer).removePIXIContainerChild(this._text);
 }
 

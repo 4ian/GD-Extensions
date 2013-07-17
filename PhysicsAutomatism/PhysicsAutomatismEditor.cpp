@@ -1,6 +1,6 @@
 /**
 
-Game Develop - Physic Automatism Extension
+Game Develop - Physics Automatism Extension
 Copyright (c) 2010-2013 Florian Rival (Florian.Rival@gmail.com)
 
 This software is provided 'as-is', without any express or implied
@@ -308,10 +308,13 @@ void PhysicsAutomatismEditor::OnokBtClick(wxCommandEvent& event)
     automatism.polygonHeight = polygonHeight;
     automatism.SetAutomaticResizing(automaticResizing);
 
-    sharedDatas->gravityX = ToFloat(string(gravityXEdit->GetValue().mb_str()));
-    sharedDatas->gravityY = ToFloat(string(gravityYEdit->GetValue().mb_str()));
-    sharedDatas->scaleX = ToFloat(string(scaleXEdit->GetValue().mb_str()));
-    sharedDatas->scaleY = ToFloat(string(scaleYEdit->GetValue().mb_str()));
+    if ( sharedDatas != boost::shared_ptr<ScenePhysicsDatas>() )
+    {
+        sharedDatas->gravityX = ToFloat(string(gravityXEdit->GetValue().mb_str()));
+        sharedDatas->gravityY = ToFloat(string(gravityYEdit->GetValue().mb_str()));
+        sharedDatas->scaleX = ToFloat(string(scaleXEdit->GetValue().mb_str()));
+        sharedDatas->scaleY = ToFloat(string(scaleYEdit->GetValue().mb_str()));
+    }
 
     EndModal(1);
 }
