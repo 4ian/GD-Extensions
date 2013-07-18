@@ -55,25 +55,25 @@ gdjs.PhysicsSharedData = function(runtimeScene, sharedData)
 	};
 
 	this.world.SetContactListener(this.contactListener);
-}
+};
 
 gdjs.PhysicsSharedData.prototype.step = function(dt) {
 	this.totalTime += dt;
 
 	if(this.totalTime > this.fixedTimeStep) {
-	    var numberOfSteps = Math.floor(this.totalTime / this.fixedTimeStep);
-	    this.totalTime -= numberOfSteps * this.fixedTimeStep;
+	   var numberOfSteps = Math.floor(this.totalTime / this.fixedTimeStep);
+	   this.totalTime -= numberOfSteps * this.fixedTimeStep;
 
         if ( numberOfSteps > 5 ) numberOfSteps = 5; //Process 5 steps at max.
 
-	    for(var a = 0; a < numberOfSteps; a++) {
-            this.world.Step(this.fixedTimeStep, 1, 1);
-            this.world.ClearForces();
-	    }
+        for(var a = 0; a < numberOfSteps; a++) {
+            this.world.Step(this.fixedTimeStep, 6, 10);
+        }
+        this.world.ClearForces();
 	}
-	
+
     this.stepped = true;
-}
+};
 
 /**
  * PhysicsRuntimeAutomatism represents an automatism allowing objects to be
@@ -85,7 +85,7 @@ gdjs.PhysicsSharedData.prototype.step = function(dt) {
 gdjs.PhysicsRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
-    
+
     this._box2DBody = null;
     this._dynamic = automatismData.attr.dynamic === "true";
     this._objectOldWidth = 0;
@@ -311,7 +311,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.applyImpulseTowardPosition = function(xP
     var angle = Math.atan2(yPosition*this._sharedData.invScaleY+this._box2DBody.GetPosition().y,
                         xPosition*this._sharedData.invScaleX-this._box2DBody.GetPosition().x);
 
-    this._box2DBody.ApplyImpulse(new Box2D.Common.Math.b2Vec2(Math.cos(angle)*length, 
+    this._box2DBody.ApplyImpulse(new Box2D.Common.Math.b2Vec2(Math.cos(angle)*length,
         -Math.sin(angle)*length), this._box2DBody.GetPosition());
 };
 
@@ -507,7 +507,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.collisionWith = function( otherObjectsTa
     //Test if an object of the list is in collision with our object.
     for(var i = 0, len = objects.length;i<len;++i) {
         for (var j = 0, lenj = this.currentContacts.length;j<lenj;++j) {
-            if ( this.currentContacts[j].owner.getNameId() === objects[i].getNameId() )
+            if ( this.currentContacts[j].owner.id === objects[i].id )
                 return true;
         }
     }

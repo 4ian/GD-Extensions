@@ -576,7 +576,7 @@ bool PhysicsAutomatism::CollisionWith( std::map <std::string, std::vector<Runtim
         std::set<PhysicsAutomatism*>::const_iterator end = currentContacts.end();
         for (;it != end;++it)
         {
-            if ( (*it)->GetObject()->GetName() == (*obj)->GetName() )
+            if ( (*it)->GetObject() == (*obj) )
                 return true;
         }
     }
