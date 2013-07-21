@@ -137,7 +137,7 @@ public :
     #if defined(GD_IDE_ONLY)
     virtual void DrawInitialInstance(gd::InitialInstance & instance, sf::RenderTarget & renderTarget, gd::Project & project, gd::Layout & layout);
     virtual sf::Vector2f GetInitialInstanceDefaultSize(gd::InitialInstance & instance, gd::Project & project, gd::Layout & layout) const {return sf::Vector2f(32,32);};
-    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail);
+    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
     static void LoadEdittimeIcon();
     virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
     #endif

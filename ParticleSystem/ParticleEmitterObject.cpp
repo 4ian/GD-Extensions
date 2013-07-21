@@ -606,7 +606,7 @@ void ParticleEmitterObject::ExposeResources(gd::ArbitraryResourceWorker & worker
     SetParticleTexture(texture);
 }
 
-bool ParticleEmitterObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool ParticleEmitterObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/particleSystemicon24.png", wxBITMAP_TYPE_ANY);
 

@@ -183,7 +183,7 @@ void TextObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
     worker.ExposeResource(fontName);
 }
 
-bool TextObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool TextObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/texticon.png", wxBITMAP_TYPE_ANY);
 

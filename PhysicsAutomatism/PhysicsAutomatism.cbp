@@ -639,6 +639,7 @@
 		<Unit filename="CustomPolygonDialog.cpp" />
 		<Unit filename="CustomPolygonDialog.h" />
 		<Unit filename="Extension.cpp" />
+		<Unit filename="JsExtension.cpp" />
 		<Unit filename="PhysicsAutomatism.cpp" />
 		<Unit filename="PhysicsAutomatism.h" />
 		<Unit filename="PhysicsAutomatismEditor.cpp" />

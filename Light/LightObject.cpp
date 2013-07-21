@@ -247,7 +247,7 @@ void LightObject::LoadEdittimeIcon()
     edittimeIcon.setTexture(edittimeIconImage);
 }
 
-bool LightObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool LightObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/lightIcon24.png", wxBITMAP_TYPE_ANY);
 

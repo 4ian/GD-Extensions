@@ -223,7 +223,7 @@ void VideoObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
     worker.ExposeResource(videoFile);
 }
 
-bool VideoObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool VideoObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/videoicon24.png", wxBITMAP_TYPE_ANY);
 

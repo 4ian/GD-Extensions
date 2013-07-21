@@ -297,7 +297,7 @@ void SoundObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
     worker.ExposeResource(fileName);
 }
 
-bool SoundObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool SoundObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/soundicon24.png", wxBITMAP_TYPE_ANY);
     return true;
