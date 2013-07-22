@@ -453,7 +453,7 @@ void Box3DObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
     worker.ExposeImage(backTextureName);
 }
 
-bool Box3DObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool Box3DObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/Box3Dicon24.png", wxBITMAP_TYPE_ANY);
 

@@ -178,7 +178,7 @@ void TiledSpriteObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
     worker.ExposeImage(textureName);
 }
 
-bool TiledSpriteObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool TiledSpriteObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/TiledSpriteIcon24.png", wxBITMAP_TYPE_ANY);
 
