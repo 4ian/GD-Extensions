@@ -10,9 +10,9 @@ Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
  * @class DraggableRuntimeAutomatism
  * @constructor 
  */
-gdjs.DraggableRuntimeAutomatism = function(runtimeScene, automatismData)
+gdjs.DraggableRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
-    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData);
+    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
     
     this._dragged = false;
     this._xOffset = 0;

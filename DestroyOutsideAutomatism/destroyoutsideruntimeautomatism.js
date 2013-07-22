@@ -10,9 +10,9 @@ Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
  * @class DestroyOutsideRuntimeAutomatism
  * @constructor 
  */
-gdjs.DestroyOutsideRuntimeAutomatism = function(runtimeScene, automatismData)
+gdjs.DestroyOutsideRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
-    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData);
+    gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
     
     this._extraBorder = parseFloat(automatismData.attr.extraBorder);
 }
@@ -29,10 +29,10 @@ gdjs.DestroyOutsideRuntimeAutomatism.prototype.doStepPreEvents = function(runtim
     var layer = runtimeScene.getLayer(this.owner.getLayer());
     
     var boundingCircleRadius = Math.sqrt(ow*ow+oh*oh)/2.0;
-    if (   ocx+boundingCircleRadius+this._extraBorder < layer.getCameraX()
-        || ocx-boundingCircleRadius-this._extraBorder > layer.getCameraX()+layer.getCameraWidth()
-        || ocy+boundingCircleRadius+this._extraBorder < layer.getCameraY()
-        || ocy-boundingCircleRadius-this._extraBorder > layer.getCameraY()+layer.getCameraHeight() ) {
+    if (   ocx+boundingCircleRadius+this._extraBorder < layer.getCameraX()-layer.getCameraWidth()/2
+        || ocx-boundingCircleRadius-this._extraBorder > layer.getCameraX()+layer.getCameraWidth()/2
+        || ocy+boundingCircleRadius+this._extraBorder < layer.getCameraY()-layer.getCameraHeight()/2
+        || ocy-boundingCircleRadius-this._extraBorder > layer.getCameraY()+layer.getCameraHeight()/2 ) {
         //We are outside the camera area.
         this.owner.deleteFromScene(runtimeScene);
     }

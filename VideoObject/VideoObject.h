@@ -61,7 +61,7 @@ public :
     #if defined(GD_IDE_ONLY)
     virtual bool DrawEdittime(sf::RenderTarget & renderTarget);
     virtual void ExposeResources(gd::ArbitraryResourceWorker & worker);
-    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail);
+    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
 
     virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
 

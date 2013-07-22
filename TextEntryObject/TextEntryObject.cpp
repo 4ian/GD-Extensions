@@ -99,7 +99,7 @@ void TextEntryObject::LoadEdittimeIcon()
     edittimeIcon.setTexture(edittimeIconImage);
 }
 
-bool TextEntryObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool TextEntryObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/textentry.png", wxBITMAP_TYPE_ANY);
 

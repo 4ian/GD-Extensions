@@ -297,7 +297,7 @@ void PanelSpriteObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
     worker.ExposeImage(textureName);
 }
 
-bool PanelSpriteObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool PanelSpriteObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/PanelSpriteIcon24.png", wxBITMAP_TYPE_ANY);
 

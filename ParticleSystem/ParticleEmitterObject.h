@@ -245,7 +245,7 @@ public :
     virtual sf::Vector2f GetInitialInstanceDefaultSize(gd::InitialInstance & instance, gd::Project & project, gd::Layout & layout) const {return sf::Vector2f(32,32);};
     virtual sf::Vector2f GetInitialInstanceOrigin(gd::InitialInstance & instance, gd::Project & project, gd::Layout & layout) const {return sf::Vector2f(16,16);};
     virtual void ExposeResources(gd::ArbitraryResourceWorker & worker);
-    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail);
+    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
     virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
 
     bool particleEditionSimpleMode; ///< User preference related to object's edition

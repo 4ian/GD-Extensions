@@ -248,7 +248,7 @@ void DrawerObject::LoadEdittimeIcon()
     edittimeIcon.setTexture(edittimeIconImage);
 }
 
-bool DrawerObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail)
+bool DrawerObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
     thumbnail = wxBitmap("CppPlatform/Extensions/primitivedrawingicon.png", wxBITMAP_TYPE_ANY);
 

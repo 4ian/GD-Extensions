@@ -1,6 +1,6 @@
 /**
 
-Game Develop - Physic Automatism Extension
+Game Develop - Physics Automatism Extension
 Copyright (c) 2010-2013 Florian Rival (Florian.Rival@gmail.com)
 
 This software is provided 'as-is', without any express or implied
@@ -40,6 +40,7 @@ freely, subject to the following restrictions:
 #endif
 #include "GDCpp/Project.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
+#include "GDCore/PlatformDefinition/Platform.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCpp/Scene.h"
 #include "PhysicsAutomatism.h"
@@ -251,6 +252,12 @@ scene(scene_)
 	linearDampingEdit->SetValue(ToString(automatism.linearDamping));
 	angularDampingEdit->SetValue(ToString(automatism.angularDamping));
 
+	if ( game_.GetCurrentPlatform().GetName() == "Game Develop JS platform" )
+    {
+        polygonCheck->Hide();
+        polygonBt->Hide();
+    }
+
     //Setup shared datas
 	if ( !scene || scene->automatismsInitialSharedDatas.find(automatism.GetName()) == scene->automatismsInitialSharedDatas.end())
 	{
@@ -308,10 +315,13 @@ void PhysicsAutomatismEditor::OnokBtClick(wxCommandEvent& event)
     automatism.polygonHeight = polygonHeight;
     automatism.SetAutomaticResizing(automaticResizing);
 
-    sharedDatas->gravityX = ToFloat(string(gravityXEdit->GetValue().mb_str()));
-    sharedDatas->gravityY = ToFloat(string(gravityYEdit->GetValue().mb_str()));
-    sharedDatas->scaleX = ToFloat(string(scaleXEdit->GetValue().mb_str()));
-    sharedDatas->scaleY = ToFloat(string(scaleYEdit->GetValue().mb_str()));
+    if ( sharedDatas != boost::shared_ptr<ScenePhysicsDatas>() )
+    {
+        sharedDatas->gravityX = ToFloat(string(gravityXEdit->GetValue().mb_str()));
+        sharedDatas->gravityY = ToFloat(string(gravityYEdit->GetValue().mb_str()));
+        sharedDatas->scaleX = ToFloat(string(scaleXEdit->GetValue().mb_str()));
+        sharedDatas->scaleY = ToFloat(string(scaleYEdit->GetValue().mb_str()));
+    }
 
     EndModal(1);
 }

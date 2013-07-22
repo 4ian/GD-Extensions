@@ -58,7 +58,7 @@ public :
     virtual void DrawInitialInstance(gd::InitialInstance & instance, sf::RenderTarget & renderTarget, gd::Project & project, gd::Layout & layout);
     virtual sf::Vector2f GetInitialInstanceDefaultSize(gd::InitialInstance & instance, gd::Project & project, gd::Layout & layout) const;
     virtual void ExposeResources(gd::ArbitraryResourceWorker & worker);
-    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail);
+    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
     virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
     virtual void LoadResources(gd::Project & project, gd::Layout & layout);
     #endif
