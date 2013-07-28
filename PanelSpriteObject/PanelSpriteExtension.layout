@@ -6,14 +6,14 @@
 			<Cursor1 position="1094" topLine="31" />
 		</Cursor>
 	</File>
-	<File name="PanelSpriteObject.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="PanelSpriteObject.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1502" topLine="40" />
+			<Cursor1 position="17631" topLine="285" />
 		</Cursor>
 	</File>
-	<File name="PanelSpriteObject.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="PanelSpriteObject.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1082" topLine="29" />
+			<Cursor1 position="2230" topLine="45" />
 		</Cursor>
 	</File>
 	<File name="PanelSpriteObjectEditor.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

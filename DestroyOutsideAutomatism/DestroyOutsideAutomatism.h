@@ -67,7 +67,7 @@ public:
 
 private:
 
-    virtual void DoStepPreEvents(RuntimeScene & scene);
+    virtual void DoStepPostEvents(RuntimeScene & scene);
 
     float extraBorder; ///< The supplementary margin outside the screen that the object must cross before being deleted.
 };

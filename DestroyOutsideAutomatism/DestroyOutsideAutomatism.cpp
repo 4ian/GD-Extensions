@@ -41,7 +41,7 @@ DestroyOutsideAutomatism::DestroyOutsideAutomatism() :
 {
 }
 
-void DestroyOutsideAutomatism::DoStepPreEvents(RuntimeScene & scene)
+void DestroyOutsideAutomatism::DoStepPostEvents(RuntimeScene & scene)
 {
     bool erase = true;
     const RuntimeLayer & theLayer = scene.GetRuntimeLayer(object->GetLayer());
@@ -55,7 +55,7 @@ void DestroyOutsideAutomatism::DoStepPreEvents(RuntimeScene & scene)
         if (   objCenterX+boundingCircleRadius+extraBorder < theCamera.GetViewCenter().x-theCamera.GetWidth()/2.0
             || objCenterX-boundingCircleRadius-extraBorder > theCamera.GetViewCenter().x+theCamera.GetWidth()/2.0
             || objCenterY+boundingCircleRadius+extraBorder < theCamera.GetViewCenter().y-theCamera.GetHeight()/2.0
-            || objCenterY-boundingCircleRadius-extraBorder > theCamera.GetViewCenter().x+theCamera.GetHeight()/2.0)
+            || objCenterY-boundingCircleRadius-extraBorder > theCamera.GetViewCenter().y+theCamera.GetHeight()/2.0)
         {
             //Ok we are outside the camera area.
         }
