@@ -763,8 +763,8 @@ void ParticleEmitterBase::SetParticleColor1( const std::string & color )
     if ( colors.size() < 3 ) return; //Color is incorrect
 
     SetParticleRed1(ToInt(colors[0]));
-    SetParticleBlue1(ToInt(colors[1]));
-    SetParticleGreen1(ToInt(colors[2]));
+    SetParticleGreen1(ToInt(colors[1]));
+    SetParticleBlue1(ToInt(colors[2]));
 }
 void ParticleEmitterBase::SetParticleColor2( const std::string & color )
 {
@@ -773,8 +773,8 @@ void ParticleEmitterBase::SetParticleColor2( const std::string & color )
     if ( colors.size() < 3 ) return; //Color is incorrect
 
     SetParticleRed2(ToInt(colors[0]));
-    SetParticleBlue2(ToInt(colors[1]));
-    SetParticleGreen2(ToInt(colors[2]));
+    SetParticleGreen2(ToInt(colors[1]));
+    SetParticleBlue2(ToInt(colors[2]));
 }
 
 /**
