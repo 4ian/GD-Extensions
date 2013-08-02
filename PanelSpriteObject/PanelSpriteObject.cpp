@@ -277,11 +277,10 @@ void PanelSpriteObject::DrawInitialInstance(gd::InitialInstance & instance, sf::
 
     };
     sf::Vector2f centerPosition = sf::Vector2f(instance.GetX()+width/2, instance.GetY()+height/2);
-    float angleInRad = instance.GetAngle()*3.14159/180.0;
 
     sf::Transform matrix;
     matrix.translate(centerPosition);
-    matrix.rotate(angleInRad);
+    matrix.rotate(instance.GetAngle());
 
     sf::RenderStates states;
     states.transform = matrix;
