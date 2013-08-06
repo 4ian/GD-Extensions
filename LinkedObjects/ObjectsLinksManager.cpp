@@ -77,7 +77,7 @@ void ObjectsLinksManager::RemoveAllLinksOf(RuntimeObject * object)
     links.erase(object); //Remove all links of object
 }
 
-std::vector< RuntimeObject* > ObjectsLinksManager::GetAllRawPointersToObjectsLinkedWith(RuntimeObject * object)
+std::vector< RuntimeObject* > ObjectsLinksManager::GetObjectsLinkedWith(RuntimeObject * object)
 {
     //Get links of object
     const std::set< RuntimeObject * > & objectLinks = links[object];
@@ -87,22 +87,6 @@ std::vector< RuntimeObject* > ObjectsLinksManager::GetAllRawPointersToObjectsLin
     for (std::set< RuntimeObject * >::iterator linkedObj = objectLinks.begin();linkedObj != objectLinks.end();++linkedObj)
     {
         if ( !(*linkedObj)->GetName().empty() )
-            list.push_back((*linkedObj));
-    }
-
-    return list;
-}
-
-std::vector< RuntimeObject* > ObjectsLinksManager::GetRawPointersToObjectsLinkedWith(RuntimeObject * object, std::string linkedName)
-{
-    //Get links of object
-    const std::set< RuntimeObject * > & objectLinks = links[object];
-    std::vector< RuntimeObject* > list; list.reserve(objectLinks.size());
-
-    //Create the list
-    for (std::set< RuntimeObject * >::iterator linkedObj = objectLinks.begin();linkedObj != objectLinks.end();++linkedObj)
-    {
-        if ( (*linkedObj)->GetName() == linkedName)
             list.push_back((*linkedObj));
     }
 

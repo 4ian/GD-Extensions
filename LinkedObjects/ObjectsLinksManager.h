@@ -47,33 +47,27 @@ class ObjectsLinksManager
 {
 public:
     /**
-     * Link two object
+     * \brief Link two object
      */
     void LinkObjects(RuntimeObject * a, RuntimeObject * b);
 
     /**
-     * Remove link between a and b
+     * \brief Remove link between a and b
      */
     void RemoveLinkBetween(RuntimeObject * a, RuntimeObject * b);
 
     /**
-     * Remove all links concerning the object
+     * \brief Remove all links concerning the object
      */
     void RemoveAllLinksOf(RuntimeObject * object);
 
     /**
-     * Get a list of all (raw pointers to) objects linked with the object
+     * \brief Get a list of (raw pointers to) all objects linked with the specified object
      */
-    std::vector<RuntimeObject*> GetAllRawPointersToObjectsLinkedWith(RuntimeObject * object);
-
+    std::vector<RuntimeObject*> GetObjectsLinkedWith(RuntimeObject * object);
 
     /**
-     * Get a list of (raw pointers to) objects, with the specified name, linked with the object
-     */
-    std::vector<RuntimeObject*> GetRawPointersToObjectsLinkedWith(RuntimeObject * object, std::string linkedName);
-
-    /**
-     * Delete all links
+     * \brief Delete all links
      */
     void ClearAll();
 
