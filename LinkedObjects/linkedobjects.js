@@ -12,14 +12,14 @@ Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
  */
 gdjs.LinksManager = function()
 {
-	this.links = new Hashtable();
+	this.links = {};
 };
 
 gdjs.LinksManager.prototype.getObjectsLinkedWith = function(objA) {
-	if ( !this.links.containsKey(objA.id) )
-		this.links.put(objA.id, []);
+	if ( !this.links.hasOwnProperty(objA.id) )
+		this.links[objA.id] = [];
 
-	return this.links.get(objA.id);
+	return this.links[objA.id];
 };
 
 gdjs.LinksManager.prototype.linkObjects = function(objA, objB) {
@@ -35,28 +35,28 @@ gdjs.LinksManager.prototype.linkObjects = function(objA, objB) {
 gdjs.LinksManager.prototype.removeAllLinksOf = function(obj) {
 	var objLinkedObjects = this.getObjectsLinkedWith(obj);
 	for (var i = 0; i < objLinkedObjects.length; i++) {
-		if ( this.links.containsKey(objLinkedObjects[i].id) ) {
-			var otherObjList = this.links.get(objLinkedObjects[i].id);
+		if ( this.links.hasOwnProperty(objLinkedObjects[i].id) ) {
+			var otherObjList = this.links[objLinkedObjects[i].id];
 			var index = otherObjList.indexOf(obj);
 			if ( index !== -1) otherObjList.remove(index);
 		}
 	}
 
-	if ( !this.links.containsKey(obj.id) )
-		this.links.get(obj.id).length = 0;
+	if ( this.links.hasOwnProperty(obj.id) )
+		delete this.links[obj.id];
 };
 
 gdjs.LinksManager.prototype.removeLinkBetween = function(objA, objB) {
 	var list, index;
 
-	if ( this.links.containsKey(objA.id) ) {
-		list = this.links.get(objA.id);
+	if ( this.links.hasOwnProperty(objA.id) ) {
+		list = this.links[objA.id];
 		index = list.indexOf(objB);
 		if ( index !== -1) list.remove(index);
 	}
 	
-	if ( this.links.containsKey(objB.id) ) {
-		list = this.links.get(objB.id);
+	if ( this.links.hasOwnProperty(objB.id) ) {
+		list = this.links[objB.id];
 		index = list.indexOf(objA);
 		if ( index !== -1) list.remove(index);
 	}
