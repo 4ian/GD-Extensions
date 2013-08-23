@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 #include <SFML/OpenGL.hpp>
 #include "GDCpp/Object.h"
 #include "GDCpp/ImageManager.h"
+#include "GDCpp/RuntimeGame.h"
 #include "GDCpp/tinyxml/tinyxml.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
@@ -786,7 +787,7 @@ void ParticleEmitterBase::SetTexture( RuntimeScene & scene, const std::string & 
     if ( particleSystem && rendererType == Quad )
     {
         //Load new texture
-        particleSystem->openGLTextureParticle = scene.game->GetImageManager()->GetOpenGLTexture(textureParticleName);
+        particleSystem->openGLTextureParticle = scene.GetImageManager()->GetOpenGLTexture(textureParticleName);
 
 	    //Notify the renderer of the change
 	    SPK::GL::GLQuadRenderer * quadRenderer = dynamic_cast<SPK::GL::GLQuadRenderer*>(particleSystem->renderer);

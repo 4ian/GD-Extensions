@@ -33,6 +33,7 @@ freely, subject to the following restrictions:
 #include <SFML/OpenGL.hpp>
 #include "GDCpp/Project.h"
 #include "GDCpp/RuntimeScene.h"
+#include "GDCpp/RuntimeGame.h"
 #include "GDCpp/Object.h"
 #include "GDCpp/ImageManager.h"
 #include "GDCpp/FontManager.h"
@@ -329,12 +330,12 @@ RuntimeBox3DObject::RuntimeBox3DObject(RuntimeScene & scene, const gd::Object & 
     leftTextureName =   box3DObject.leftTextureName;
     rightTextureName =  box3DObject.rightTextureName;
     backTextureName =   box3DObject.backTextureName;
-    frontTexture =  scene.game->GetImageManager()->GetSFMLTexture(frontTextureName);
-    topTexture =    scene.game->GetImageManager()->GetSFMLTexture(topTextureName);
-    bottomTexture = scene.game->GetImageManager()->GetSFMLTexture(bottomTextureName) ;
-    leftTexture =   scene.game->GetImageManager()->GetSFMLTexture(leftTextureName);
-    rightTexture =  scene.game->GetImageManager()->GetSFMLTexture(rightTextureName);
-    backTexture =   scene.game->GetImageManager()->GetSFMLTexture(backTextureName);
+    frontTexture =  scene.GetImageManager()->GetSFMLTexture(frontTextureName);
+    topTexture =    scene.GetImageManager()->GetSFMLTexture(topTextureName);
+    bottomTexture = scene.GetImageManager()->GetSFMLTexture(bottomTextureName) ;
+    leftTexture =   scene.GetImageManager()->GetSFMLTexture(leftTextureName);
+    rightTexture =  scene.GetImageManager()->GetSFMLTexture(rightTextureName);
+    backTexture =   scene.GetImageManager()->GetSFMLTexture(backTextureName);
 }
 
 #if defined(GD_IDE_ONLY)

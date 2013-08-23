@@ -117,7 +117,7 @@ void GD_EXTENSION_API ShowOpenFile( RuntimeScene & scene, const std::string & va
     scene.NotifyPauseWasMade(timeSpent.getElapsedTime().asMicroseconds());//Don't take the time spent in this function in account.
 
     //Update the variable
-    scene.GetVariables().ObtainVariable(variable) = result;
+    scene.GetVariables().Get(variable).SetString(result);
 }
 
 /**
@@ -144,7 +144,7 @@ void GD_EXTENSION_API ShowYesNoMsgBox( RuntimeScene & scene, const std::string &
     scene.NotifyPauseWasMade(timeSpent.getElapsedTime().asMicroseconds());//Don't take the time spent in this function in account.
 
     //Update the variable
-    scene.GetVariables().ObtainVariable(variable) = result;
+    scene.GetVariables().Get(variable).SetString(result);
 }
 
 //Declaration and definition of a simple input box for windows
@@ -460,7 +460,7 @@ bool GD_EXTENSION_API ShowTextInput( RuntimeScene & scene, const std::string & v
     scene.NotifyPauseWasMade(timeSpent.getElapsedTime().asMicroseconds());//Don't take the time spent in this function in account.
 
     //Update the variable
-    scene.GetVariables().ObtainVariable(variable) = result;
+    scene.GetVariables().Get(variable).SetString(result);
 
     return true;
 }

@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 */
 #include <SFML/Graphics.hpp>
 #include "GDCpp/RuntimeScene.h"
+#include "GDCpp/RuntimeGame.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/ImageManager.h"
 #include "GDCpp/CommonTools.h"
@@ -37,16 +38,16 @@ namespace PrimitiveDrawingTools
 
 void GD_EXTENSION_API CopyImageOnAnother( const std::string & destName, const std::string & srcName, float destX, float destY, bool useTransparency,RuntimeScene & scene )
 {
-    if ( !scene.game->GetImageManager()->HasLoadedSFMLTexture(destName) ) return;
-    if ( !scene.game->GetImageManager()->HasLoadedSFMLTexture(srcName) ) return;
+    if ( !scene.GetImageManager()->HasLoadedSFMLTexture(destName) ) return;
+    if ( !scene.GetImageManager()->HasLoadedSFMLTexture(srcName) ) return;
 
-    boost::shared_ptr<SFMLTextureWrapper> dest = scene.game->GetImageManager()->GetSFMLTexture(destName);
+    boost::shared_ptr<SFMLTextureWrapper> dest = scene.GetImageManager()->GetSFMLTexture(destName);
 
     //Make sure the coordinates are correct.
     if ( destX < 0 || static_cast<unsigned>(destX) >= dest->texture.getSize().x) return;
     if ( destY < 0 || static_cast<unsigned>(destY) >= dest->texture.getSize().y) return;
 
-    dest->image.copy(scene.game->GetImageManager()->GetSFMLTexture(srcName)->image, destX, destY, sf::IntRect(0, 0, 0, 0), useTransparency);
+    dest->image.copy(scene.GetImageManager()->GetSFMLTexture(srcName)->image, destX, destY, sf::IntRect(0, 0, 0, 0), useTransparency);
     dest->texture.loadFromImage(dest->image);
 }
 
@@ -56,9 +57,9 @@ void GD_EXTENSION_API CaptureScreen( RuntimeScene & scene, const std::string & d
     sf::Image capture = scene.renderWindow->capture();
 
     if ( !destFileName.empty() ) capture.saveToFile(destFileName);
-    if ( !destImageName.empty() && scene.game->GetImageManager()->HasLoadedSFMLTexture(destImageName) )
+    if ( !destImageName.empty() && scene.GetImageManager()->HasLoadedSFMLTexture(destImageName) )
     {
-        boost::shared_ptr<SFMLTextureWrapper> sfmlTexture = scene.game->GetImageManager()->GetSFMLTexture(destImageName);
+        boost::shared_ptr<SFMLTextureWrapper> sfmlTexture = scene.GetImageManager()->GetSFMLTexture(destImageName);
         sfmlTexture->image = capture;
         sfmlTexture->texture.loadFromImage(sfmlTexture->image); //Do not forget to update the associated texture
     }
@@ -73,10 +74,10 @@ void GD_EXTENSION_API CreateSFMLTexture( RuntimeScene & scene, const std::string
 {
     //Get or create the texture in memory
     boost::shared_ptr<SFMLTextureWrapper> newTexture;
-    if ( !scene.game->GetImageManager()->HasLoadedSFMLTexture(imageName) )
+    if ( !scene.GetImageManager()->HasLoadedSFMLTexture(imageName) )
         newTexture = boost::shared_ptr<SFMLTextureWrapper>(new SFMLTextureWrapper);
     else
-        newTexture = scene.game->GetImageManager()->GetSFMLTexture(imageName);
+        newTexture = scene.GetImageManager()->GetSFMLTexture(imageName);
 
     //Get the color
     sf::Color color;
@@ -94,30 +95,30 @@ void GD_EXTENSION_API CreateSFMLTexture( RuntimeScene & scene, const std::string
 
     newTexture->texture.loadFromImage(newTexture->image); //Do not forget to update the associated texture
 
-    scene.game->GetImageManager()->SetSFMLTextureAsPermanentlyLoaded(imageName, newTexture); //Otherwise
+    scene.GetImageManager()->SetSFMLTextureAsPermanentlyLoaded(imageName, newTexture); //Otherwise
 }
 
 void GD_EXTENSION_API OpenSFMLTextureFromFile( RuntimeScene & scene, const std::string & fileName, const std::string & imageName )
 {
     //Get or create the texture in memory
     boost::shared_ptr<SFMLTextureWrapper> newTexture;
-    if ( !scene.game->GetImageManager()->HasLoadedSFMLTexture(imageName) )
+    if ( !scene.GetImageManager()->HasLoadedSFMLTexture(imageName) )
         newTexture = boost::shared_ptr<SFMLTextureWrapper>(new SFMLTextureWrapper);
     else
-        newTexture = scene.game->GetImageManager()->GetSFMLTexture(imageName);
+        newTexture = scene.GetImageManager()->GetSFMLTexture(imageName);
 
     //Open the SFML image and the SFML texture
     newTexture->image.loadFromFile(fileName);
     newTexture->texture.loadFromImage(newTexture->image); //Do not forget to update the associated texture
 
-    scene.game->GetImageManager()->SetSFMLTextureAsPermanentlyLoaded(imageName, newTexture);
+    scene.GetImageManager()->SetSFMLTextureAsPermanentlyLoaded(imageName, newTexture);
 }
 
 void GD_EXTENSION_API SaveSFMLTextureToFile( RuntimeScene & scene, const std::string & fileName, const std::string & imageName )
 {
-    if ( !scene.game->GetImageManager()->HasLoadedSFMLTexture(imageName) ) return;
+    if ( !scene.GetImageManager()->HasLoadedSFMLTexture(imageName) ) return;
 
-    scene.game->GetImageManager()->GetSFMLTexture(imageName)->image.saveToFile(fileName);
+    scene.GetImageManager()->GetSFMLTexture(imageName)->image.saveToFile(fileName);
 }
 
 }

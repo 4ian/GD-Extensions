@@ -33,6 +33,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/Object.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/RuntimeScene.h"
+#include "GDCpp/RuntimeGame.h"
 #include "GDCpp/ImageManager.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
@@ -117,7 +118,7 @@ RuntimeTiledSpriteObject::RuntimeTiledSpriteObject(RuntimeScene & scene, const g
 void RuntimeTiledSpriteObject::ChangeAndReloadImage(const std::string &txtName, const RuntimeScene &scene)
 {
     textureName = txtName;
-    texture = scene.game->GetImageManager()->GetSFMLTexture(textureName);
+    texture = scene.GetImageManager()->GetSFMLTexture(textureName);
 }
 
 /**

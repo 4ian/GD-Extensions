@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/ImageManager.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/RuntimeScene.h"
+#include "GDCpp/RuntimeGame.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Polygon.h"
@@ -341,7 +342,7 @@ unsigned int RuntimePanelSpriteObject::GetNumberOfProperties() const
 void RuntimePanelSpriteObject::ChangeAndReloadImage(const std::string &txtName, const RuntimeScene &scene)
 {
     textureName = txtName;
-    texture = scene.game->GetImageManager()->GetSFMLTexture(textureName);
+    texture = scene.GetImageManager()->GetSFMLTexture(textureName);
 }
 
 void DestroyRuntimePanelSpriteObject(RuntimeObject * object)
