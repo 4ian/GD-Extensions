@@ -33,9 +33,7 @@ freely, subject to the following restrictions:
 
 #include "GDCpp/Object.h"
 #include "GDCpp/RuntimeScene.h"
-#if defined(GD_IDE_ONLY)
-#include "GDCore/Events/Event.h"
-#endif
+#include "GDCpp/Variable.h"
 
 //Windows build uses native windows-dialogs
 #if defined(WINDOWS)
@@ -81,7 +79,7 @@ void GD_EXTENSION_API ShowMessageBox( RuntimeScene & scene, const std::string & 
 /**
  * Display an "open file" dialog
  */
-void GD_EXTENSION_API ShowOpenFile( RuntimeScene & scene, const std::string & variable, const std::string & title, std::string filters )
+void GD_EXTENSION_API ShowOpenFile( RuntimeScene & scene, gd::Variable & variable, const std::string & title, std::string filters )
 {
     sf::Clock timeSpent;
 
@@ -117,13 +115,13 @@ void GD_EXTENSION_API ShowOpenFile( RuntimeScene & scene, const std::string & va
     scene.NotifyPauseWasMade(timeSpent.getElapsedTime().asMicroseconds());//Don't take the time spent in this function in account.
 
     //Update the variable
-    scene.GetVariables().Get(variable).SetString(result);
+    variable.SetString(result);
 }
 
 /**
  * Show a message box with Yes/No buttons
  */
-void GD_EXTENSION_API ShowYesNoMsgBox( RuntimeScene & scene, const std::string & variable, const std::string & message, const std::string & title )
+void GD_EXTENSION_API ShowYesNoMsgBox( RuntimeScene & scene, gd::Variable & variable, const std::string & message, const std::string & title )
 {
     sf::Clock timeSpent;
 
@@ -144,7 +142,7 @@ void GD_EXTENSION_API ShowYesNoMsgBox( RuntimeScene & scene, const std::string &
     scene.NotifyPauseWasMade(timeSpent.getElapsedTime().asMicroseconds());//Don't take the time spent in this function in account.
 
     //Update the variable
-    scene.GetVariables().Get(variable).SetString(result);
+    variable.SetString(result);
 }
 
 //Declaration and definition of a simple input box for windows
@@ -441,7 +439,7 @@ BOOL CInputBox::DoModal(LPCTSTR szCaption, LPCTSTR szPrompt)
 /**
  * Show a dialog so as to get a text from user
  */
-bool GD_EXTENSION_API ShowTextInput( RuntimeScene & scene, const std::string & variable, const std::string & message, const std::string & title )
+bool GD_EXTENSION_API ShowTextInput( RuntimeScene & scene, gd::Variable & variable, const std::string & message, const std::string & title )
 {
     sf::Clock timeSpent;
     string result;
@@ -460,7 +458,7 @@ bool GD_EXTENSION_API ShowTextInput( RuntimeScene & scene, const std::string & v
     scene.NotifyPauseWasMade(timeSpent.getElapsedTime().asMicroseconds());//Don't take the time spent in this function in account.
 
     //Update the variable
-    scene.GetVariables().Get(variable).SetString(result);
+    variable.SetString(result);
 
     return true;
 }

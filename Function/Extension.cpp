@@ -211,7 +211,7 @@ public:
         }
 
         {
-            class CodeGenerator : public gd::StrExpressionMetadata::ExtraInformation::CustomCodeGenerator
+            class CodeGenerator : public gd::ExpressionCodeGenerationInformation::CustomCodeGenerator
             {
                 virtual std::string GenerateCode(const std::vector<gd::Expression> & parameters, gd::EventsCodeGenerator & codeGenerator, gd::EventsCodeGenerationContext & context)
                 {
@@ -234,7 +234,7 @@ public:
                 };
             };
 
-            gd::StrExpressionMetadata::ExtraInformation::CustomCodeGenerator * codeGenerator = new CodeGenerator; //Need for code to compile
+            gd::ExpressionCodeGenerationInformation::CustomCodeGenerator * codeGenerator = new CodeGenerator; //Need for code to compile
 
             AddStrExpression("Parameter",
                            _("Parameter of the current function"),
@@ -242,7 +242,7 @@ public:
                            _("Function"),
                            "res/function.png")
                 .AddParameter("expression", _("Number of the parameter ( Parameters start at 0 ! )"))
-                .codeExtraInformation.SetCustomCodeGenerator(boost::shared_ptr<gd::StrExpressionMetadata::ExtraInformation::CustomCodeGenerator>(codeGenerator));
+                .codeExtraInformation.SetCustomCodeGenerator(boost::shared_ptr<gd::ExpressionCodeGenerationInformation::CustomCodeGenerator>(codeGenerator));
         }
         #endif
 

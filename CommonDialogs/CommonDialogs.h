@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 
 #include <string>
 class RuntimeScene;
+namespace gd { class Variable; }
 
 namespace GDpriv
 {
@@ -36,9 +37,9 @@ namespace CommonDialogs
 {
 
 void ShowMessageBox( RuntimeScene & scene, const std::string & message, const std::string & title );
-void ShowOpenFile( RuntimeScene & scene, const std::string & variable, const std::string & title, std::string filters );
-void ShowYesNoMsgBox( RuntimeScene & scene, const std::string & variable, const std::string & message, const std::string & title );
-void ShowTextInput( RuntimeScene & scene, const std::string & variable, const std::string & message, const std::string & title );
+void ShowOpenFile( RuntimeScene & scene, gd::Variable & variable, const std::string & title, std::string filters );
+void ShowYesNoMsgBox( RuntimeScene & scene, gd::Variable & variable, const std::string & message, const std::string & title );
+void ShowTextInput( RuntimeScene & scene, gd::Variable & variable, const std::string & message, const std::string & title );
 
 }
 }
