@@ -190,7 +190,7 @@ public:
 
 /*
                 obj.AddAction("Angle",
-                               _("Régler l'angle d'un objet texte"),
+                               _("Change the angle"),
                                _("Modify the angle of a Text object."),
                                _("Do _PARAM1__PARAM2_ to the angle of _PARAM0_"),
                                _("Rotation"),

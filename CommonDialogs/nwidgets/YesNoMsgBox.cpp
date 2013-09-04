@@ -38,13 +38,13 @@ YesNoMsgBox::YesNoMsgBox( string title, string message, string & result_ ) :
 {
     yesBt.set_pos( 10, 60 );
     yesBt.set_size( 50, 20 );
-    yesBt.set_name( "Oui" );
+    yesBt.set_name( "Yes" );
     BtStyle style;
     yesBt.set_style(style);
 
     noBt.set_pos( 40, 40 );
     noBt.set_size( 50, 20 );
-    noBt.set_name( "Non" );
+    noBt.set_name( "No" );
     noBt.set_style(style);
 
     // lets put the label 5 pixels below the button

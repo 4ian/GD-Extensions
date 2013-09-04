@@ -130,4 +130,6 @@ gdjs.evtTools.linkedObjects.pickObjectsLinkedTo = function(runtimeScene, objects
         }
         arr.length = finalSize;
     }
+
+    return isTrue;
 };
