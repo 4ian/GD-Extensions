@@ -37,9 +37,9 @@ gdjs.DraggableRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScen
             runtimeScene.getGame().getMouseX(), 
             runtimeScene.getGame().getMouseY());
             
-        if (this.owner.getDrawableX() <= mousePos[0] 
-            && this.owner.getDrawableX() + this.owner.getWidth() >= mousePos[0] 
-            && this.owner.getDrawableY() <= mousePos[1] 
+        if (this.owner.getDrawableX() <= mousePos[0]
+            && this.owner.getDrawableX() + this.owner.getWidth() >= mousePos[0]
+            && this.owner.getDrawableY() <= mousePos[1]
             && this.owner.getDrawableY() + this.owner.getHeight() >= mousePos[1] ) {
             
             mousePos = runtimeScene.getLayer(this.owner.getLayer()).convertCoords(
