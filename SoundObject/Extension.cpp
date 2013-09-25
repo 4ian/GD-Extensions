@@ -148,7 +148,7 @@ public:
                            _("Play"),
                            _("Play a sound."),
                            _("Play sound _PARAM0_"),
-                           _("Play"),
+                           "",
                            "res/actions/son24.png",
                            "res/actions/son.png")
                 .AddParameter("object", _("Object"), "Sound", false)
@@ -159,7 +159,7 @@ public:
                            _("Stop"),
                            _("Stop a sound."),
                            _("Stop _PARAM0_"),
-                           _("Play"),
+                           "",
                            "res/actions/son24.png",
                            "res/actions/son.png")
                 .AddParameter("object", _("Object"), "Sound", false)
@@ -170,7 +170,7 @@ public:
                            _("Pause"),
                            _("Pause a sound."),
                            _("Pause _PARAM0_"),
-                           _("Play"),
+                           "",
                            "res/actions/son24.png",
                            "res/actions/son.png")
                 .AddParameter("object", _("Object"), "Sound", false)
@@ -257,7 +257,7 @@ public:
                            _("Being played"),
                            _("Test if a sound is being played."),
                            _("_PARAM0_ is being played"),
-                           _("Play"),
+                           "",
                            "res/actions/son24.png",
                            "res/actions/son.png")
                 .AddParameter("object", _("Object"), "Sound", false)
@@ -268,7 +268,7 @@ public:
                            _("Paused"),
                            _("A sound is paused"),
                            _("_PARAM0_ is paused"),
-                           _("Play"),
+                           "",
                            "res/actions/son24.png",
                            "res/actions/son.png")
                 .AddParameter("object", _("Object"), "Sound", false)
@@ -279,7 +279,7 @@ public:
                            _("Stopped"),
                            _("Test if a sound is stopped."),
                            _("_PARAM0_ is stopped"),
-                           _("Play"),
+                           "",
                            "res/actions/son24.png",
                            "res/actions/son.png")
                 .AddParameter("object", _("Object"), "Sound", false)

@@ -72,7 +72,7 @@ public:
                            _("Modify the text"),
                            _("Modify the text of a Text object."),
                            _("Do _PARAM1__PARAM2_ to the text of _PARAM0_"),
-                           _("Text"),
+                           "",
                            "res/actions/text24.png",
                            "res/actions/text.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -81,10 +81,10 @@ public:
                 .codeExtraInformation.SetFunctionName("SetString").SetManipulatedType("string").SetAssociatedGetter("GetString").SetIncludeFile("TextObject/TextObject.h");
 
             obj.AddCondition("String",
-                           _("Test the text"),
-                           _("Test the text of a Text object."),
-                           _("The text of _PARAM0_ is _PARAM1__PARAM2_"),
-                           _("Text"),
+                           _("Compare the text"),
+                           _("Compare the text of a Text object."),
+                           _("Text of _PARAM0_ is _PARAM1__PARAM2_"),
+                           "",
                            "res/conditions/text24.png",
                            "res/conditions/text.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -107,7 +107,7 @@ public:
                            _("Size"),
                            _("Modify the size of the text."),
                            _("Do _PARAM1__PARAM2_ to the size of the text of _PARAM0_"),
-                           _("Size"),
+                           "",
                            "res/actions/characterSize24.png",
                            "res/actions/characterSize.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -119,7 +119,7 @@ public:
                            _("Size"),
                            _("Test the size of the text"),
                            _("The size of the text of _PARAM0_ is _PARAM1__PARAM2_"),
-                           _("Size"),
+                           "",
                            "res/conditions/characterSize24.png",
                            "res/conditions/characterSize.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -142,7 +142,7 @@ public:
                            _("Opacity"),
                            _("Modify the opacity of a Text object."),
                            _("Do _PARAM1__PARAM2_ to the opacity of _PARAM0_"),
-                           _("Visibility"),
+                           "",
                            "res/actions/opacity24.png",
                            "res/actions/opacity.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -154,7 +154,7 @@ public:
                            _("Opacity"),
                            _("Test the value of the opacity of a text object."),
                            _("The opacity of _PARAM0_ is _PARAM1__PARAM2_"),
-                           _("Visibility"),
+                           "",
                            "res/conditions/opacity24.png",
                            "res/conditions/opacity.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -168,7 +168,7 @@ public:
                            _("Smoothing"),
                            _("Activate or desactivate text smoothing."),
                            _("Smooth _PARAM0_: _PARAM1_"),
-                           _("Visibility"),
+                           _("Style"),
                            "res/actions/opacity24.png",
                            "res/actions/opacity.png")
                 .AddParameter("object", _("Object"), "Text", false)
@@ -179,7 +179,7 @@ public:
                            _("Smoothing"),
                            _("Test if an object is smoothed"),
                            _("_PARAM0_ is smoothed"),
-                           _("Visibility"),
+                           _("Style"),
                            "res/conditions/opacity24.png",
                            "res/conditions/opacity.png")
                 .AddParameter("object", _("Object"), "Text", false)

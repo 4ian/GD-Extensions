@@ -61,10 +61,10 @@ public:
         aut.SetIncludeFile("DraggableAutomatism/DraggableAutomatism.h");
 
         aut.AddCondition("Dragged",
-                       _("Dragged"),
+                       _("Being dragged"),
                        _("Return true if the object is being dragged"),
                        _("_PARAM0_ is being dragged"),
-                       _("State"),
+                       "",
                        "CppPlatform/Extensions/draggableicon24.png",
                        "CppPlatform/Extensions/draggableicon16.png")
             .AddParameter("object", _("Object"))

@@ -416,7 +416,7 @@ public:
                            _("Collision"),
                            _("Test if two objects are colliding.\nAttention! Only objects specified in the first parameter will be taken in account by the next actions and conditions, if they are colliding with the other objects."),
                            _("_PARAM0_ is in collision with a _PARAM2_"),
-                           _("Collision"),
+                           "",
                            "res/physics24.png",
                            "res/physics16.png")
                 .AddParameter("object", _("Object"))

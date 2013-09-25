@@ -143,7 +143,7 @@ public:
                            _("Z Position"),
                            _("Modify the Z Position of a 3D Box."),
                            _("Do _PARAM1__PARAM2_ to the Z position of _PARAM0_"),
-                           _("Position"),
+                           "",
                            "res/actions/position24.png",
                            "res/actions/position.png")
                 .AddParameter("object", _("Object"), "Box3D", false)
@@ -156,7 +156,7 @@ public:
                            _("Z Position"),
                            _("Test Z position of a 3D Box."),
                            _("The Z position of _PARAM0_ is _PARAM1__PARAM2_"),
-                           _("Position"),
+                           "",
                            "res/conditions/position24.png",
                            "res/conditions/position.png")
                 .AddParameter("object", _("Object"), "Box3D", false)
