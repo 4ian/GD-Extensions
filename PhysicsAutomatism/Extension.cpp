@@ -219,7 +219,7 @@ public:
             aut.AddAction("ApplyImpulse",
                            _("Apply an impulse"),
                            _("Apply an impulse to the object."),
-                           _("Apply to _PARAM0_  an impulse _PARAM2_;_PARAM3_"),
+                           _("Apply to _PARAM0_ impulse _PARAM2_;_PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -233,7 +233,7 @@ public:
             aut.AddAction("ApplyImpulseUsingPolarCoordinates",
                            _("Apply an impulse ( angle )"),
                            _("Apply an impulse to an object, using a angle and a length as coordinates."),
-                           _("Apply to _PARAM0_ an impulse, angle : _PARAM2_° and length : _PARAM3_ pixels"),
+                           _("Apply to _PARAM0_ impulse _PARAM3_ at angle : _PARAM2_°"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -247,7 +247,7 @@ public:
             aut.AddAction("ApplyImpulseTowardPosition",
                            _("Apply an impulse toward a position"),
                            _("Apply an impulse, directed toward a position, to the object."),
-                           _("Apply to _PARAM0_  an impulse toward position _PARAM2_;_PARAM3_ of length _PARAM4_"),
+                           _("Apply to _PARAM0_ impulse _PARAM4_ toward position _PARAM2_;_PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -262,7 +262,7 @@ public:
             aut.AddAction("ApplyForce",
                            _("Add a force"),
                            _("Add a force to object"),
-                           _("Apply to _PARAM0_  an impulse _PARAM2_;_PARAM3_"),
+                           _("Apply to _PARAM0_ force _PARAM2_;_PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -276,7 +276,7 @@ public:
             aut.AddAction("ApplyForceUsingPolarCoordinates",
                            _("Apply a force ( angle )"),
                            _("Apply a force to an object, using an angle and a length as coordinates."),
-                           _("Apply to _PARAM0_ a force, angle : _PARAM2_° and length : _PARAM3_"),
+                           _("Apply to _PARAM0_ force _PARAM3_ at angle _PARAM2_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -290,7 +290,7 @@ public:
             aut.AddAction("ApplyForceTowardPosition",
                            _("Apply a force toward a position"),
                            _("Apply a force, directed toward a position, to the object."),
-                           _("Add to _PARAM0_  a force toward position _PARAM2_;_PARAM3_ of length _PARAM4_"),
+                           _("Add to _PARAM0_ force _PARAM4_ toward position _PARAM2_;_PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -305,7 +305,7 @@ public:
             aut.AddAction("ApplyTorque",
                            _("Add a torque ( a rotation )"),
                            _("Add a torque ( a rotation ) to object."),
-                           _("Add to _PARAM0_ a torque _PARAM2_"),
+                           _("Add to _PARAM0_ torque _PARAM2_"),
                            _("Rotation"),
                            "res/physics24.png",
                            "res/physics16.png")
