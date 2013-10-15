@@ -2,6 +2,7 @@
 
 Game Develop - Tiled Sprite Extension
 Copyright (c) 2012 Victor Levasseur (victorlevasseur01@orange.fr)
+Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -25,7 +26,7 @@ freely, subject to the following restrictions:
 */
 /**
  * Contributors to the extension:
- * Florian Rival ( Minor changes, added offsets )
+ * Florian Rival ( Minor changes, added offsets, HTML5 port )
  */
 
 #include "GDCpp/ExtensionBase.h"
@@ -48,7 +49,7 @@ public:
         SetExtensionInformation("TiledSpriteObject",
                               _("Tiled Sprite Object"),
                               _("Extension allowing to use tiled sprite objects."),
-                              "Victor Levasseur",
+                              "Victor Levasseur and Florian Rival",
                               "zlib/libpng License ( Open Source )");
 
         {
