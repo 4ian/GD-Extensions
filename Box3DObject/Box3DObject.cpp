@@ -43,8 +43,9 @@ freely, subject to the following restrictions:
 
 #if defined(GD_IDE_ONLY)
 #include "GDCpp/CommonTools.h"
-#include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
 #include "Box3DObjectEditor.h"
+#include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
+#include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
 #include "GDCore/IDE/ArbitraryResourceWorker.h"
 #endif
 
@@ -467,9 +468,9 @@ void Box3DObject::EditObject( wxWindow* parent, gd::Project & game, gd::MainFram
     dialog.ShowModal();
 }
 
-std::map<std::string, std::string> Box3DObject::GetInitialInstanceProperties(const gd::InitialInstance & position, gd::Project & game, gd::Layout & scene)
+std::map<std::string, gd::PropgridPropertyDescriptor> Box3DObject::GetInitialInstanceProperties(const gd::InitialInstance & position, gd::Project & game, gd::Layout & scene)
 {
-    std::map<std::string, std::string> properties;
+    std::map<std::string, gd::PropgridPropertyDescriptor> properties;
     properties[ToString(_("Z"))] = position.floatInfos.find("z") != position.floatInfos.end() ?
                                    ToString(position.floatInfos.find("z")->second) :
                                    "0";

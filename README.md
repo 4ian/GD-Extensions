@@ -21,8 +21,8 @@ First, take a look at the Readme and the documentation provided in the Game Deve
 Extensions always contains an Extension.cpp and/or a JsExtension.cpp file that are used
 to expose the extension to Game Develop. 
 
-After being compiled, extensions binaries are put in the IDE/bin/release/CppPlatform/Extensions
-( or IDE/bin/release/JsPlatform/Extensions ) folder of the SDK.
+After being compiled, extensions binaries are put in the Binaries/Output/Release/CppPlatform/Extensions
+( or Binaries/Output/Release/JsPlatform/Extensions ) folder of the SDK.
 
 Contributing
 ------------

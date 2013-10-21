@@ -31,15 +31,14 @@ freely, subject to the following restrictions:
 #include "GDCpp/RuntimeObject.h"
 #include <boost/shared_ptr.hpp>
 class SFMLTextureWrapper;
-namespace gd { class ImageManager; }
 class RuntimeScene;
 namespace gd { class Object; }
 namespace gd { class ImageManager; }
 namespace gd { class InitialInstance; }
 #if defined(GD_IDE_ONLY)
 class wxBitmap;
-namespace gd { class Project; }
 class wxWindow;
+namespace gd { class Project; }
 namespace gd { class MainFrameWrapper; }
 #endif
 
@@ -61,7 +60,7 @@ public :
     virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
     virtual void ExposeResources(gd::ArbitraryResourceWorker & worker);
     virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
-    virtual std::map<std::string, std::string> GetInitialInstanceProperties(const gd::InitialInstance & position, gd::Project & game, gd::Layout & scene);
+    virtual std::map<std::string, gd::PropgridPropertyDescriptor> GetInitialInstanceProperties(const gd::InitialInstance & position, gd::Project & game, gd::Layout & scene);
     virtual bool UpdateInitialInstanceProperty(gd::InitialInstance & position, const std::string & name, const std::string & value, gd::Project & game, gd::Layout & scene);
     #endif
 

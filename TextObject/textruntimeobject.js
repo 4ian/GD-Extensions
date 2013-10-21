@@ -37,14 +37,14 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
     this._updateTextStyle();
     this._updateTextPosition();
     this._text.updateText(); //Work around a PIXI.js bug.
-}
+};
 
 gdjs.TextRuntimeObject.prototype = Object.create( gdjs.RuntimeObject.prototype );
 gdjs.TextRuntimeObject.thisIsARuntimeObjectConstructor = "TextObject::Text";
 
 gdjs.TextRuntimeObject.prototype.onDeletedFromScene = function(runtimeScene) {
     runtimeScene.getLayer(this.layer).removePIXIContainerChild(this._text);
-}
+};
 
 gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
     style = {align:"left"};
@@ -55,28 +55,28 @@ gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
     style.font += this._characterSize+"px"+" "+this._fontName;
     style.fill = "#"+gdjs.rgbToHex(this._color[0], this._color[1], this._color[2]);
     this._text.setStyle(style);
-}
+};
 
 gdjs.TextRuntimeObject.prototype._updateTextPosition = function() {
     this._text.position.x = this.x+this._text.width/2;
     this._text.position.y = this.y+this._text.height/2;  
     this.hitBoxesDirty = true;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setX = function(x) {
     this.x = x;
     this._updateTextPosition();
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setY = function(y) {
     this.y = y;
     this._updateTextPosition();
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setAngle = function(angle) {
     this.angle = angle;
     this._text.rotation = gdjs.toRad(angle);
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setOpacity = function(opacity) {
     if ( opacity < 0 ) opacity = 0;
@@ -84,75 +84,75 @@ gdjs.TextRuntimeObject.prototype.setOpacity = function(opacity) {
 
     this.opacity = opacity;
     this._text.alpha = opacity/255; 
-}
+};
 
 gdjs.TextRuntimeObject.prototype.getOpacity = function() {
     return this.opacity;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.getString = function() {
     return this._text.text;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setString = function(str) {
     if ( str.length === 0 ) str = " ";
     this._text.setText(str);
     this._text.updateText(); //Work around a PIXI.js bug.
     this._updateTextPosition();
-}
+};
 
 gdjs.TextRuntimeObject.prototype.getCharacterSize = function() {
     return this._characterSize;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setCharacterSize = function(newSize) {
     this._characterSize = newSize;
     this._updateTextStyle();
-}
+};
 
 gdjs.TextRuntimeObject.prototype.isBold = function() {
     return this._bold;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setBold = function(enable) {
     this._bold = enable;
     this._updateTextStyle();
-}
+};
 
 gdjs.TextRuntimeObject.prototype.isItalic = function() {
     return this._italic;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setItalic = function(enable) {
     this._italic = enable;
     this._updateTextStyle();
-}
+};
 
 gdjs.TextRuntimeObject.prototype.hide = function(enable) {
     if ( enable == undefined ) enable = true;
     this._hidden = enable;
     this._text.visible = !enable;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setLayer = function(name) {
     //We need to move the object from the pixi container of the layer
     this._runtimeScene.getLayer(this.layer).removePIXIContainerChild(this._text);
     this.layer = name;
     this._runtimeScene.getLayer(this.layer).addChildToPIXIContainer(this._text, this.zOrder);
-}
+};
 
 gdjs.TextRuntimeObject.prototype.getWidth = function() {
     return this._text.width;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.getHeight = function() {
     return this._text.height;
-}
+};
 
 gdjs.TextRuntimeObject.prototype.setColor = function(str) {
     this._color = str.split(";");
     this._updateTextStyle();
-}
+};
 
 /**
  * Set the Z order of the object.
@@ -165,4 +165,4 @@ gdjs.TextRuntimeObject.prototype.setZOrder = function(z) {
         this._runtimeScene.getLayer(this.layer).changePIXIContainerChildZOrder(this._text, z);
         this.zOrder = z;
     }
-}
+};
