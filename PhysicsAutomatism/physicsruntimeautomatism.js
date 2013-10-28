@@ -519,7 +519,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.isStatic = function() {
     return !this._dynamic;
 }
 
-gdjs.PhysicsRuntimeAutomatism.prototype.IsDynamic = function() {
+gdjs.PhysicsRuntimeAutomatism.prototype.isDynamic = function() {
     return this._dynamic;
 }
 

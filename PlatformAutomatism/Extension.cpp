@@ -45,7 +45,7 @@ public:
     {
         SetExtensionInformation("PlatformAutomatism",
                               _("Platform Automatism"),
-                              _("TODO"),
+                              _("Allows to use controllable objects which can run and jump on platforms."),
                               "Florian Rival",
                               "zlib/libpng License ( Open Source )");
 
@@ -61,20 +61,327 @@ public:
                   boost::shared_ptr<gd::AutomatismsSharedData>(new gd::AutomatismsSharedData));
 
             #if defined(GD_IDE_ONLY)
-
             aut.SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
 
-            aut.AddAction("SetReverseAtEnd",
-                           _("De/activate rounding"),
-                           _("Activate or desactivate rounding"),
-                           _("Activate rounding for _PARAM0_: _PARAM2_"),
+            aut.AddCondition("IsOnFloor",
+                           _("Is on floor"),
+                           _("Check if the object is on a platform."),
+                           _("_PARAM0_ is on floor"),
+                           _(""),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("IsOnFloor").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("IsOnLadder",
+                           _("Is on ladder"),
+                           _("Check if the object is on a ladder."),
+                           _("_PARAM0_ is on ladder"),
+                           _(""),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("IsOnLadder").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("IsJumping",
+                           _("Is jumping"),
+                           _("Check if the object is jumping."),
+                           _("_PARAM0_ is jumping"),
+                           _(""),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("IsJumping").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("IsFalling",
+                           _("Is falling"),
+                           _("Check if the object is falling."),
+                           _("_PARAM0_ is falling"),
+                           _(""),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("IsFalling").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("Gravity",
+                           _("Gravity"),
+                           _("Compare the gravity applied on the object ( in pixels per second per second )."),
+                           _("Gravity of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
                            "CppPlatform/Extensions/platformerobjecticon16.png")
                 .AddParameter("object", _("Object"))
-                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism", false)
-                .AddParameter("yesorno", _("Activate"))
-                .codeExtraInformation.SetFunctionName("SetReverseAtEnd").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("relationalOperator", _("Comparison sign"))
+                .AddParameter("expression", _("Value to test"))
+                .codeExtraInformation.SetFunctionName("GetGravity").SetManipulatedType("number").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("Gravity",
+                           _("Gravity"),
+                           _("Change the gravity applied on an object ( in pixels per second per second )."),
+                           _("Do _PARAM2__PARAM3_ to the gravity applied on _PARAM0_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("operator", _("Modification's sign"))
+                .AddParameter("expression", _("Value"))
+                .codeExtraInformation.SetFunctionName("SetGravity").SetManipulatedType("number").SetAssociatedGetter("GetGravity").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("MaxFallingSpeed",
+                           _("Maximum falling speed"),
+                           _("Compare the maximum falling speed of the object ( in pixels per second )."),
+                           _("The maximum falling speed of _PARAM0_ is _PARAM2__PARAM3_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("relationalOperator", _("Comparison sign"))
+                .AddParameter("expression", _("Value to test"))
+                .codeExtraInformation.SetFunctionName("GetMaxFallingSpeed").SetManipulatedType("number").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("MaxFallingSpeed",
+                           _("Maximum falling speed"),
+                           _("Change the maximum falling speed of an object ( in pixels per second )."),
+                           _("Do _PARAM2__PARAM3_ to the maximum falling speed of _PARAM0_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("operator", _("Modification's sign"))
+                .AddParameter("expression", _("Value"))
+                .codeExtraInformation.SetFunctionName("SetMaxFallingSpeed").SetManipulatedType("number").SetAssociatedGetter("GetMaxFallingSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("Acceleration",
+                           _("Acceleration"),
+                           _("Compare the acceleration of the object ( in pixels per second per second )."),
+                           _("The acceleration of _PARAM0_ is _PARAM2__PARAM3_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("relationalOperator", _("Comparison sign"))
+                .AddParameter("expression", _("Value to test"))
+                .codeExtraInformation.SetFunctionName("GetAcceleration").SetManipulatedType("number").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("Acceleration",
+                           _("Acceleration"),
+                           _("Change the acceleration of an object ( in pixels per second per second )."),
+                           _("Do _PARAM2__PARAM3_ to the acceleration of _PARAM0_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("operator", _("Modification's sign"))
+                .AddParameter("expression", _("Value"))
+                .codeExtraInformation.SetFunctionName("SetAcceleration").SetManipulatedType("number").SetAssociatedGetter("GetAcceleration").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("Deceleration",
+                           _("Deceleration"),
+                           _("Compare the deceleration of the object ( in pixels per second per second )."),
+                           _("The deceleration of _PARAM0_ is _PARAM2__PARAM3_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("relationalOperator", _("Comparison sign"))
+                .AddParameter("expression", _("Value to test"))
+                .codeExtraInformation.SetFunctionName("GetDeceleration").SetManipulatedType("number").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("Deceleration",
+                           _("Deceleration"),
+                           _("Change the deceleration of an object ( in pixels per second per second )."),
+                           _("Do _PARAM2__PARAM3_ to the deceleration of _PARAM0_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("operator", _("Modification's sign"))
+                .AddParameter("expression", _("Value"))
+                .codeExtraInformation.SetFunctionName("SetDeceleration").SetManipulatedType("number").SetAssociatedGetter("GetDeceleration").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("MaxSpeed",
+                           _("Maximum speed"),
+                           _("Compare the maximum speed of the object ( in pixels per second )."),
+                           _("The maximum speed of _PARAM0_ is _PARAM2__PARAM3_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("relationalOperator", _("Comparison sign"))
+                .AddParameter("expression", _("Value to test"))
+                .codeExtraInformation.SetFunctionName("GetMaxSpeed").SetManipulatedType("number").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("MaxSpeed",
+                           _("Maximum speed"),
+                           _("Change the maximum speed of an object ( in pixels per second )."),
+                           _("Do _PARAM2__PARAM3_ to the maximum speed of _PARAM0_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("operator", _("Modification's sign"))
+                .AddParameter("expression", _("Value"))
+                .codeExtraInformation.SetFunctionName("SetMaxSpeed").SetManipulatedType("number").SetAssociatedGetter("GetMaxSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddCondition("JumpSpeed",
+                           _("Jump speed"),
+                           _("Compare the jump speed of the object ( in pixels per second )."),
+                           _("The jump speed of _PARAM0_ is _PARAM2__PARAM3_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("relationalOperator", _("Comparison sign"))
+                .AddParameter("expression", _("Value to test"))
+                .codeExtraInformation.SetFunctionName("GetJumpSpeed").SetManipulatedType("number").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("JumpSpeed",
+                           _("Jump speed"),
+                           _("Change the jump speed of an object ( in pixels per second )."),
+                           _("Do _PARAM2__PARAM3_ to the jump speed of _PARAM0_"),
+                           _("Options"),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("operator", _("Modification's sign"))
+                .AddParameter("expression", _("Value"))
+                .codeExtraInformation.SetFunctionName("SetJumpSpeed").SetManipulatedType("number").SetAssociatedGetter("GetJumpSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateLeftKey",
+                           _("Simulate left key press"),
+                           _("Simulate a pressing on left key."),
+                           _("Simulate pressing Left for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SimulateLeftKey").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateRightKey",
+                           _("Simulate right key press"),
+                           _("Simulate a pressing on right key."),
+                           _("Simulate pressing Right for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SimulateRightKey").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateUpKey",
+                           _("Simulate up key press"),
+                           _("Simulate a pressing on up key ( Used when on a ladder )."),
+                           _("Simulate pressing Up for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SimulateUpKey").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateDownKey",
+                           _("Simulate down key press"),
+                           _("Simulate a pressing on down key ( Used when on a ladder )."),
+                           _("Simulate pressing Down for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SimulateDownKey").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateLadderKey",
+                           _("Simulate ladder key press"),
+                           _("Simulate a pressing on ladder key ( Used to grab a ladder )."),
+                           _("Simulate pressing Ladder key for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SimulateLadderKey").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateJumpKey",
+                           _("Simulate jump key press"),
+                           _("Simulate a pressing on jump key."),
+                           _("Simulate pressing Jump key for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SimulateJumpKey").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SimulateControl",
+                           _("Simulate control"),
+                           _("Simulate a pressing on a key.\nValid keys are Left, Right, Jump, Ladder, Up, Down."),
+                           _("Simulate pressing _PARAM2_ key for _PARAM0_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("string", _("Key"))
+                .codeExtraInformation.SetFunctionName("SimulateControl").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("IgnoreDefaultControls",
+                           _("Ignore default controls"),
+                           _("De/activate the use of default controls.\nIf deactivated, use the simulate actions to move the object."),
+                           _("Ignore default controls for _PARAM0_: _PARAM2_"),
+                           _("Controls"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .AddParameter("yesorno", _("Ignore controls"))
+                .codeExtraInformation.SetFunctionName("IgnoreDefaultControls").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddExpression("Gravity", _("Gravity"), _("Get the gravity applied on the object"), _("Options"), "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("GetGravity").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddExpression("MaxFallingSpeed", _("Maximum falling speed"), _("Get the maximum falling speed"), _("Options"), "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("GetMaxFallingSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddExpression("Acceleration", _("Acceleration"), _("Acceleration"), _("Options"), "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("GetAcceleration").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddExpression("Deceleration", _("Deceleration"), _("Deceleration"), _("Options"), "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("GetDeceleration").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddExpression("MaxSpeed", _("Maximum speed"), _("Maximum speed"), _("Options"), "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("GetMaxSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddExpression("JumpSpeed", _("Jump speed"), _("Jump speed"), _("Options"), "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("GetJumpSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
             #endif
         }
         {
@@ -90,6 +397,18 @@ public:
 
             #if defined(GD_IDE_ONLY)
             aut.SetIncludeFile("PlatformAutomatism/PlatformAutomatism.h");
+
+            aut.AddAction("ChangePlatformType",
+                           _("Change platform type"),
+                           _("Change the platform type of the object: Platform, Jumpthru or Ladder."),
+                           _("Set platform type of _PARAM0_ to _PARAM2_"),
+                           _("Platforms"),
+                           "CppPlatform/Extensions/platformicon24.png",
+                           "CppPlatform/Extensions/platformicon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformAutomatism")
+                .AddParameter("string", _("Platform type (\"Platform\", \"Jumpthru\" or \"Ladder\")"))
+                .codeExtraInformation.SetFunctionName("ChangePlatformType").SetIncludeFile("PlatformAutomatism/PlatformAutomatism.h");
             #endif
         }
 

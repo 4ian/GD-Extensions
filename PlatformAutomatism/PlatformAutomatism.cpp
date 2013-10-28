@@ -85,6 +85,13 @@ void PlatformAutomatism::DoStepPostEvents(RuntimeScene & scene)
 {
 
 }
+    
+void PlatformAutomatism::ChangePlatformType(const std::string & platformType_)
+{
+    if ( platformType_ == "Ladder" ) platformType = Ladder;
+    else if ( platformType_ == "Jumpthru" ) platformType = Jumpthru;
+    else platformType = NormalPlatform;
+}
 
 void PlatformAutomatism::OnActivate()
 {
@@ -139,9 +146,6 @@ std::map<std::string, gd::PropgridPropertyDescriptor> PlatformAutomatism::GetPro
         .AddExtraInfo(ToString(_("Jumpthru platform")))
         .AddExtraInfo(ToString(_("Ladder")));
     
-    properties[ToString(_("TrucMuche"))].SetValue("Test");
-    properties[ToString(_("TrucMucheChouette"))].SetValue("Test2");
-
     return properties;
 }
 

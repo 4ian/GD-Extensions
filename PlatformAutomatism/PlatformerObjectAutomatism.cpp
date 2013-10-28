@@ -55,12 +55,20 @@ PlatformerObjectAutomatism::PlatformerObjectAutomatism() :
     parentScene(NULL),
     sceneManager(NULL),
     isOnFloor(false),
+    isOnLadder(false),
     floorPlatform(NULL),
     currentFallSpeed(0),
     currentSpeed(0),
     jumping(false),
     currentJumpSpeed(0),
-    canJump(false)
+    canJump(false),
+    ignoreDefaultControls(false),
+    leftKey(false),
+    rightKey(false),
+    ladderKey(false),
+    upKey(false),
+    downKey(false),
+    jumpKey(false)
 {
 }
 
@@ -87,15 +95,15 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     double requestedDeltaY = 0;
 
     //Change the speed according to the player's input.
-    bool left = sf::Keyboard::isKeyPressed( sf::Keyboard::Left );
-    bool right = sf::Keyboard::isKeyPressed( sf::Keyboard::Right );
-    if ( left ) 
+    leftKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed( sf::Keyboard::Left );
+    rightKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed( sf::Keyboard::Right );
+    if ( leftKey ) 
         currentSpeed -= acceleration*timeDelta;
-    if ( right ) 
+    if ( rightKey ) 
         currentSpeed += acceleration*timeDelta;
 
     //Take deceleration into account only if no key is pressed.
-    if ( left == right )
+    if ( leftKey == rightKey )
     {
         bool wasPositive = currentSpeed>0;
         currentSpeed -= deceleration*timeDelta*(wasPositive ? 1.0 : -1.0);
@@ -109,7 +117,9 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     if (currentSpeed < -maxSpeed) currentSpeed = -maxSpeed;
     requestedDeltaX += currentSpeed*timeDelta;
 
+    //Compute the list of the objects that will be used
     std::set<PlatformAutomatism*> potentialObjects = GetPotentialCollidingObjects(std::max(requestedDeltaX, maxFallingSpeed));
+    std::set<PlatformAutomatism*> overlappedJumpThru = GetJumpthruCollidingWith(potentialObjects);
 
     //Check that the floor object still exists and is near the object.
     if ( isOnFloor && potentialObjects.find(floorPlatform) == potentialObjects.end() ) 
@@ -132,7 +142,9 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     if ( requestedDeltaX != 0 )
     {
         object->SetX(object->GetX()+requestedDeltaX);
-        while ( IsCollidingWith(potentialObjects, floorPlatform) ) //Colliding: Try to push out from the solid.
+        //Colliding: Try to push out from the solid.
+        //Note that jump thru are never obstacle on X axis.
+        while ( IsCollidingWith(potentialObjects, floorPlatform, /*excludeJumpthrus=*/true) ) 
         {
             if ( (requestedDeltaX > 0 && object->GetX() <= oldX) || 
                  (requestedDeltaX < 0 && object->GetX() >= oldX) )
@@ -145,7 +157,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
             if ( isOnFloor )
             {
                 object->SetY(object->GetY()-1);
-                if ( !IsCollidingWith(potentialObjects, floorPlatform) )
+                if ( !IsCollidingWith(potentialObjects, floorPlatform, /*excludeJumpthrus=*/true) )
                     break;
                 object->SetY(object->GetY()+1);
             }
@@ -157,8 +169,36 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
 
     //2) Y axis:
 
+    //Go on a ladder
+    ladderKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+    if (ladderKey && IsOverlappingLadder(potentialObjects))
+    {
+        canJump = true;
+        isOnFloor = false;
+        floorPlatform = NULL;
+        currentJumpSpeed = 0;
+        currentFallSpeed = 0;
+        isOnLadder = true;
+    }
+
+    if ( isOnLadder )
+    {
+        upKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+        downKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+        if ( upKey )
+            requestedDeltaY -= 150*timeDelta;
+        if ( downKey )
+            requestedDeltaY += 150*timeDelta;
+
+        //Coming to an extremity of a ladder
+        if ( !IsOverlappingLadder(potentialObjects) )
+        {
+            isOnLadder = false;
+        }
+    }
+
     //Fall
-    if (!isOnFloor) 
+    if (!isOnFloor && !isOnLadder) 
     {
         currentFallSpeed += gravity*timeDelta;
         if ( currentFallSpeed > maxFallingSpeed ) currentFallSpeed = maxFallingSpeed;
@@ -168,14 +208,15 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     }
 
     //Jumping
-    bool up = sf::Keyboard::isKeyPressed( sf::Keyboard::Up );
-    if ( canJump && up )
+    jumpKey |= !ignoreDefaultControls && (sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) || sf::Keyboard::isKeyPressed( sf::Keyboard::RShift ) );
+    if ( canJump && jumpKey )
     {
         jumping = true;
         canJump = false;
         //isOnFloor = false; If floor is a very steep slope, the object could go into it.
+        isOnLadder = false;
         currentJumpSpeed = jumpSpeed;
-        object->SetY(object->GetY()-1);
+        //object->SetY(object->GetY()-1);
     }
 
     if ( jumping )
@@ -253,7 +294,10 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     {
         double oldY = object->GetY();
         object->SetY(object->GetY()+requestedDeltaY);
-        while ( IsCollidingWith(potentialObjects) ) 
+
+        //Stop when colliding with an obstacle.
+        while (  (requestedDeltaY < 0 && IsCollidingWith(potentialObjects, NULL, /*excludeJumpThrus=*/true)) //Jumpthru = obstacle <=> Never when going up
+              || (requestedDeltaY > 0 && IsCollidingWith(potentialObjects, overlappedJumpThru)) ) //Jumpthru = obstacle <=> Only if not already overlapped when goign down
         {
             jumping = false;
             if ( (requestedDeltaY > 0 && object->GetY() <= oldY) || 
@@ -269,53 +313,80 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     }
 
     //3) Update the current floor data for the next tick:
-
-    //Check if the object is on a floor:
-    //In priority, check if the last floor platform is still the floor.
-    double oldY = object->GetY();
-    object->SetY(object->GetY()+1);
-    if ( isOnFloor && object->IsCollidingWith(floorPlatform->GetObject() ) ) 
+    overlappedJumpThru = GetJumpthruCollidingWith(potentialObjects);
+    if ( !isOnLadder )
     {
-        //Still on the same floor
-        floorLastX = floorPlatform->GetObject()->GetX();
-        floorLastY = floorPlatform->GetObject()->GetY();
-    }
-    else 
-    {
-        std::set<PlatformAutomatism*> collidingObjects = GetPlatformsCollidingWith(potentialObjects);
-        if ( !collidingObjects.empty() ) //Just landed on floor
+        //Check if the object is on a floor:
+        //In priority, check if the last floor platform is still the floor.
+        double oldY = object->GetY();
+        object->SetY(object->GetY()+1);
+        if ( isOnFloor && object->IsCollidingWith(floorPlatform->GetObject() ) ) 
         {
-            isOnFloor = true;
-            canJump = true;
-            jumping = false;
-            floorPlatform = *collidingObjects.begin();
+            //Still on the same floor
             floorLastX = floorPlatform->GetObject()->GetX();
             floorLastY = floorPlatform->GetObject()->GetY();
-            currentFallSpeed = 0;
         }
-        else //In the air
+        else 
         {
-            canJump = false;
-            isOnFloor = false;
-            floorPlatform = NULL;
-            std::cout << "AIR";
+            //Check if landing on a new floor: (Exclude already overlapped jump truh)
+            std::set<PlatformAutomatism*> collidingObjects = GetPlatformsCollidingWith(potentialObjects, overlappedJumpThru);
+            if ( !collidingObjects.empty() ) //Just landed on floor
+            {
+                isOnFloor = true;
+                canJump = true;
+                jumping = false;
+                floorPlatform = *collidingObjects.begin();
+                floorLastX = floorPlatform->GetObject()->GetX();
+                floorLastY = floorPlatform->GetObject()->GetY();
+                currentFallSpeed = 0;
+            }
+            else //In the air
+            {
+                canJump = false;
+                isOnFloor = false;
+                floorPlatform = NULL;
+            }
         }
+        object->SetY(oldY);
     }
-    object->SetY(oldY);
+
+    //4) Do not forget to reset pressed keys
+    leftKey = false;
+    rightKey = false;
+    ladderKey = false;
+    upKey = false;
+    downKey = false;
+    jumpKey = false;
 }
 
-std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingWith()
+std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+    const std::set<PlatformAutomatism*> & exceptTheseOnes)
 {
-    return GetPlatformsCollidingWith(sceneManager->GetAllPlatforms());
+    std::set<PlatformAutomatism*> result;
+    for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
+         it != candidates.end();
+         ++it)
+    {
+        if ( exceptTheseOnes.find(*it) != exceptTheseOnes.end() ) continue;
+        if ( (*it)->GetPlatformType() == PlatformAutomatism::Ladder ) continue;
+
+        if ( object->IsCollidingWith((*it)->GetObject()) )
+            result.insert(*it);
+    }
+
+    return result;
 }
 
-bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, PlatformAutomatism * exceptThisOne)
+bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+    PlatformAutomatism * exceptThisOne, bool excludeJumpThrus)
 {
     for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
          it != candidates.end();
          ++it)
     {
         if ( *it == exceptThisOne ) continue;
+        if ( (*it)->GetPlatformType() == PlatformAutomatism::Ladder ) continue;
+        if ( excludeJumpThrus && (*it)->GetPlatformType() == PlatformAutomatism::Jumpthru ) continue;
 
         if ( object->IsCollidingWith((*it)->GetObject()) )
             return true;
@@ -324,23 +395,51 @@ bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomati
     return false;
 }
 
-std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
-    PlatformAutomatism * exceptThisOne)
+bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+    const std::set<PlatformAutomatism*> & exceptTheseOnes)
+{
+    for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
+         it != candidates.end();
+         ++it)
+    {
+        if ( exceptTheseOnes.find(*it) != exceptTheseOnes.end() ) continue;
+        if ( (*it)->GetPlatformType() == PlatformAutomatism::Ladder ) continue;
+
+        if ( object->IsCollidingWith((*it)->GetObject()) )
+            return true;
+    }
+
+    return false;
+}
+
+std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetJumpthruCollidingWith(const std::set<PlatformAutomatism*> & candidates) 
 {
     std::set<PlatformAutomatism*> result;
     for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
          it != candidates.end();
          ++it)
     {
-        if ( *it == exceptThisOne ) continue;
-        //todo//if ( /*jumptru && */ (*it)->GetObject()->GetY()  )
+        if ( (*it)->GetPlatformType() != PlatformAutomatism::Jumpthru ) continue;
+        
         if ( object->IsCollidingWith((*it)->GetObject()) )
-        {
             result.insert(*it);
-        }
     }
 
     return result;
+}
+
+bool PlatformerObjectAutomatism::IsOverlappingLadder(const std::set<PlatformAutomatism*> & candidates)
+{
+    for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
+         it != candidates.end();
+         ++it)
+    {
+        if ( (*it)->GetPlatformType() != PlatformAutomatism::Ladder ) continue;
+        if ( object->IsCollidingWith((*it)->GetObject()) )
+            return true;
+    }
+
+    return false;
 }
 
 std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPotentialCollidingObjects(double maxMovementLength)
@@ -381,7 +480,16 @@ void PlatformerObjectAutomatism::DoStepPostEvents(RuntimeScene & scene)
         sceneManager = parentScene ? &ScenePlatformObjectsManager::managers[&scene] : NULL;
         floorPlatform = NULL;
     }
+}
 
+void PlatformerObjectAutomatism::SimulateControl(const std::string & input)
+{
+    if ( input == "Left" ) leftKey = true;
+    else if ( input == "Right" ) rightKey = true;
+    else if ( input == "Up" ) upKey = true;
+    else if ( input == "Down" ) downKey = true;
+    else if ( input == "Ladder" ) ladderKey = true;
+    else if ( input == "Jump" ) jumpKey = true;
 }
 
 void PlatformerObjectAutomatism::LoadFromXml(const TiXmlElement * elem)
@@ -392,6 +500,7 @@ void PlatformerObjectAutomatism::LoadFromXml(const TiXmlElement * elem)
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("deceleration", deceleration); 
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed); 
     GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed); 
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls); 
 }
 
 #if defined(GD_IDE_ONLY)
@@ -403,6 +512,7 @@ void PlatformerObjectAutomatism::SaveToXml(TiXmlElement * elem) const
     GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("deceleration", deceleration); 
     GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed); 
     GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed); 
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls); 
 }
 
 std::map<std::string, gd::PropgridPropertyDescriptor> PlatformerObjectAutomatism::GetProperties(gd::Project & project) const
@@ -410,17 +520,23 @@ std::map<std::string, gd::PropgridPropertyDescriptor> PlatformerObjectAutomatism
     std::map<std::string, gd::PropgridPropertyDescriptor> properties;
 
     properties[ToString(_("Gravity"))].SetValue(ToString(gravity));
+    properties[ToString(_("Jump speed"))].SetValue(ToString(jumpSpeed));
     properties[ToString(_("Max. falling speed"))].SetValue(ToString(maxFallingSpeed));
     properties[ToString(_("Acceleration"))].SetValue(ToString(acceleration));
     properties[ToString(_("Deceleration"))].SetValue(ToString(deceleration));
     properties[ToString(_("Max. speed"))].SetValue(ToString(maxSpeed));
-    properties[ToString(_("Jump speed"))].SetValue(ToString(jumpSpeed));
+    properties[ToString(_("Default controls"))].SetValue(ignoreDefaultControls ? "false" : "true").SetType("Boolean");
 
     return properties;
 }
 
 bool PlatformerObjectAutomatism::UpdateProperty(const std::string & name, const std::string & value, gd::Project & project)
 {
+    if ( name == ToString(_("Default controls")) ) {
+        ignoreDefaultControls = (value == "0");
+        return true;
+    }
+
     if ( ToDouble(value) < 0 ) return false;
 
     if ( name == ToString(_("Gravity")) )

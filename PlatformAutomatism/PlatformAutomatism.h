@@ -71,6 +71,12 @@ public:
      */
     PlatformType GetPlatformType() const { return platformType; }
 
+    /**
+     * \brief Change the platform type
+     * \param platformType The new platform type ("Platform", "Jumpthru" or "Ladder").
+     */
+    void ChangePlatformType(const std::string & platformType_);
+
     virtual void LoadFromXml(const TiXmlElement * elem);
     #if defined(GD_IDE_ONLY)
     virtual std::map<std::string, gd::PropgridPropertyDescriptor> GetProperties(gd::Project & project) const;

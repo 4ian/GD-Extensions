@@ -48,6 +48,34 @@ public:
     virtual ~PlatformerObjectAutomatism();
     virtual Automatism* Clone() const { return new PlatformerObjectAutomatism(*this); }
 
+    double GetGravity() const { return gravity; };
+    double GetMaxFallingSpeed() const { return maxFallingSpeed; };
+    double GetAcceleration() const { return acceleration; };
+    double GetDeceleration() const { return deceleration; };
+    double GetMaxSpeed() const { return maxSpeed; };
+    double GetJumpSpeed() const { return jumpSpeed; };
+
+    void SetGravity(double gravity_) { gravity = gravity_; };
+    void SetMaxFallingSpeed(double maxFallingSpeed_) { maxFallingSpeed = maxFallingSpeed_; };
+    void SetAcceleration(double acceleration_) { acceleration = acceleration_; };
+    void SetDeceleration(double deceleration_) { deceleration = deceleration_; };
+    void SetMaxSpeed(double maxSpeed_) { maxSpeed = maxSpeed_; };
+    void SetJumpSpeed(double jumpSpeed_) { jumpSpeed = jumpSpeed_; };
+
+    void IgnoreDefaultControls(bool ignore = true) { ignoreDefaultControls = ignore; };
+    void SimulateControl(const std::string & input);
+    void SimulateLeftKey() { leftKey = true; };
+    void SimulateRightKey() { rightKey = true; };
+    void SimulateLadderKey() { ladderKey = true; };
+    void SimulateUpKey() { upKey = true; };
+    void SimulateDownKey() { downKey = true; };
+    void SimulateJumpKey() { jumpKey = true; };
+
+    bool IsOnFloor() const { return isOnFloor; }
+    bool IsOnLadder() const { return isOnLadder; }
+    bool IsJumping() const { return jumping; }
+    bool IsFalling() const { return !isOnFloor && !isOnLadder && !jumping; }
+
     /**
      * \brief Load the automatism from XML
      */
@@ -75,24 +103,43 @@ private:
     std::set<PlatformAutomatism*> GetPotentialCollidingObjects(double maxMovementLength);
 
     /**
-     * \brief Return a list of all the platforms colliding with the object.
-     * \warning sceneManager must be valid and not NULL.
+     * \brief Among the platforms passed in parameter, return a list of the platforms colliding with the object.
+     * \note Ladders are *always* excluded from the test.
+     * \param candidates The platform to be tested for collision
+     * \param exceptTheseOnes The platforms to be excluded from the test
      */
-    std::set<PlatformAutomatism*> GetPlatformsCollidingWith();
+    std::set<PlatformAutomatism*> GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+        const std::set<PlatformAutomatism*> & exceptTheseOnes);
 
     /**
-     * \brief Among the platforms passed in paramater, return a list of the platforms colliding with the object..
+     * \brief Among the platforms passed in parameter, return true if there is a platform colliding with the object.
+     * \note Ladders are *always* excluded from the test.
      * \param candidates The platform to be tested for collision
      * \param exceptThisOne If not NULL, this platform won't be tested for collision.
+     * \param excludeJumpThrus If set to true, the jump thru platform will be excluded.
      */
-    std::set<PlatformAutomatism*> GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, PlatformAutomatism * exceptThisOne = NULL);
+    bool IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+        PlatformAutomatism * exceptThisOne = NULL, bool excludeJumpThrus = false);
 
     /**
-     * \brief Among the platforms passed in paramater, return true if there is a platform colliding with the object.
-     * \param candidates The platform to be tested for collision
-     * \param exceptThisOne If not NULL, this platform won't be tested for collision.
+     * \brief Among the platforms passed in parameter, return true if there is a platform colliding with the object.
+     * \note Ladders are *always* excluded from the test.
+     * \param candidates The platforms to be tested for collision
+     * \param exceptTheseOnes The platforms to be excluded from the test
      */
-    bool IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, PlatformAutomatism * exceptThisOne = NULL);
+    bool IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, const std::set<PlatformAutomatism*> & exceptTheseOnes);
+
+    /**
+     * \brief Among the platforms passed in parameter, return true if the object is overlapping a ladder.
+     * \param candidates The platform to be tested for collision
+     */
+    bool IsOverlappingLadder(const std::set<PlatformAutomatism*> & candidates);
+
+    /**
+     * \brief Among the platforms passed in parameter, return a list of the jump thru platforms colliding with the object.
+     * \param candidates The platform to be tested for collision
+     */
+    std::set<PlatformAutomatism*> GetJumpthruCollidingWith(const std::set<PlatformAutomatism*> & candidates);
 
     double gravity; //In pixels.seconds^-2
     double maxFallingSpeed; //In pixels.seconds^-1
@@ -104,6 +151,7 @@ private:
     RuntimeScene * parentScene; ///< The scene the object belongs to.
     ScenePlatformObjectsManager * sceneManager; ///< The platform objects manager associated to the scene.
     bool isOnFloor; ///< True if the object is on a floor.
+    bool isOnLadder; ///< True if the object is on a ladder.
     PlatformAutomatism * floorPlatform; ///< The platform the object is on, when isOnFloor == true.
     double floorLastX; ///< The last X position of the floor platform, when isOnFloor == true.
     double floorLastY; ///< The last Y position of the floor platform, when isOnFloor == true.
@@ -112,6 +160,14 @@ private:
     bool jumping; ///< True if the object is jumping.
     double currentJumpSpeed; ///< The current speed of the jump, when jumping == true.
     bool canJump; ///< True if the object can jump.
+
+    bool ignoreDefaultControls; ///< If set to true, do not track the default inputs.
+    bool leftKey;
+    bool rightKey;
+    bool ladderKey;
+    bool upKey;
+    bool downKey;
+    bool jumpKey;
 };
 #endif // PLATFORMEROBJECTAUTOMATISM_H
 
