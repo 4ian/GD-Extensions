@@ -61,6 +61,7 @@ public:
     void SetDeceleration(double deceleration_) { deceleration = deceleration_; };
     void SetMaxSpeed(double maxSpeed_) { maxSpeed = maxSpeed_; };
     void SetJumpSpeed(double jumpSpeed_) { jumpSpeed = jumpSpeed_; };
+    void SetCanJump() { canJump = true; };
 
     void IgnoreDefaultControls(bool ignore = true) { ignoreDefaultControls = ignore; };
     void SimulateControl(const std::string & input);
@@ -74,7 +75,10 @@ public:
     bool IsOnFloor() const { return isOnFloor; }
     bool IsOnLadder() const { return isOnLadder; }
     bool IsJumping() const { return jumping; }
-    bool IsFalling() const { return !isOnFloor && !isOnLadder && !jumping; }
+    bool IsFalling() const { return !isOnFloor && !isOnLadder && (!jumping || currentJumpSpeed < currentFallSpeed); }
+    bool IsMoving() const { return (currentSpeed != 0 && hasReallyMoved) || currentJumpSpeed != 0 || currentFallSpeed != 0; }
+
+    virtual void OnOwnerChanged();
 
     /**
      * \brief Load the automatism from XML
@@ -160,6 +164,11 @@ private:
     bool jumping; ///< True if the object is jumping.
     double currentJumpSpeed; ///< The current speed of the jump, when jumping == true.
     bool canJump; ///< True if the object can jump.
+    bool hasReallyMoved; ///< Used for IsMoving(): Only set to true when the object has moved from more than 1 pixel horizontally.
+
+    //Object size tracking:
+    bool trackSize; ///< If true, the automatism try to change the object position to avoid glitch when size change.
+    float oldHeight; ///< Object old height, used to track changes in height.
 
     bool ignoreDefaultControls; ///< If set to true, do not track the default inputs.
     bool leftKey;

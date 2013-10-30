@@ -62,6 +62,8 @@ PlatformerObjectAutomatism::PlatformerObjectAutomatism() :
     jumping(false),
     currentJumpSpeed(0),
     canJump(false),
+    hasReallyMoved(false),
+    trackSize(true),
     ignoreDefaultControls(false),
     leftKey(false),
     rightKey(false),
@@ -74,6 +76,11 @@ PlatformerObjectAutomatism::PlatformerObjectAutomatism() :
 
 PlatformerObjectAutomatism::~PlatformerObjectAutomatism()
 {
+}
+
+void PlatformerObjectAutomatism::OnOwnerChanged() 
+{
+    oldHeight = object->GetHeight();
 }
 
 void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
@@ -89,7 +96,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
 
     double timeDelta = static_cast<double>(scene.GetElapsedTime())/1000000.0;
 
-    //0) Get the player input:
+    //0.1) Get the player input:
 
     double requestedDeltaX = 0;
     double requestedDeltaY = 0;
@@ -127,6 +134,14 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
         isOnFloor = false;
         floorPlatform = NULL;
     }
+
+    //0.2) Track changes in object size
+
+    //Stick the object to the floor if its height has changed.
+    if ( trackSize && isOnFloor && oldHeight != object->GetHeight() && !scene.IsFirstLoop() )
+        object->SetY(object->GetY()+oldHeight-object->GetHeight());
+
+    oldHeight = object->GetHeight();
 
     //1) X axis:
 
@@ -216,6 +231,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
         //isOnFloor = false; If floor is a very steep slope, the object could go into it.
         isOnLadder = false;
         currentJumpSpeed = jumpSpeed;
+        currentFallSpeed = 0;
         //object->SetY(object->GetY()-1);
     }
 
@@ -300,6 +316,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
               || (requestedDeltaY > 0 && IsCollidingWith(potentialObjects, overlappedJumpThru)) ) //Jumpthru = obstacle <=> Only if not already overlapped when goign down
         {
             jumping = false;
+            currentJumpSpeed = 0;
             if ( (requestedDeltaY > 0 && object->GetY() <= oldY) || 
                  (requestedDeltaY < 0 && object->GetY() >= oldY) )
             {
@@ -335,6 +352,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
                 isOnFloor = true;
                 canJump = true;
                 jumping = false;
+                currentJumpSpeed = 0;
                 floorPlatform = *collidingObjects.begin();
                 floorLastX = floorPlatform->GetObject()->GetX();
                 floorLastY = floorPlatform->GetObject()->GetY();
@@ -357,6 +375,9 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     upKey = false;
     downKey = false;
     jumpKey = false;
+
+    //5) Track the movement
+    hasReallyMoved = abs(object->GetX()-oldX) >= 1;
 }
 
 std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 

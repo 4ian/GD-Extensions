@@ -38,6 +38,8 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
     this._potentialCollidingObjects = {}; //Hashtable of platforms (Keys: Objects id, values: automatisms) near the object, updated with _updatePotentialCollidingObjects.
     this._collidingObjects = {};
     this._overlappedJumpThru = {};
+    this._oldHeight = owner.getHeight();
+    this._hasReallyMoved = false;
 
 	//Create the shared manager if necessary.
 	if ( !gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.containsKey(runtimeScene.getName()) ) {
@@ -60,7 +62,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
     var object = this.owner;
     var timeDelta = runtimeScene.getElapsedTime()/1000;
 
-    //0) Get the player input:
+    //0.1) Get the player input:
     var requestedDeltaX = 0;
     var requestedDeltaY = 0;
 
@@ -93,6 +95,14 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
         this._isOnFloor = false;
         this._floorPlatform = null;
     }
+
+    //0.2) Track changes in object size
+
+    //Stick the object to the floor if its height has changed.
+    if ( this._isOnFloor && this._oldHeight !== object.getHeight() )
+        object.setY(object.getY()+this._oldHeight-object.getHeight());
+
+    this._oldHeight = object.getHeight();
 
     //1) X axis:
 
@@ -174,6 +184,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
         //this._isOnFloor = false; If floor is a very steep slope, the object could go into it.
         this._isOnLadder = false;
         this._currentJumpSpeed = this._jumpSpeed;
+        this._currentFallSpeed = 0;
         //object.setY(object.getY()-1); //Useless and dangerous
     }
 
@@ -248,6 +259,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
               || (requestedDeltaY > 0 && this._isCollidingWithExcluding(this._potentialCollidingObjects, this._overlappedJumpThru)) ) //Jumpthru = obstacle <=> Only if not already overlapped when goign down
         {
             this._jumping = false;
+            this._currentJumpSpeed = 0;
             if ( (requestedDeltaY > 0 && object.getY() <= oldY) || 
                  (requestedDeltaY < 0 && object.getY() >= oldY) ) {
                 object.setY(oldY); //Unable to move the object without being stuck in an obstacle.
@@ -280,6 +292,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
                     this._isOnFloor = true;
                     this._canJump = true;
                     this._jumping = false;
+                    this._currentJumpSpeed = 0;
                     this._currentFallSpeed = 0;
 
                     //Register one of the colliding platforms as the floor.
@@ -307,6 +320,9 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
     this._upKey = false;
     this._downKey = false;
     this._jumpKey = false;
+
+    //5) Track the movement
+    this._hasReallyMoved = Math.abs(object.getX()-oldX) >= 1;
 };
 
 gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPostEvents = function(runtimeScene) {
@@ -482,4 +498,109 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateControl = function(inpu
     else if ( input === "Down" ) this._downKey = true;
     else if ( input === "Ladder" ) this._ladderKey = true;
     else if ( input === "Jump" ) this._jumpKey = true;
+};
+
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getGravity = function() 
+{
+    return this._gravity;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getMaxFallingSpeed = function() 
+{
+    return this._maxFallingSpeed;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getAcceleration = function() 
+{
+    return this._acceleration;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getDeceleration = function() 
+{
+    return this._deceleration;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getMaxSpeed = function() 
+{
+    return this._maxSpeed;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getJumpSpeed = function() 
+{
+    return this._jumpSpeed;
+};
+
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setGravity = function(gravity)
+{
+    this._gravity = gravity;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setMaxFallingSpeed = function(maxFallingSpeed)
+{
+    this._maxFallingSpeed = maxFallingSpeed;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setAcceleration = function(acceleration)
+{
+    this._acceleration = acceleration;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setDeceleration = function(deceleration)
+{
+    this._deceleration = deceleration;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setMaxSpeed = function(maxSpeed)
+{
+    this._maxSpeed = maxSpeed;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setJumpSpeed = function(jumpSpeed)
+{
+    this._jumpSpeed = jumpSpeed;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setCanJump = function()
+{
+    this._canJump = true;
+};
+
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.ignoreDefaultControls = function(ignore)
+{
+    this._ignoreDefaultControls = ignore;
+};
+
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateLeftKey = function()
+{
+    this._leftKey = true;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateRightKey = function()
+{
+    this._rightKey = true;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateLadderKey = function()
+{
+    this._ladderKey = true;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateUpKey = function()
+{
+    this._upKey = true;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateDownKey = function()
+{
+    this._downKey = true;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateJumpKey = function()
+{
+    this._jumpKey = true;
+};
+
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.isOnFloor = function()
+{
+    return this._isOnFloor;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.isOnLadder = function()
+{
+    return this._isOnLadder;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.isJumping = function()
+{
+    return this._jumping;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.isFalling = function()
+{
+    return !this._isOnFloor && !this._isOnLadder && (!this._jumping || this._currentJumpSpeed < this._currentFallSpeed);
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.isMoving = function()
+{
+    return (this._hasReallyMoved &&this._currentSpeed !== 0) || this._currentJumpSpeed !== 0 || this._currentFallSpeed !== 0;
 };

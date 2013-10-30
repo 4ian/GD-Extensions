@@ -63,6 +63,17 @@ public:
             #if defined(GD_IDE_ONLY)
             aut.SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
 
+            aut.AddCondition("IsMoving",
+                           _("Is moving"),
+                           _("Check if the object is moving ( whether it is on the floor or in the air )."),
+                           _("_PARAM0_ is moving"),
+                           _(""),
+                           "CppPlatform/Extensions/platformerobjecticon24.png",
+                           "CppPlatform/Extensions/platformerobjecticon16.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("IsMoving").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
             aut.AddCondition("IsOnFloor",
                            _("Is on floor"),
                            _("Check if the object is on a platform."),
@@ -98,7 +109,7 @@ public:
 
             aut.AddCondition("IsFalling",
                            _("Is falling"),
-                           _("Check if the object is falling."),
+                           _("Check if the object is falling.\nNote that the object can be flagged as jumping and falling at the same time: At the end of a jump, the fall speed becomes higher that the jump speed."),
                            _("_PARAM0_ is falling"),
                            _(""),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -262,6 +273,17 @@ public:
                 .AddParameter("operator", _("Modification's sign"))
                 .AddParameter("expression", _("Value"))
                 .codeExtraInformation.SetFunctionName("SetJumpSpeed").SetManipulatedType("number").SetAssociatedGetter("GetJumpSpeed").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
+
+            aut.AddAction("SetCanJump",
+                           _("Allow again jumping"),
+                           _("Allow the object to jump again, even if it is in the air: this can be useful to allow double jump for example."),
+                           _("Allow _PARAM0_ to jump again"),
+                           _("Options"),
+                           "res/conditions/keyboard24.png",
+                           "res/conditions/keyboard.png")
+                .AddParameter("object", _("Object"))
+                .AddParameter("automatism", _("Automatism"), "PlatformerObjectAutomatism")
+                .codeExtraInformation.SetFunctionName("SetCanJump").SetIncludeFile("PlatformAutomatism/PlatformerObjectAutomatism.h");
 
             aut.AddAction("SimulateLeftKey",
                            _("Simulate left key press"),
