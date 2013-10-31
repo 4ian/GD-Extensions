@@ -4,28 +4,99 @@ Copyright (c) 2013 Florian Rival (Florian.Rival@gmail.com)
  */
 
 /**
- * Manage the common objects shared by objects having a 
- * platform automatism.
+ * PlatformObjectsManager manages the common objects shared by objects having a 
+ * platform automatism: In particular, the platforms automatisms are required to declare
+ * themselves ( see gdjs.PlatformObjectsManager.addPlatform ) to the manager of their associated scene 
+ * ( see gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers ).
+ *
+ * @class PlatformObjectsManager
+ * @namespace gdjs
+ * @constructor 
  */
 gdjs.PlatformObjectsManager = function(runtimeScene, sharedData)
 {
-	this._allPlatforms = new Hashtable();
+    this._platformsHSHG = new gdjs.HSHG.HSHG();
+    //this._hshgNeedUpdate = true; Useless: The automatisms track by themselves changes in objects size or position.
 };
 
+/**
+ * Add a platform to the list of existing platforms.
+ *
+ * @method addPlatform
+ */
 gdjs.PlatformObjectsManager.prototype.addPlatform = function(platformAutomatism) {
-    if ( !this._allPlatforms.containsKey(platformAutomatism.owner.id) ) {
-        this._allPlatforms.put(platformAutomatism.owner.id, platformAutomatism);
-    }
+    this._platformsHSHG.addObject(platformAutomatism);
 };
 
+/**
+ * Remove a platform from the list of existing platforms. Be sure that the platform was
+ * added before.
+ *
+ * @method removePlatform
+ */
 gdjs.PlatformObjectsManager.prototype.removePlatform = function(platformAutomatism) {
-    if ( this._allPlatforms.containsKey(platformAutomatism.owner.id) ) {
-        this._allPlatforms.remove(platformAutomatism.owner.id);
-    }
+    this._platformsHSHG.removeObject(platformAutomatism);
 };
 
-gdjs.PlatformObjectsManager.prototype.getAllPlatforms = function() {
-	return this._allPlatforms;
+/**
+ * Tool class which represents a simple point with a radius and a getAABB method.
+ * @class Vertex
+ * @namespace gdjs.PlatformObjectsManager
+ * @private
+ * @constructor 
+ */
+gdjs.PlatformObjectsManager.Vertex = function(x,y,radius) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+};
+     
+/**
+ * Return an axis aligned bouding box for the vertex.
+ * @method getAABB
+ */
+gdjs.PlatformObjectsManager.Vertex.prototype.getAABB = function(){
+    var rad = this.radius, x = this.x, y = this.y;
+    return this.aabb = { min: [ x - rad, y - rad ], max: [ x + rad, y + rad ] };
+};
+
+/**
+ * Returns all the platforms around the specified object.
+ * @param object {gdjs.RuntimeObject} The object
+ * @param maxMovementLength The maximum distance, in pixels, the object is going to do.
+ * @param result If defined, the platforms near the object will be inserted into result ( Using the identifier of their owner object as key ).
+ * @return If result is not defined, an array with all platforms near the object. Otherwise, nothing is returned.
+ * @method getAllPlatformsAround
+ */
+gdjs.PlatformObjectsManager.prototype.getAllPlatformsAround = function(object, maxMovementLength, result) {
+
+    var ow = object.getWidth();
+    var oh = object.getHeight();
+    var x = object.getDrawableX()+object.getCenterX();
+    var y = object.getDrawableY()+object.getCenterY();
+    var objBoundingRadius = Math.sqrt(ow*ow+oh*oh)/2.0 + maxMovementLength;
+
+    var vertex = new gdjs.PlatformObjectsManager.Vertex(x,y, objBoundingRadius);
+    this._platformsHSHG.addObject(vertex);
+    var platformsCollidingWithVertex = this._platformsHSHG.queryForCollisionWith(vertex);
+    this._platformsHSHG.removeObject(vertex);
+
+    if ( result === undefined )
+        return platformsCollidingWithVertex;
+    else {
+        //Clean the result object
+        for(var k in result) {
+            if ( result.hasOwnProperty(k) )
+                delete result[k];
+        }
+
+        //Insert platforms
+        for(var i = 0; i < platformsCollidingWithVertex.length; ++i) {
+            result[platformsCollidingWithVertex[i].owner.id] = platformsCollidingWithVertex[i];
+        }
+
+        return;
+    }
 };
 
 /**
@@ -33,6 +104,7 @@ gdjs.PlatformObjectsManager.prototype.getAllPlatforms = function() {
  * considered as a platform by objects having PlatformerObject Automatism.
  *
  * @class PlatformRuntimeAutomatism
+ * @namespace gdjs
  * @constructor 
  */
 gdjs.PlatformRuntimeAutomatism = function(runtimeScene, automatismData, owner)
@@ -47,6 +119,12 @@ gdjs.PlatformRuntimeAutomatism = function(runtimeScene, automatismData, owner)
         this._platformType = gdjs.PlatformRuntimeAutomatism.JUMPTHRU;
     else
         this._platformType = gdjs.PlatformRuntimeAutomatism.NORMALPLAFTORM;
+
+    //Note that we can't use getX(), getWidth()... of owner here: The owner is not fully constructed.
+    this._oldX = 0; 
+    this._oldY = 0; 
+    this._oldWidth = 0;
+    this._oldHeight = 0;
 
 	//Create the shared manager if necessary.
 	if ( !gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.containsKey(runtimeScene.getName()) ) {
@@ -84,6 +162,13 @@ gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene
         registeredInManager = false;
     }*/
 
+    //No need for update as we take care of this below.
+    /*if ( this._hshgNeedUpdate ) { 
+        this._manager._platformsHSHG.update();
+        this._manager._hshgNeedUpdate = false;
+    }*/
+
+    //Make sure the platform is or is not in the platforms manager.
     if (!this.activated() && this._registeredInManager) 
     {
         this._manager.removePlatform(this);
@@ -94,10 +179,29 @@ gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene
         this._manager.addPlatform(this);
         this._registeredInManager = true;
     }
+
+    //Track changes in size or position
+    if (this._oldX !== this.owner.getX() || this._oldY !== this.owner.getY() ||
+        this._oldWidth !== this.owner.getWidth() || this._oldHeight !== this.owner.getHeight())
+    {
+        if ( this._registeredInManager ) {
+            this._manager.removePlatform(this);
+            this._manager.addPlatform(this);
+        }
+
+        this._oldX = this.owner.getX();
+        this._oldY = this.owner.getY();
+        this._oldWidth = this.owner.getWidth();
+        this._oldHeight = this.owner.getHeight();
+    }
 };
 
 gdjs.PlatformRuntimeAutomatism.prototype.doStepPostEvents = function(runtimeScene) {
+    //this._manager._hshgNeedUpdate = true; //Useless, see above.
+};
 
+gdjs.PlatformRuntimeAutomatism.prototype.getAABB = function(){
+    return this.owner.getAABB();
 };
 
 gdjs.PlatformRuntimeAutomatism.prototype.onActivate = function() {

@@ -56,11 +56,13 @@ public:
 
         GetAutomatismMetadata("PlatformAutomatism::PlatformAutomatism")
             .SetIncludeFile("PlatformAutomatism/platformruntimeautomatism.js")
-            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js");
+            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js")
+            .AddIncludeFile("PlatformAutomatism/hshg.js");
 
         GetAutomatismMetadata("PlatformAutomatism::PlatformerObjectAutomatism")
             .SetIncludeFile("PlatformAutomatism/platformruntimeautomatism.js")
-            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js");
+            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js")
+            .AddIncludeFile("PlatformAutomatism/hshg.js");
 
         {
 

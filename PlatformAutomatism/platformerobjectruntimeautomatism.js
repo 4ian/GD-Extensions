@@ -462,7 +462,12 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype._isOverlappingLadder = function
  */
 gdjs.PlatformerObjectRuntimeAutomatism.prototype._updatePotentialCollidingObjects = function(maxMovementLength)
 {
-    var o1w = this.owner.getWidth();
+    this._manager.getAllPlatformsAround(this.owner, maxMovementLength, this._potentialCollidingObjects);
+
+    //This is the naive implementation when the platforms manager is simply containing a list
+    //of all existing platforms:
+    
+    /*var o1w = this.owner.getWidth();
     var o1h = this.owner.getHeight();
     var obj1BoundingRadius = Math.sqrt(o1w*o1w+o1h*o1h)/2.0 + maxMovementLength;
 
@@ -488,7 +493,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype._updatePotentialCollidingObject
                     delete this._potentialCollidingObjects[k];
             }
         }
-    }
+    }*/
 };
 
 gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateControl = function(input) {
