@@ -67,7 +67,7 @@ public:
                            _("Is moving"),
                            _("Check if the object is moving ( whether it is on the floor or in the air )."),
                            _("_PARAM0_ is moving"),
-                           _(""),
+                           "",
                            "CppPlatform/Extensions/platformerobjecticon24.png",
                            "CppPlatform/Extensions/platformerobjecticon16.png")
                 .AddParameter("object", _("Object"))
@@ -78,7 +78,7 @@ public:
                            _("Is on floor"),
                            _("Check if the object is on a platform."),
                            _("_PARAM0_ is on floor"),
-                           _(""),
+                           "",
                            "CppPlatform/Extensions/platformerobjecticon24.png",
                            "CppPlatform/Extensions/platformerobjecticon16.png")
                 .AddParameter("object", _("Object"))
@@ -89,7 +89,7 @@ public:
                            _("Is on ladder"),
                            _("Check if the object is on a ladder."),
                            _("_PARAM0_ is on ladder"),
-                           _(""),
+                           "",
                            "CppPlatform/Extensions/platformerobjecticon24.png",
                            "CppPlatform/Extensions/platformerobjecticon16.png")
                 .AddParameter("object", _("Object"))
@@ -100,7 +100,7 @@ public:
                            _("Is jumping"),
                            _("Check if the object is jumping."),
                            _("_PARAM0_ is jumping"),
-                           _(""),
+                           "",
                            "CppPlatform/Extensions/platformerobjecticon24.png",
                            "CppPlatform/Extensions/platformerobjecticon16.png")
                 .AddParameter("object", _("Object"))
@@ -111,7 +111,7 @@ public:
                            _("Is falling"),
                            _("Check if the object is falling.\nNote that the object can be flagged as jumping and falling at the same time: At the end of a jump, the fall speed becomes higher that the jump speed."),
                            _("_PARAM0_ is falling"),
-                           _(""),
+                           "",
                            "CppPlatform/Extensions/platformerobjecticon24.png",
                            "CppPlatform/Extensions/platformerobjecticon16.png")
                 .AddParameter("object", _("Object"))
