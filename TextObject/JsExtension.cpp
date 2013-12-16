@@ -85,11 +85,11 @@ public:
         GetAllConditionsForObject("TextObject::Text")["TextObject::IsItalic"].codeExtraInformation
             .SetFunctionName("isItalic").SetIncludeFile("TextObject/textruntimeobject.js");
 
-        GetAllExpressionsForObject("TextObject::Text")["TextObject::Opacity"].codeExtraInformation
+        GetAllExpressionsForObject("TextObject::Text")["Opacity"].codeExtraInformation
             .SetFunctionName("getOpacity").SetIncludeFile("TextObject/textruntimeobject.js");
-        GetAllExpressionsForObject("TextObject::Text")["TextObject::Angle"].codeExtraInformation
+        GetAllExpressionsForObject("TextObject::Text")["Angle"].codeExtraInformation
             .SetFunctionName("getAngle").SetIncludeFile("TextObject/textruntimeobject.js");
-        GetAllStrExpressionsForObject("TextObject::Text")["TextObject::String"].codeExtraInformation
+        GetAllStrExpressionsForObject("TextObject::Text")["String"].codeExtraInformation
             .SetFunctionName("getString").SetIncludeFile("TextObject/textruntimeobject.js");
 
         GetAllActionsForObject("TextObject::Text")["TextObject::ChangeColor"].codeExtraInformation

@@ -26,17 +26,15 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
         this._fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
     }
      
-    var text = objectData.String.attr.value;
-    if ( text.length === 0 ) text = " ";
+    this._str = objectData.String.attr.value;
     
-    if ( this._text == undefined ) this._text = new PIXI.Text(text, {align:"left"});
+    if ( this._text == undefined ) this._text = new PIXI.Text(" ", {align:"left"});
     this._text.anchor.x = 0.5;
     this._text.anchor.y = 0.5;
     runtimeScene.getLayer("").addChildToPIXIContainer(this._text, this.zOrder);
     
     this._updateTextStyle();
-    this._updateTextPosition();
-    this._text.updateText(); //Work around a PIXI.js bug.
+    this.setString(this._str);
 };
 
 gdjs.TextRuntimeObject.prototype = Object.create( gdjs.RuntimeObject.prototype );
@@ -53,7 +51,7 @@ gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
     if ( this._bold ) style.font += "bold ";
     //if ( this._underlined ) style.font += "underlined "; Not supported :/
     style.font += this._characterSize+"px"+" "+this._fontName;
-    style.fill = "#"+gdjs.rgbToHex(this._color[0], this._color[1], this._color[2]);
+    style.fill = "rgb("+this._color[0]+","+this._color[1]+","+this._color[2]+")";
     this._text.setStyle(style);
 };
 
@@ -83,7 +81,7 @@ gdjs.TextRuntimeObject.prototype.setOpacity = function(opacity) {
     if ( opacity > 255 ) opacity = 255;
 
     this.opacity = opacity;
-    this._text.alpha = opacity/255; 
+    this._text.alpha = opacity/255;
 };
 
 gdjs.TextRuntimeObject.prototype.getOpacity = function() {
@@ -91,12 +89,12 @@ gdjs.TextRuntimeObject.prototype.getOpacity = function() {
 };
 
 gdjs.TextRuntimeObject.prototype.getString = function() {
-    return this._text.text;
+    return this._str;
 };
 
 gdjs.TextRuntimeObject.prototype.setString = function(str) {
-    if ( str.length === 0 ) str = " ";
-    this._text.setText(str);
+    this._str = str;
+    this._text.setText(str.length === 0 ? " " : str);
     this._text.updateText(); //Work around a PIXI.js bug.
     this._updateTextPosition();
 };
@@ -150,7 +148,12 @@ gdjs.TextRuntimeObject.prototype.getHeight = function() {
 };
 
 gdjs.TextRuntimeObject.prototype.setColor = function(str) {
-    this._color = str.split(";");
+    var color = str.split(";");
+    if ( color.length < 3 ) return;
+
+    this._color[0] = parseInt(color[0]);
+    this._color[1] = parseInt(color[1]);
+    this._color[2] = parseInt(color[2]);
     this._updateTextStyle();
 };
 
