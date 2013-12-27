@@ -59,11 +59,11 @@ void GD_EXTENSION_API EncryptFile( const std::string & srcFile, const std::strin
     char * obuffer = new char[size];
     ifile.read(ibuffer,fsize);
 
-    ::AES crypt;
-    crypt.SetParameters(192);
-
-    crypt.StartEncryption(reinterpret_cast<const unsigned char*>(passwordWith24characters.c_str()));
-    crypt.Encrypt(reinterpret_cast<const unsigned char*>(ibuffer),reinterpret_cast<unsigned char*>(obuffer),size/16);
+    aes_ks_t keySetting;
+    aes_setks_encrypt(reinterpret_cast<const unsigned char*>(passwordWith24characters.c_str()), 192, &keySetting);
+    const unsigned char iv[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+    aes_cbc_encrypt(reinterpret_cast<const unsigned char*>(ibuffer), reinterpret_cast<unsigned char*>(obuffer), 
+        (uint8_t*)iv, size/AES_BLOCK_SIZE, &keySetting);
 
     ofile.write(obuffer,size);
 
@@ -96,11 +96,11 @@ void GD_EXTENSION_API DecryptFile( const std::string & srcFile, const std::strin
     char * obuffer = new char[size];
     ifile.read(ibuffer,fsize);
 
-    ::AES crypt;
-    crypt.SetParameters(192);
-
-    crypt.StartDecryption(reinterpret_cast<const unsigned char*>(passwordWith24characters.c_str()));
-    crypt.Decrypt(reinterpret_cast<const unsigned char*>(ibuffer),reinterpret_cast<unsigned char*>(obuffer),size/16);
+    aes_ks_t keySetting;
+    aes_setks_decrypt(reinterpret_cast<const unsigned char*>(passwordWith24characters.c_str()), 192, &keySetting);
+    const unsigned char iv[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+    aes_cbc_decrypt(reinterpret_cast<const unsigned char*>(ibuffer), reinterpret_cast<unsigned char*>(obuffer), 
+        (uint8_t*)iv, size/AES_BLOCK_SIZE, &keySetting);
 
     ofile.write(obuffer,size);
 

@@ -225,6 +225,7 @@ object(object_)
     m_mgr.Update();
 
     SetSize(800,640);
+    resourcesEditor->toolbar->Realize(); //Mandatory on linux to display the toolbar.
 }
 
 PanelSpriteObjectEditor::~PanelSpriteObjectEditor()
