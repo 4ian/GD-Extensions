@@ -46,5 +46,5 @@
 *.js~
 *.depend
 *.cpp~
-
+*.layout
 /.build
