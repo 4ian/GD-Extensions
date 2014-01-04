@@ -1,7 +1,7 @@
 /**
 
 Game Develop - TextEntry Object Extension
-Copyright (c) 2011-2013 Florian Rival (Florian.Rival@gmail.com)
+Copyright (c) 2011-2014 Florian Rival (Florian.Rival@gmail.com)
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -34,10 +34,10 @@ freely, subject to the following restrictions:
 #include "GDCpp/RuntimeScene.h"
 #include "TextEntryObject.h"
 #if defined(GD_IDE_ONLY)
+#include <wx/bitmap.h>
 #include "GDCore/IDE/ArbitraryResourceWorker.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
-#include "TextEntryObjectEditor.h"
 #endif
 
 using namespace std;

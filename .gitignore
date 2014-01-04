@@ -48,3 +48,5 @@
 *.cpp~
 *.layout
 /.build
+*.layout
+/TiledSpriteObject/*.layout
