@@ -72,15 +72,29 @@ PlatformerObjectAutomatism::PlatformerObjectAutomatism() :
     downKey(false),
     jumpKey(false)
 {
+    SetSlopeMaxAngle(45);
 }
 
 PlatformerObjectAutomatism::~PlatformerObjectAutomatism()
 {
 }
 
-void PlatformerObjectAutomatism::OnOwnerChanged() 
+void PlatformerObjectAutomatism::OnOwnerChanged()
 {
     oldHeight = object->GetHeight();
+}
+
+bool PlatformerObjectAutomatism::SetSlopeMaxAngle(double slopeMaxAngle_)
+{
+    if (slopeMaxAngle < 0 || slopeMaxAngle >= 90) return false;
+
+    slopeMaxAngle = slopeMaxAngle_;
+    if ( slopeMaxAngle == 45 )
+        slopeClimbingFactor = 1; //Avoid rounding errors
+    else
+        slopeClimbingFactor = tan(slopeMaxAngle*3.1415926/180);
+
+    return true;
 }
 
 void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
@@ -104,9 +118,9 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     //Change the speed according to the player's input.
     leftKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed( sf::Keyboard::Left );
     rightKey |= !ignoreDefaultControls && sf::Keyboard::isKeyPressed( sf::Keyboard::Right );
-    if ( leftKey ) 
+    if ( leftKey )
         currentSpeed -= acceleration*timeDelta;
-    if ( rightKey ) 
+    if ( rightKey )
         currentSpeed += acceleration*timeDelta;
 
     //Take deceleration into account only if no key is pressed.
@@ -129,7 +143,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     std::set<PlatformAutomatism*> overlappedJumpThru = GetJumpthruCollidingWith(potentialObjects);
 
     //Check that the floor object still exists and is near the object.
-    if ( isOnFloor && potentialObjects.find(floorPlatform) == potentialObjects.end() ) 
+    if ( isOnFloor && potentialObjects.find(floorPlatform) == potentialObjects.end() )
     {
         isOnFloor = false;
         floorPlatform = NULL;
@@ -146,7 +160,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     //1) X axis:
 
     //Shift the object according to the floor movement.
-    if ( isOnFloor ) 
+    if ( isOnFloor )
     {
         requestedDeltaX += floorPlatform->GetObject()->GetX() - floorLastX;
         requestedDeltaY += floorPlatform->GetObject()->GetY() - floorLastY;
@@ -159,9 +173,9 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
         object->SetX(object->GetX()+requestedDeltaX);
         //Colliding: Try to push out from the solid.
         //Note that jump thru are never obstacle on X axis.
-        while ( IsCollidingWith(potentialObjects, floorPlatform, /*excludeJumpthrus=*/true) ) 
+        while ( IsCollidingWith(potentialObjects, floorPlatform, /*excludeJumpthrus=*/true) )
         {
-            if ( (requestedDeltaX > 0 && object->GetX() <= oldX) || 
+            if ( (requestedDeltaX > 0 && object->GetX() <= oldX) ||
                  (requestedDeltaX < 0 && object->GetX() >= oldX) )
             {
                 object->SetX(oldX); //Unable to move the object without being stuck in an obstacle.
@@ -213,7 +227,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     }
 
     //Fall
-    if (!isOnFloor && !isOnLadder) 
+    if (!isOnFloor && !isOnLadder)
     {
         currentFallSpeed += gravity*timeDelta;
         if ( currentFallSpeed > maxFallingSpeed ) currentFallSpeed = maxFallingSpeed;
@@ -255,24 +269,24 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
             double oldY = object->GetY();
             int step = 0;
             bool stillInFloor = false;
-            do 
+            do
             {
-                if ( step >= floor(abs(requestedDeltaX)) ) //Slope is too step ( > 50% )
+                if ( step >= floor(abs(requestedDeltaX*slopeClimbingFactor)) ) //Slope is too step ( > max angle )
                 {
-                    object->SetY(object->GetY()-(abs(requestedDeltaX)-(double)step)); //Try to add the decimal part.
+                    object->SetY(object->GetY()-(abs(requestedDeltaX*slopeClimbingFactor)-(double)step)); //Try to add the decimal part.
                     if ( object->IsCollidingWith(floorPlatform->GetObject()) )
                         stillInFloor = true; //Too steep.
 
                     break;
                 }
-         
+
                 //Try to get out of the floor.
                 object->SetY(object->GetY()-1);
                 step++;
             }
             while ( object->IsCollidingWith(floorPlatform->GetObject() ) );
 
-            if ( stillInFloor ) 
+            if ( stillInFloor )
             {
                 object->SetY(oldY); //Unable to follow the floor ( too steep ): Go back to the original position.
                 object->SetX(oldX); //And also revert the shift on X axis.
@@ -287,7 +301,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
             bool noMoreOnFloor = false;
             while ( !IsCollidingWith(potentialObjects) )
             {
-                if ( step > abs(requestedDeltaX) ) //Slope is too step ( > 50% )
+                if ( step > abs(requestedDeltaX*slopeClimbingFactor) ) //Slope is too step ( > 50% )
                 {
                     noMoreOnFloor = true;
                     break;
@@ -300,7 +314,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
             if ( noMoreOnFloor )
                 object->SetY(oldY); //Unable to follow the floor: Go back to the original position. Fall will be triggered next tick.
             else
-                object->SetY(object->GetY()-1); //Floor touched: Go back 1 pixel over.   
+                object->SetY(object->GetY()-1); //Floor touched: Go back 1 pixel over.
         }
 
     }
@@ -317,7 +331,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
         {
             jumping = false;
             currentJumpSpeed = 0;
-            if ( (requestedDeltaY > 0 && object->GetY() <= oldY) || 
+            if ( (requestedDeltaY > 0 && object->GetY() <= oldY) ||
                  (requestedDeltaY < 0 && object->GetY() >= oldY) )
             {
                 object->SetY(oldY); //Unable to move the object without being stuck in an obstacle.
@@ -337,13 +351,13 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
         //In priority, check if the last floor platform is still the floor.
         double oldY = object->GetY();
         object->SetY(object->GetY()+1);
-        if ( isOnFloor && object->IsCollidingWith(floorPlatform->GetObject() ) ) 
+        if ( isOnFloor && object->IsCollidingWith(floorPlatform->GetObject() ) )
         {
             //Still on the same floor
             floorLastX = floorPlatform->GetObject()->GetX();
             floorLastY = floorPlatform->GetObject()->GetY();
         }
-        else 
+        else
         {
             //Check if landing on a new floor: (Exclude already overlapped jump truh)
             std::set<PlatformAutomatism*> collidingObjects = GetPlatformsCollidingWith(potentialObjects, overlappedJumpThru);
@@ -380,7 +394,7 @@ void PlatformerObjectAutomatism::DoStepPreEvents(RuntimeScene & scene)
     hasReallyMoved = abs(object->GetX()-oldX) >= 1;
 }
 
-std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates,
     const std::set<PlatformAutomatism*> & exceptTheseOnes)
 {
     std::set<PlatformAutomatism*> result;
@@ -398,7 +412,7 @@ std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetPlatformsCollidingW
     return result;
 }
 
-bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates,
     PlatformAutomatism * exceptThisOne, bool excludeJumpThrus)
 {
     for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
@@ -416,7 +430,7 @@ bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomati
     return false;
 }
 
-bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomatism*> & candidates,
     const std::set<PlatformAutomatism*> & exceptTheseOnes)
 {
     for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
@@ -433,7 +447,7 @@ bool PlatformerObjectAutomatism::IsCollidingWith(const std::set<PlatformAutomati
     return false;
 }
 
-std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetJumpthruCollidingWith(const std::set<PlatformAutomatism*> & candidates) 
+std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetJumpthruCollidingWith(const std::set<PlatformAutomatism*> & candidates)
 {
     std::set<PlatformAutomatism*> result;
     for (std::set<PlatformAutomatism*>::iterator it = candidates.begin();
@@ -441,7 +455,7 @@ std::set<PlatformAutomatism*> PlatformerObjectAutomatism::GetJumpthruCollidingWi
          ++it)
     {
         if ( (*it)->GetPlatformType() != PlatformAutomatism::Jumpthru ) continue;
-        
+
         if ( object->IsCollidingWith((*it)->GetObject()) )
             result.insert(*it);
     }
@@ -515,25 +529,28 @@ void PlatformerObjectAutomatism::SimulateControl(const std::string & input)
 
 void PlatformerObjectAutomatism::LoadFromXml(const TiXmlElement * elem)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("gravity", gravity); 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxFallingSpeed", maxFallingSpeed); 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("acceleration", acceleration); 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("deceleration", deceleration); 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed); 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed); 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls); 
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("gravity", gravity);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxFallingSpeed", maxFallingSpeed);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("acceleration", acceleration);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("deceleration", deceleration);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("slopeMaxAngle", slopeMaxAngle);
 }
 
 #if defined(GD_IDE_ONLY)
 void PlatformerObjectAutomatism::SaveToXml(TiXmlElement * elem) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("gravity", gravity); 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxFallingSpeed", maxFallingSpeed); 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("acceleration", acceleration); 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("deceleration", deceleration); 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed); 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed); 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls); 
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("gravity", gravity);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxFallingSpeed", maxFallingSpeed);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("acceleration", acceleration);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("deceleration", deceleration);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("slopeMaxAngle", slopeMaxAngle);
+
 }
 
 std::map<std::string, gd::PropgridPropertyDescriptor> PlatformerObjectAutomatism::GetProperties(gd::Project & project) const
@@ -547,6 +564,7 @@ std::map<std::string, gd::PropgridPropertyDescriptor> PlatformerObjectAutomatism
     properties[ToString(_("Deceleration"))].SetValue(ToString(deceleration));
     properties[ToString(_("Max. speed"))].SetValue(ToString(maxSpeed));
     properties[ToString(_("Default controls"))].SetValue(ignoreDefaultControls ? "false" : "true").SetType("Boolean");
+    properties[ToString(_("Slope max. angle"))].SetValue(ToString(slopeMaxAngle));
 
     return properties;
 }
@@ -572,7 +590,9 @@ bool PlatformerObjectAutomatism::UpdateProperty(const std::string & name, const 
         maxSpeed = ToDouble(value);
     else if ( name == ToString(_("Jump speed")) )
         jumpSpeed = ToDouble(value);
-    else 
+    else if ( name == ToString(_("Slope max. angle")) )
+        return SetSlopeMaxAngle(ToDouble(value));
+    else
         return false;
 
     return true;
