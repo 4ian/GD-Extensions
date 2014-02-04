@@ -117,12 +117,18 @@ void PhysicsAutomatism::DoStepPostEvents(RuntimeScene & scene)
     float newHeight = object->GetHeight();
     if ( (int)objectOldWidth != (int)newWidth || (int)objectOldHeight != (int)newHeight )
     {
-            /*std::cout << "Changed:" << (int)objectOldWidth << "!=" << (int)newWidth << std::endl;
-            std::cout << "Changed:" << (int)objectOldHeight << "!=" << (int)newHeight << std::endl;
-            std::cout << "( Object name:" << object->GetName() << std::endl;*/
+        /*std::cout << "Changed:" << (int)objectOldWidth << "!=" << (int)newWidth << std::endl;
+        std::cout << "Changed:" << (int)objectOldHeight << "!=" << (int)newHeight << std::endl;
+        std::cout << "( Object name:" << object->GetName() << std::endl;*/
+
+        double oldAngularVelocity = body->GetAngularVelocity();
+        b2Vec2 oldVelocity = body->GetLinearVelocity();
 
         runtimeScenesPhysicsDatas->world->DestroyBody(body);
         CreateBody(scene);
+
+        body->SetAngularVelocity(oldAngularVelocity);
+        body->SetLinearVelocity(oldVelocity);
     }
 
     runtimeScenesPhysicsDatas->stepped = false; //Prepare for a new simulation
@@ -226,7 +232,8 @@ void PhysicsAutomatism::CreateBody(const RuntimeScene & scene)
         b2FixtureDef fixtureDef;
 
         b2PolygonShape dynamicBox;
-        dynamicBox.SetAsBox((object->GetWidth() > 0 ? object->GetWidth() : 1.0f)*runtimeScenesPhysicsDatas->GetInvScaleX()/2, (object->GetHeight() > 0 ? object->GetHeight() : 1.0f)*runtimeScenesPhysicsDatas->GetInvScaleY()/2);
+        dynamicBox.SetAsBox((object->GetWidth() > 0 ? object->GetWidth() : 1.0f)*runtimeScenesPhysicsDatas->GetInvScaleX()/2,
+            (object->GetHeight() > 0 ? object->GetHeight() : 1.0f)*runtimeScenesPhysicsDatas->GetInvScaleY()/2);
         fixtureDef.shape = &dynamicBox;
         fixtureDef.density = massDensity;
         fixtureDef.friction = averageFriction;

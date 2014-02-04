@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 //*)
 #include <wx/log.h>
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
-#include "GDCore/IDE/wxTools/SkinHelper.h"
+#include "GDCore/IDE/SkinHelper.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
