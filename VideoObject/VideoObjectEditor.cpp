@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 #include <wx/string.h>
 //*)
 #include <wx/msgdlg.h>
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
 #include <wx/colordlg.h>
 #include <wx/filename.h>
 #include <wx/filedlg.h>
@@ -171,7 +171,7 @@ void VideoObjectEditor::OnconverterBtClick(wxCommandEvent& event)
 {
     if ( !wxFileExists(wxGetCwd()+"/Extensions/ffmpeg2theora.exe"))
     {
-        wxLogError(_("ffmpeg2theora.exe executable was not found in Extensions directory of Game Develop."));
+        gd::LogError(_("ffmpeg2theora.exe executable was not found in Extensions directory of Game Develop."));
         return;
     }
 
@@ -185,7 +185,7 @@ void VideoObjectEditor::OnconverterBtClick(wxCommandEvent& event)
 
         wxProgressDialog dialog(_("Converting"), _("Please wait during conversion"));
         wxExecute(wxGetCwd()+"/Extensions/ffmpeg2theora.exe "+fileDialog.GetPath()+parameters, wxEXEC_SYNC);;
-        wxLogMessage(_("Conversion ended."));
+        gd::LogMessage(_("Conversion ended."));
     }
 }
 

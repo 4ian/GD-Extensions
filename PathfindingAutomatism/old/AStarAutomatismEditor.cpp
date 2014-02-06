@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 #include <wx/intl.h>
 #include <wx/string.h>
 //*)
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
 #include "GDCpp/Project.h"
 #include "AStarAutomatism.h"
 #include "SceneAStarDatas.h"
@@ -166,7 +166,7 @@ scene(scene_)
     //Setup shared datas
 	if ( !scene || scene->automatismsInitialSharedDatas.find(automatism.GetName()) == scene->automatismsInitialSharedDatas.end())
 	{
-	    wxLogError(_("Unable to access to shared datas."));
+	    gd::LogError(_("Unable to access to shared datas."));
 	    return;
 	}
 
@@ -174,7 +174,7 @@ scene(scene_)
 
     if ( sharedDatas == boost::shared_ptr<SceneAStarDatas>() )
     {
-	    wxLogError(_("Unable to access to shared datas : Bad data type."));
+	    gd::LogError(_("Unable to access to shared datas : Bad data type."));
 	    return;
     }
 

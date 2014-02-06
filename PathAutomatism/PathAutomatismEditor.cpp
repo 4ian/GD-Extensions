@@ -39,7 +39,8 @@ freely, subject to the following restrictions:
 #include <limits>
 #include <algorithm>
 #include <boost/shared_ptr.hpp>
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
+#include "GDCore/Tools/Localization.h"
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
@@ -342,7 +343,7 @@ PathAutomatismEditor::PathAutomatismEditor(wxWindow* parent, gd::Project & game_
     //Setup shared datas
 	if ( !scene || scene->automatismsInitialSharedDatas.find(automatism.GetName()) == scene->automatismsInitialSharedDatas.end())
 	{
-	    wxLogError(_("Unable to access to shared datas."));
+	    gd::LogError(_("Unable to access to shared datas."));
 	    return;
 	}
 
@@ -350,7 +351,7 @@ PathAutomatismEditor::PathAutomatismEditor(wxWindow* parent, gd::Project & game_
 
     if ( sharedDatas == boost::shared_ptr<ScenePathDatas>() )
     {
-	    wxLogError(_("Unable to access to shared datas : Bad data type."));
+	    gd::LogError(_("Unable to access to shared datas : Bad data type."));
 	    return;
     }
 

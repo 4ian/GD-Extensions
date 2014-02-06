@@ -28,12 +28,7 @@ freely, subject to the following restrictions:
 #include "GDCore/Tools/Version.h"
 #include <boost/version.hpp>
 #include <iostream>
-#include <wx/intl.h>
-//Ensure the wxWidgets macro "_" returns a std::string
-#if defined(_)
-    #undef _
-#endif
-#define _(s) std::string(wxGetTranslation((s)).mb_str())
+#include "GDCore/Tools/Localization.h"
 
 /**
  * \brief This class declares information about the JS extension.

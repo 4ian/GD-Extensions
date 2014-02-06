@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 #include <wx/image.h>
 #include <wx/string.h>
 //*)
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
 #include <wx/msgdlg.h>
 #include <wx/colordlg.h>
 #include <wx/filedlg.h>
@@ -44,6 +44,7 @@ freely, subject to the following restrictions:
 #include "ParticleEmitterObject.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
 #include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
+#include "GDCore/Tools/Localization.h"
 
 using namespace std;
 
@@ -1135,7 +1136,7 @@ void ParticleEmitterObjectEditor::OnimageChooseBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( editorImagesPnl ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 
