@@ -1,41 +1,41 @@
 /**
-Game Develop - Platform Automatism Extension
+Game Develop - Pathfinding Automatism Extension
 Copyright (c) 2013-2014 Florian Rival (Florian.Rival@gmail.com)
  */
 
 /**
  * PathfindingObstaclesManager manages the common objects shared by objects having a
- * platform automatism: In particular, the platforms automatisms are required to declare
- * themselves ( see gdjs.PathfindingObstaclesManager.addPlatform ) to the manager of their associated scene
- * ( see gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers ).
+ * pathfinding automatism: In particular, the obstacles automatisms are required to declare
+ * themselves ( see gdjs.PathfindingObstaclesManager.addObstacle ) to the manager of their associated scene
+ * ( see gdjs.PathfindingRuntimeAutomatism.obstaclesManagers ).
  *
  * @class PathfindingObstaclesManager
  * @namespace gdjs
  * @constructor
  */
-gdjs.PathfindingObstaclesManager = function(runtimeScene, sharedData)
+gdjs.PathfindingObstaclesManager = function(runtimeScene)
 {
-    this._platformsHSHG = new gdjs.HSHG.HSHG();
+    this._obstaclesHSHG = new gdjs.HSHG.HSHG();
     //this._hshgNeedUpdate = true; Useless: The automatisms track by themselves changes in objects size or position.
 };
 
 /**
- * Add a platform to the list of existing platforms.
+ * Add a obstacle to the list of existing obstacles.
  *
- * @method addPlatform
+ * @method addObstacle
  */
-gdjs.PathfindingObstaclesManager.prototype.addPlatform = function(platformAutomatism) {
-    this._platformsHSHG.addObject(platformAutomatism);
+gdjs.PathfindingObstaclesManager.prototype.addObstacle = function(pathfindingObstacleAutomatism) {
+    this._obstaclesHSHG.addObject(pathfindingObstacleAutomatism);
 };
 
 /**
- * Remove a platform from the list of existing platforms. Be sure that the platform was
+ * Remove a obstacle from the list of existing obstacles. Be sure that the obstacle was
  * added before.
  *
- * @method removePlatform
+ * @method removeObstacle
  */
-gdjs.PathfindingObstaclesManager.prototype.removePlatform = function(platformAutomatism) {
-    this._platformsHSHG.removeObject(platformAutomatism);
+gdjs.PathfindingObstaclesManager.prototype.removeObstacle = function(pathfindingObstacleAutomatism) {
+    this._obstaclesHSHG.removeObject(pathfindingObstacleAutomatism);
 };
 
 /**
@@ -61,28 +61,22 @@ gdjs.PathfindingObstaclesManager.Vertex.prototype.getAABB = function(){
 };
 
 /**
- * Returns all the platforms around the specified object.
- * @param object {gdjs.RuntimeObject} The object
- * @param maxMovementLength The maximum distance, in pixels, the object is going to do.
- * @param result If defined, the platforms near the object will be inserted into result ( Using the identifier of their owner object as key ).
- * @return If result is not defined, an array with all platforms near the object. Otherwise, nothing is returned.
- * @method getAllPlatformsAround
+ * Returns all the obstacles around the specified position.
+ * @param x X position
+ * @param y Y position
+ * @param radius The radius of the search
+ * @param result If defined, the obstacles near the object will be inserted into result (Using the identifier of their owner object as key).
+ * @return If result is not defined, an array with all obstacles near the position. Otherwise, nothing is returned.
+ * @method getAllObstaclesAround
  */
-gdjs.PathfindingObstaclesManager.prototype.getAllPlatformsAround = function(object, maxMovementLength, result) {
-
-    var ow = object.getWidth();
-    var oh = object.getHeight();
-    var x = object.getDrawableX()+object.getCenterX();
-    var y = object.getDrawableY()+object.getCenterY();
-    var objBoundingRadius = Math.sqrt(ow*ow+oh*oh)/2.0 + maxMovementLength;
-
-    var vertex = new gdjs.PathfindingObstaclesManager.Vertex(x,y, objBoundingRadius);
-    this._platformsHSHG.addObject(vertex);
-    var platformsCollidingWithVertex = this._platformsHSHG.queryForCollisionWith(vertex);
-    this._platformsHSHG.removeObject(vertex);
+gdjs.PathfindingObstaclesManager.prototype.getAllObstaclesAround = function(x, y, radius, result) {
+    var vertex = new gdjs.PathfindingObstaclesManager.Vertex(x,y, radius);
+    this._obstaclesHSHG.addObject(vertex);
+    var obstaclesCollidingWithVertex = this._obstaclesHSHG.queryForCollisionWith(vertex);
+    this._obstaclesHSHG.removeObject(vertex);
 
     if ( result === undefined )
-        return platformsCollidingWithVertex;
+        return obstaclesCollidingWithVertex;
     else {
         //Clean the result object
         for(var k in result) {
@@ -90,9 +84,9 @@ gdjs.PathfindingObstaclesManager.prototype.getAllPlatformsAround = function(obje
                 delete result[k];
         }
 
-        //Insert platforms
-        for(var i = 0; i < platformsCollidingWithVertex.length; ++i) {
-            result[platformsCollidingWithVertex[i].owner.id] = platformsCollidingWithVertex[i];
+        //Insert obstacles
+        for(var i = 0; i < obstaclesCollidingWithVertex.length; ++i) {
+            result[obstaclesCollidingWithVertex[i].owner.id] = obstaclesCollidingWithVertex[i];
         }
 
         return;
@@ -100,62 +94,50 @@ gdjs.PathfindingObstaclesManager.prototype.getAllPlatformsAround = function(obje
 };
 
 /**
- * PlatformRuntimeAutomatism represents an automatism allowing objects to be
- * considered as a platform by objects having PlatformerObject Automatism.
+ * PathfindingObstacleRuntimeAutomatism represents an automatism allowing objects to be
+ * considered as a obstacle by objects having Pathfinding Automatism.
  *
- * @class PlatformRuntimeAutomatism
+ * @class PathfindingObstacleRuntimeAutomatism
  * @namespace gdjs
  * @constructor
  */
-gdjs.PlatformRuntimeAutomatism = function(runtimeScene, automatismData, owner)
+gdjs.PathfindingObstacleRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
-    //Load the platform type
-    this._platformType = automatismData.attr.platformType;
-    if ( this._platformType == "Ladder" )
-        this._platformType = gdjs.PlatformRuntimeAutomatism.LADDER;
-    else if ( this._platformType == "Jumpthru" )
-        this._platformType = gdjs.PlatformRuntimeAutomatism.JUMPTHRU;
-    else
-        this._platformType = gdjs.PlatformRuntimeAutomatism.NORMALPLAFTORM;
-
-    //Note that we can't use getX(), getWidth()... of owner here: The owner is not fully constructed.
-    this._oldX = 0;
-    this._oldY = 0;
+    //Load the automatism
+    this._impassable = automatismData.attr.impassable === "true";
+    this._cost = parseFloat(automatismData.attr.cost, 10);
+    this._oldX = 0; //Note that we can't use getX(), getWidth()... of owner here:
+    this._oldY = 0; //The owner is not yet fully constructed.
     this._oldWidth = 0;
     this._oldHeight = 0;
 
 	//Create the shared manager if necessary.
-	if ( !gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.containsKey(runtimeScene.getName()) ) {
+	if ( !gdjs.PathfindingObstacleRuntimeAutomatism.obstaclesManagers.containsKey(runtimeScene.getName()) ) {
 		var manager = new gdjs.PathfindingObstaclesManager(runtimeScene);
-		gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.put(runtimeScene.getName(), manager);
+		gdjs.PathfindingObstacleRuntimeAutomatism.obstaclesManagers.put(runtimeScene.getName(), manager);
 	}
-	this._manager = gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.get(runtimeScene.getName());
+	this._manager = gdjs.PathfindingObstacleRuntimeAutomatism.obstaclesManagers.get(runtimeScene.getName());
 
 	this._registeredInManager = false;
-
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype = Object.create( gdjs.RuntimeAutomatism.prototype );
-gdjs.PlatformRuntimeAutomatism.thisIsARuntimeAutomatismConstructor = "PlatformAutomatism::PlatformAutomatism";
-gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers = new Hashtable();
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype = Object.create( gdjs.RuntimeAutomatism.prototype );
+gdjs.PathfindingObstacleRuntimeAutomatism.thisIsARuntimeAutomatismConstructor = "PathfindingAutomatism::PathfindingObstacleAutomatism";
+gdjs.PathfindingObstacleRuntimeAutomatism.obstaclesManagers = new Hashtable();
 
-gdjs.PlatformRuntimeAutomatism.LADDER = 2;
-gdjs.PlatformRuntimeAutomatism.JUMPTHRU = 1;
-gdjs.PlatformRuntimeAutomatism.NORMALPLAFTORM = 0;
-
-gdjs.PlatformRuntimeAutomatism.prototype.ownerRemovedFromScene = function() {
-	if ( this._manager && this._registeredInManager ) this._manager.removePlatform(this);
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.ownerRemovedFromScene = function() {
+	if ( this._manager && this._registeredInManager ) this._manager.removeObstacle(this);
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene) {
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene) {
 
     //Scene change is not supported
     /*if ( parentScene != &scene ) //Parent scene has changed
     {
         if ( sceneManager ) //Remove the object from any old scene manager.
-            sceneManager->RemovePlatform(this);
+            sceneManager->RemoveObstacle(this);
 
         parentScene = &scene;
         sceneManager = parentScene ? &ScenePathfindingObstaclesManager::managers[&scene] : NULL;
@@ -164,19 +146,19 @@ gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene
 
     //No need for update as we take care of this below.
     /*if ( this._hshgNeedUpdate ) {
-        this._manager._platformsHSHG.update();
+        this._manager._obstaclesHSHG.update();
         this._manager._hshgNeedUpdate = false;
     }*/
 
-    //Make sure the platform is or is not in the platforms manager.
+    //Make sure the obstacle is or is not in the obstacles manager.
     if (!this.activated() && this._registeredInManager)
     {
-        this._manager.removePlatform(this);
+        this._manager.removeObstacle(this);
         this._registeredInManager = false;
     }
     else if (this.activated() && !this._registeredInManager)
     {
-        this._manager.addPlatform(this);
+        this._manager.addObstacle(this);
         this._registeredInManager = true;
     }
 
@@ -185,8 +167,8 @@ gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene
         this._oldWidth !== this.owner.getWidth() || this._oldHeight !== this.owner.getHeight())
     {
         if ( this._registeredInManager ) {
-            this._manager.removePlatform(this);
-            this._manager.addPlatform(this);
+            this._manager.removeObstacle(this);
+            this._manager.addObstacle(this);
         }
 
         this._oldX = this.owner.getX();
@@ -196,32 +178,36 @@ gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene
     }
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.doStepPostEvents = function(runtimeScene) {
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.doStepPostEvents = function(runtimeScene) {
     //this._manager._hshgNeedUpdate = true; //Useless, see above.
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.getAABB = function(){
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.getAABB = function(){
     return this.owner.getAABB();
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.onActivate = function() {
-    this._manager.addPlatform(this);
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.onActivate = function() {
+    this._manager.addObstacle(this);
     this._registeredInManager = true;
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.onDeActivate = function() {
-    this._manager.removePlatform(this);
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.onDeActivate = function() {
+    this._manager.removeObstacle(this);
     this._registeredInManager = false;
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.changePlatformType = function(platformType)
-{
-    if ( platformType === "Ladder" ) this._platformType = gdjs.PlatformRuntimeAutomatism.LADDER;
-    else if ( platformType === "Jumpthru" ) this._platformType = gdjs.PlatformRuntimeAutomatism.JUMPTHRU;
-    else this._platformType = gdjs.PlatformRuntimeAutomatism.NORMALPLAFTORM;
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.getCost = function() {
+    return this._cost;
 };
 
-gdjs.PlatformRuntimeAutomatism.prototype.getPlatformType = function()
-{
-    return this._platformType;
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.setCost = function(cost) {
+    this._cost = cost;
+};
+
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.isImpassable = function() {
+    return this._impassable;
+};
+
+gdjs.PathfindingObstacleRuntimeAutomatism.prototype.setImpassable = function(impassable) {
+    this._impassable = impassable;
 };

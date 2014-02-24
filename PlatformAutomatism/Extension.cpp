@@ -52,7 +52,7 @@ public:
         {
             gd::AutomatismMetadata & aut = AddAutomatism("PlatformerObjectAutomatism",
                   _("Platformer object"),
-                  _("PlatformerObject"),
+                  "PlatformerObject",
                   _("Controllable object which can jump and run on platforms."),
                   "",
                   "CppPlatform/Extensions/platformerobjecticon.png",
@@ -409,7 +409,7 @@ public:
         {
             gd::AutomatismMetadata & aut = AddAutomatism("PlatformAutomatism",
                   _("Platform"),
-                  _("Platform"),
+                  "Platform",
                   _("Platform on which Platformer objects can run."),
                   "",
                   "CppPlatform/Extensions/platformicon.png",

@@ -35,7 +35,7 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 #include <iostream>
 #include <map>
-#include <wx/intl.h>
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
 #endif
 
@@ -43,7 +43,9 @@ freely, subject to the following restrictions:
 PathfindingObstacleAutomatism::PathfindingObstacleAutomatism() :
     parentScene(NULL),
     sceneManager(NULL),
-    registeredInManager(false)
+    registeredInManager(false),
+    impassable(true),
+    cost(2)
 {
 }
 
@@ -103,25 +105,41 @@ void PathfindingObstacleAutomatism::OnDeActivate()
 
 void PathfindingObstacleAutomatism::LoadFromXml(const TiXmlElement * elem)
 {
-    //TODO
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("impassable", impassable);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("cost", cost);
 }
 
 #if defined(GD_IDE_ONLY)
 void PathfindingObstacleAutomatism::SaveToXml(TiXmlElement * elem) const
 {
-    //TODO
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("impassable", impassable);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("cost", cost);
 }
 
 std::map<std::string, gd::PropgridPropertyDescriptor> PathfindingObstacleAutomatism::GetProperties(gd::Project & project) const
 {
     std::map<std::string, gd::PropgridPropertyDescriptor> properties;
+    properties[ToString(_("Impassable obstacle"))].SetValue(impassable ? "true" : "false").SetType("Boolean");
+    properties[ToString(_("Cost (if not impassable)"))].SetValue(ToString(cost));
 
-    //TODO
     return properties;
 }
 
-/*bool PathfindingObstacleAutomatism::UpdateProperty(const std::string & name, const std::string & value, gd::Project & project)
+bool PathfindingObstacleAutomatism::UpdateProperty(const std::string & name, const std::string & value, gd::Project & project)
 {
-}*/
+    if ( name == ToString(_("Impassable obstacle")) ) {
+        impassable = (value != "0");
+        return true;
+    }
+
+    if ( ToDouble(value) < 0 ) return false;
+
+    if ( name == ToString(_("Cost (if not impassable)")) )
+        cost = ToDouble(value);
+    else
+        return false;
+
+    return true;
+}
 
 #endif

@@ -36,7 +36,7 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 #include <iostream>
 #include <map>
-#include <wx/intl.h>
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
 #endif
 
@@ -53,7 +53,7 @@ PlatformAutomatism::~PlatformAutomatism()
 {
     if ( sceneManager && registeredInManager ) sceneManager->RemovePlatform(this);
 }
-    
+
 void PlatformAutomatism::DoStepPreEvents(RuntimeScene & scene)
 {
     if ( parentScene != &scene ) //Parent scene has changed
@@ -66,14 +66,14 @@ void PlatformAutomatism::DoStepPreEvents(RuntimeScene & scene)
         registeredInManager = false;
     }
 
-    if (!activated && registeredInManager) 
+    if (!activated && registeredInManager)
     {
         if ( sceneManager ) sceneManager->RemovePlatform(this);
         registeredInManager = false;
     }
-    else if (activated && !registeredInManager) 
+    else if (activated && !registeredInManager)
     {
-        if ( sceneManager ) 
+        if ( sceneManager )
         {
             sceneManager->AddPlatform(this);
             registeredInManager = true;
@@ -85,7 +85,7 @@ void PlatformAutomatism::DoStepPostEvents(RuntimeScene & scene)
 {
 
 }
-    
+
 void PlatformAutomatism::ChangePlatformType(const std::string & platformType_)
 {
     if ( platformType_ == "Ladder" ) platformType = Ladder;
@@ -106,7 +106,7 @@ void PlatformAutomatism::OnDeActivate()
 {
     if ( sceneManager )
         sceneManager->RemovePlatform(this);
-    
+
     registeredInManager = false;
 }
 
@@ -145,7 +145,7 @@ std::map<std::string, gd::PropgridPropertyDescriptor> PlatformAutomatism::GetPro
         .AddExtraInfo(ToString(_("Platform")))
         .AddExtraInfo(ToString(_("Jumpthru platform")))
         .AddExtraInfo(ToString(_("Ladder")));
-    
+
     return properties;
 }
 

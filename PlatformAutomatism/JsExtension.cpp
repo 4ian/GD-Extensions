@@ -26,14 +26,9 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 #include "GDCore/PlatformDefinition/PlatformExtension.h"
 #include "GDCore/Tools/Version.h"
+#include "GDCore/Tools/Localization.h"
 #include <boost/version.hpp>
 #include <iostream>
-#include <wx/intl.h>
-//Ensure the wxWidgets macro "_" returns a std::string
-#if defined(_)
-    #undef _
-#endif
-#define _(s) std::string(wxGetTranslation((s)).mb_str())
 
 /**
  * \brief This class declares information about the JS extension.
@@ -56,20 +51,18 @@ public:
 
         GetAutomatismMetadata("PlatformAutomatism::PlatformAutomatism")
             .SetIncludeFile("PlatformAutomatism/platformruntimeautomatism.js")
-            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js")
-            .AddIncludeFile("PlatformAutomatism/hshg.js");
+            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js");
 
         GetAutomatismMetadata("PlatformAutomatism::PlatformerObjectAutomatism")
             .SetIncludeFile("PlatformAutomatism/platformruntimeautomatism.js")
-            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js")
-            .AddIncludeFile("PlatformAutomatism/hshg.js");
+            .AddIncludeFile("PlatformAutomatism/platformerobjectruntimeautomatism.js");
 
         {
 
             std::map<std::string, gd::InstructionMetadata > & autActions = GetAllActionsForAutomatism("PlatformAutomatism::PlatformerObjectAutomatism");
             std::map<std::string, gd::InstructionMetadata > & autConditions = GetAllConditionsForAutomatism("PlatformAutomatism::PlatformerObjectAutomatism");
             std::map<std::string, gd::ExpressionMetadata > & autExpressions = GetAllExpressionsForAutomatism("PlatformAutomatism::PlatformerObjectAutomatism");
-            
+
             autConditions["PlatformAutomatism::IsMoving"].codeExtraInformation.SetFunctionName("isMoving");
             autConditions["PlatformAutomatism::IsOnFloor"].codeExtraInformation.SetFunctionName("isOnFloor");
             autConditions["PlatformAutomatism::IsOnLadder"].codeExtraInformation.SetFunctionName("isOnLadder");
@@ -106,12 +99,9 @@ public:
             autActions["PlatformAutomatism::IgnoreDefaultControls"].codeExtraInformation.SetFunctionName("ignoreDefaultControls");
         }
         {
-
             std::map<std::string, gd::InstructionMetadata > & autActions = GetAllActionsForAutomatism("PlatformAutomatism::PlatformAutomatism");
-            //std::map<std::string, gd::InstructionMetadata > & autConditions = GetAllConditionsForAutomatism("PlatformAutomatism::PlatformAutomatism");
-            //std::map<std::string, gd::ExpressionMetadata > & autExpressions = GetAllExpressionsForAutomatism("PlatformAutomatism::PlatformAutomatism");
-            
-            autActions["PhysicsAutomatism::ChangePlatformType"].codeExtraInformation.SetFunctionName("changePlatformType");  
+
+            autActions["PlatformAutomatism::ChangePlatformType"].codeExtraInformation.SetFunctionName("changePlatformType");
         }
 
         StripUnimplementedInstructionsAndExpressions();

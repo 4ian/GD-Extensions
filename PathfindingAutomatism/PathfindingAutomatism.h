@@ -52,6 +52,52 @@ public:
      */
     void MoveTo(RuntimeScene & scene, float x, float y);
 
+    //Path information:
+    /**
+     * \brief Return true if the latest call to MoveTo succeeded.
+     */
+    bool PathFound() { return pathFound; }
+
+    /**
+     * \brief Return true if the object reached its destination
+     */
+    bool DestinationReached() { return reachedEnd; }
+
+    float GetNodeX(unsigned int index) const;
+    float GetNodeY(unsigned int index) const;
+    unsigned int GetNextNodeIndex() const;
+    unsigned int GetNodeCount() const { return path.size(); };
+    float GetNextNodeX() const;
+    float GetNextNodeY() const;
+    float GetLastNodeX() const;
+    float GetLastNodeY() const;
+    float GetDestinationX() const;
+    float GetDestinationY() const;
+
+    //Configuration:
+    bool DiagonalsAllowed() { return allowDiagonals; };
+    float GetAcceleration() { return acceleration; };
+    float GetMaxSpeed() { return maxSpeed; };
+    float GetAngularMaxSpeed() { return angularMaxSpeed; };
+    bool IsObjectRotated() { return rotateObject; }
+    float GetAngleOffset() { return angleOffset; };
+    unsigned int GetCellWidth() { return cellWidth; };
+    unsigned int GetCellHeight() { return cellHeight; };
+    float GetExtraBorder() { return extraBorder; };
+
+    bool SetAllowDiagonals(bool allowDiagonals_) { allowDiagonals = allowDiagonals_; };
+    float SetAcceleration(float acceleration_) { acceleration = acceleration_; };
+    float SetMaxSpeed(float maxSpeed_) { maxSpeed = maxSpeed_; };
+    float SetAngularMaxSpeed(float angularMaxSpeed_) { angularMaxSpeed = angularMaxSpeed_; };
+    bool SetRotateObject(bool rotateObject_) { rotateObject = rotateObject_; };
+    float SetAngleOffset(float angleOffset_) { angleOffset = angleOffset_; };
+    unsigned int SetCellWidth(unsigned int cellWidth_) { cellWidth = cellWidth_; };
+    unsigned int SetCellHeight(unsigned int cellHeight_) { cellHeight = cellHeight_; };
+    float SetExtraBorder(float extraBorder_) { extraBorder = extraBorder_; };
+
+    float GetSpeed() { return speed; };
+    float SetSpeed(float speed_) { speed = speed_; };
+
     /**
      * \brief Load the automatism from XML
      */
@@ -75,6 +121,7 @@ private:
     RuntimeScene * parentScene; ///< The scene the object belongs to.
     ScenePathfindingObstaclesManager * sceneManager; ///< The platform objects manager associated to the scene.
     std::vector<sf::Vector2f> path; ///< The computed path
+    bool pathFound;
 
     //Automatism configuration:
     bool allowDiagonals;
@@ -83,6 +130,9 @@ private:
     float angularMaxSpeed;
     bool rotateObject; ///< If true, the object is rotated according to the current segment's angle.
     float angleOffset; ///< Angle offset (added to the angle calculated with the segment)
+    unsigned int cellWidth;
+    unsigned int cellHeight;
+    float extraBorder;
 
     //Attributes used for traveling on the path:
     float speed;

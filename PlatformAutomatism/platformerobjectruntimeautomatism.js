@@ -38,7 +38,7 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
     this._potentialCollidingObjects = {}; //Hashtable of platforms (Keys: Objects id, values: automatisms) near the object, updated with _updatePotentialCollidingObjects.
     this._collidingObjects = {};
     this._overlappedJumpThru = {};
-    this._oldHeight = owner.getHeight();
+    this._oldHeight = 0;//owner.getHeight(); //Be careful, object might not be initialized.
     this._hasReallyMoved = false;
     this.setSlopeMaxAngle(parseFloat(automatismData.attr.slopeMaxAngle, 10));
 

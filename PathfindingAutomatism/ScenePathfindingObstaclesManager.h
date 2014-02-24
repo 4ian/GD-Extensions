@@ -41,7 +41,7 @@ public:
      */
     static std::map<RuntimeScene*, ScenePathfindingObstaclesManager> managers;
 
-	ScenePathfindingObstaclesManager() : cellWidth(20), cellHeight(20) {};
+	ScenePathfindingObstaclesManager() {};
 	virtual ~ScenePathfindingObstaclesManager();
 
     /**
@@ -61,15 +61,8 @@ public:
      */
     const std::set<PathfindingObstacleAutomatism*> & GetAllObstacles() const { return allObstacles; }
 
-    unsigned int GetCellWidth() const { return cellWidth; };
-    unsigned int GetCellHeight() const { return cellHeight; };
-
-    //TODO: SetCellWidth
-
 private:
     std::set<PathfindingObstacleAutomatism*> allObstacles; ///< The list of all obstacles of the scene.
-    unsigned int cellWidth;
-    unsigned int cellHeight;
 };
 
 

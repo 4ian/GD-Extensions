@@ -231,9 +231,9 @@ public:
                 .codeExtraInformation.SetFunctionName("ApplyImpulse").SetIncludeFile("PhysicsAutomatism/PhysicsAutomatism.h");
 
             aut.AddAction("ApplyImpulseUsingPolarCoordinates",
-                           _("Apply an impulse ( angle )"),
+                           _("Apply an impulse (angle)"),
                            _("Apply an impulse to an object, using a angle and a length as coordinates."),
-                           _("Apply to _PARAM0_ impulse _PARAM3_ at angle : _PARAM2_°"),
+                           _("Apply to _PARAM0_ impulse _PARAM3_ with angle: _PARAM2_°"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -303,8 +303,8 @@ public:
                 .codeExtraInformation.SetFunctionName("ApplyForceTowardPosition").SetIncludeFile("PhysicsAutomatism/PhysicsAutomatism.h");
 
             aut.AddAction("ApplyTorque",
-                           _("Add a torque ( a rotation )"),
-                           _("Add a torque ( a rotation ) to object."),
+                           _("Add a torque (a rotation)"),
+                           _("Add a torque (a rotation) to object."),
                            _("Add to _PARAM0_ torque _PARAM2_"),
                            _("Rotation"),
                            "res/physics24.png",
@@ -316,9 +316,9 @@ public:
                 .codeExtraInformation.SetFunctionName("ApplyTorque").SetIncludeFile("PhysicsAutomatism/PhysicsAutomatism.h");
 
             aut.AddAction("SetLinearVelocity",
-                           _("Linear speed"),
-                           _("Modify speed of an object."),
-                           _("Set linear speed of _PARAM0_ to _PARAM2_;_PARAM3_"),
+                           _("Linear velocity"),
+                           _("Modify velocity of an object."),
+                           _("Set linear velocity of _PARAM0_ to _PARAM2_;_PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -331,7 +331,7 @@ public:
 
             aut.AddCondition("LinearVelocityX",
                            _("X component"),
-                           _("Test linear velocity on X axis of object."),
+                           _("Compare the linear velocity on X axis of object."),
                            _("Linear velocity on X axis of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
@@ -345,7 +345,7 @@ public:
 
             aut.AddCondition("LinearVelocityY",
                            _("Y component"),
-                           _("Test linear velocity on Y axis of object."),
+                           _("Compare the linear velocity on Y axis of object."),
                            _("Linear velocity on Y axis of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
@@ -359,7 +359,7 @@ public:
 
             aut.AddCondition("LinearVelocity",
                            _("Linear speed"),
-                           _("Test linear velocity of the object."),
+                           _("Compare the linear velocity of the object."),
                            _("Linear velocity of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
@@ -374,7 +374,7 @@ public:
             aut.AddAction("SetAngularVelocity",
                            _("Angular speed"),
                            _("Modify angular velocity of object."),
-                           _("Put angular speed of _PARAM0_ to _PARAM2_"),
+                           _("Set angular speed of _PARAM0_ to _PARAM2_"),
                            _("Rotation"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -386,7 +386,7 @@ public:
 
             aut.AddCondition("AngularVelocity",
                            _("Angular speed"),
-                           _("Test angular speed of the object."),
+                           _("Compare the angular speed of the object."),
                            _("Angular speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Rotation"),
                            "res/physics24.png",
@@ -400,8 +400,8 @@ public:
 
             aut.AddCondition("LinearDamping",
                            _("Linear damping"),
-                           _("Test object's linear damping"),
-                           _("Linear velocity of _PARAM0_ is _PARAM2__PARAM3_"),
+                           _("Compare the linear damping of the object."),
+                           _("Linear damping of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")
@@ -455,7 +455,7 @@ public:
             aut.AddAction("SetAngularDamping",
                            _("Angular damping"),
                            _("Modify angular damping of object."),
-                           _("Put angular damping of _PARAM0_ to _PARAM2_"),
+                           _("Set angular damping of _PARAM0_ to _PARAM2_"),
                            _("Displacement"),
                            "res/physics24.png",
                            "res/physics16.png")

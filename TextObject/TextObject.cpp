@@ -185,7 +185,7 @@ void TextObject::ExposeResources(gd::ArbitraryResourceWorker & worker)
 
 bool TextObject::GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const
 {
-    thumbnail = wxBitmap("CppPlatform/Extensions/texticon.png", wxBITMAP_TYPE_ANY);
+    thumbnail = wxBitmap("CppPlatform/Extensions/texticon24.png", wxBITMAP_TYPE_ANY);
 
     return true;
 }

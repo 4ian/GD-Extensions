@@ -56,14 +56,29 @@ public:
     RuntimeObject * GetObject() const { return object; }
 
     /**
-     * \brief Return the cost of moving on the object (-1 for impassable obstacle)
+     * \brief Return true if the obstacle is impassable.
      */
-    float GetCost() const { return -1; } //TODO
+    bool IsImpassable() const { return impassable; }
+
+    /**
+     * \brief Set the object as impassable or not.
+     */
+    void SetImpassable(bool impassable_ = true) { impassable = impassable_; }
+
+    /**
+     * \brief Return the cost of moving on the object.
+     */
+    float GetCost() const { return cost; } //TODO
+
+    /**
+     * \brief Change the cost of moving on the object.
+     */
+    void SetCost(float newCost) { cost = newCost; }
 
     virtual void LoadFromXml(const TiXmlElement * elem);
     #if defined(GD_IDE_ONLY)
     virtual std::map<std::string, gd::PropgridPropertyDescriptor> GetProperties(gd::Project & project) const;
-    //virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project); //TODO: Virtual borders
+    virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project);
     virtual void SaveToXml(TiXmlElement * elem) const;
     #endif
 
@@ -77,6 +92,8 @@ private:
     RuntimeScene * parentScene; ///< The scene the object belongs to.
     ScenePathfindingObstaclesManager * sceneManager; ///< The obstacles manager associated to the scene.
     bool registeredInManager; ///< True if the automatism is registered in the list of obstacles of the scene.
+    bool impassable;
+    float cost; ///< The cost of moving on the obstacle (for when impassable == false)
 };
 
 #endif // PATHFINDINGOBSTACLEAUTOMATISM_H

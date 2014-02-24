@@ -41,7 +41,7 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 #include <iostream>
 #include <map>
-#include <wx/intl.h>
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
 #endif
 

@@ -38,19 +38,22 @@ freely, subject to the following restrictions:
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
 #include "GDCpp/CommonTools.h"
+#include "GDCpp/XmlMacros.h"
 #include <iostream>
 #include <cmath>
 #include <algorithm>
 #if defined(GD_IDE_ONLY)
-#include <iostream>
 #include <map>
-#include <wx/intl.h>
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
 #endif
 
 namespace
 {
 
+/**
+ * \brief Internal tool class representing the position of a node when looking for a path.
+ */
 class NodePosition
 {
 public:
@@ -73,6 +76,12 @@ public:
         }
     };
 };
+
+std::ostream& operator<<(std::ostream& stream, const NodePosition & nodePos)
+{
+    stream << nodePos.x << ";" << nodePos.y;
+    return stream;
+}
 
 /**
  * \brief Internal tool class representing a node when looking for a path
@@ -118,29 +127,72 @@ typedef float (*DistanceFunPtr)(const NodePosition & , const NodePosition & );
 class SearchContext
 {
 public:
-    SearchContext(ScenePathfindingObstaclesManager & obstacles_, int startNodeX_, int startNodeY_,
-        bool allowsDiagonal_ = true) :
+    SearchContext(ScenePathfindingObstaclesManager & obstacles_, bool allowsDiagonal_ = true) :
         obstacles(obstacles_),
         finalNode(NULL),
         destination(0, 0),
-        start(startNodeX_, startNodeY_),
-        allowsDiagonal(allowsDiagonal_)
+        startX(0),
+        startY(0),
+        allowsDiagonal(allowsDiagonal_),
+        maxComplexityFactor(50),
+        cellWidth(20),
+        cellHeight(20),
+        leftBorder(0),
+        rightBorder(0),
+        topBorder(0),
+        bottomBorder(0)
     {
-        std::cout << "start: " << startNodeX_ << ";" << startNodeY_ << std::endl;
-        distanceFunction = allowsDiagonal ? &SearchContext::EuclidianDistance : &SearchContext::ManhattanDistance;
+        distanceFunction = allowsDiagonal ? &SearchContext::EuclideanDistance : &SearchContext::ManhattanDistance;
     }
 
     /**
-     * Compute a path to the specified target node, considering the obstacles
-     * and the start node passed in the constructor.
+     * \brief Set the start position.
+     * \param x The coordinate on X axis of the start position, in "world" coordinates.
+     * \param y The coordinate on Y axis of the start position, in "world" coordinates.
+     */
+    SearchContext & SetStartPosition(float x, float y)
+    {
+        startX = x;
+        startY = y;
+        return *this;
+    }
+
+    /**
+     * \brief Set the size to be considered for the object for which the path will be planned.
+     */
+    SearchContext & SetObjectSize(float leftBorder_, float topBorder_, float rightBorder_, float bottomBorder_)
+    {
+        leftBorder = leftBorder_;
+        rightBorder = rightBorder_;
+        topBorder = topBorder_;
+        bottomBorder = bottomBorder_;
+        return *this;
+    }
+
+    /**
+     * \brief Change the size of a virtual cell, in pixels.
+     */
+    SearchContext & SetCellSize(unsigned int cellWidth_, unsigned int cellHeight_)
+    {
+        cellWidth = cellWidth_;
+        cellHeight = cellHeight_;
+        return *this;
+    }
+
+    /**
+     * \brief Compute a path to the specified position, considering the obstacles
+     * and the start position passed in the constructor.
      * \return true if computation found a path, in which case you can call GetFinalNode method
      * to construct the path.
+     * \param x The coordinate on X axis of the target position, in "world" coordinates.
+     * \param y The coordinate on Y axis of the target position, in "world" coordinates.
      */
-    bool ComputePathTo(int targetNodeX, int targetNodeY)
+    bool ComputePathTo(float targetX, float targetY)
     {
-        destination = NodePosition(targetNodeX, targetNodeY);
-        std::cout << "Destination: " << targetNodeX << ";" << targetNodeY << std::endl;
+        destination = NodePosition(GDRound(targetX/cellWidth), GDRound(targetY/cellHeight));
+        NodePosition start(GDRound(startX/cellWidth), GDRound(startY/cellHeight));
 
+        //Initialize the algorithm
         allNodes.clear();
         Node & startNode = GetNode(start);
         startNode.smallestCost = 0;
@@ -148,10 +200,12 @@ public:
         openNodes.clear();
         openNodes.insert(&startNode);
 
+        //A* algorithm main loop
         unsigned int iterationCount = 0;
+        unsigned int maxIterationCount = startNode.estimateCost*maxComplexityFactor;
         while (!openNodes.empty())
         {
-            if (iterationCount++ > 500) return false; //Make sure we do not search forever.
+            if (iterationCount++ > maxIterationCount) return false; //Make sure we do not search forever.
 
             Node * n = *openNodes.begin(); //Get the most promising node...
             n->open = false;                 //...and flag it as explored
@@ -173,7 +227,8 @@ public:
 
     /**
      * @return The final node of the computed path.
-     * Iterate on the parent member to create the path.
+     * Iterate on the parent member to create the path. Beware, the coordinates of the node
+     * must be multiplied by the cell size to get the "world" coordinates of the path.
      */
     Node * GetFinalNode() const
     {
@@ -238,8 +293,9 @@ private:
     }
 
     /**
-     * Get (or construct dynamically) a node.
-     * All nodes should be created using this method: The cost of the node is computed thanks
+     * \brief Get (or dynamically construct) a node.
+     *
+     * *All* nodes should be created using this method: The cost of the node is computed thanks
      * to the objects flagged as obstacles.
      */
     Node & GetNode(const NodePosition & pos)
@@ -256,15 +312,15 @@ private:
              ++it)
         {
             RuntimeObject * obj = (*it)->GetObject();
-            int topLeftCellX = floor(obj->GetDrawableX()/obstacles.GetCellWidth());
-            int topLeftCellY = floor(obj->GetDrawableY()/obstacles.GetCellHeight());
-            int bottomRightCellX = ceil((obj->GetDrawableX()+obj->GetWidth())/obstacles.GetCellWidth());
-            int bottomRightCellY = ceil((obj->GetDrawableY()+obj->GetHeight())/obstacles.GetCellHeight());
+            int topLeftCellX = floor((obj->GetDrawableX()-rightBorder)/cellWidth);
+            int topLeftCellY = floor((obj->GetDrawableY()-bottomBorder)/cellHeight);
+            int bottomRightCellX = ceil((obj->GetDrawableX()+obj->GetWidth()+leftBorder)/cellWidth);
+            int bottomRightCellY = ceil((obj->GetDrawableY()+obj->GetHeight()+topBorder)/cellHeight);
             if ( topLeftCellX <= pos.x && pos.x <= bottomRightCellX
                 && topLeftCellY <= pos.y && pos.y <= bottomRightCellY)
             {
                 objectsOnCell = true;
-                if ( (*it)->GetCost() < 0 )
+                if ( (*it)->IsImpassable() )
                 {
                     newNode.cost = -1;
                     break; //The cell is impassable, stop here.
@@ -281,9 +337,9 @@ private:
     }
 
     /**
-     * Compute the euclidian distance between two positions.
+     * Compute the euclidean distance between two positions.
      */
-    static float EuclidianDistance(const NodePosition & a, const NodePosition & b)
+    static float EuclideanDistance(const NodePosition & a, const NodePosition & b)
     {
         return sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
     }
@@ -325,9 +381,17 @@ private:
     const ScenePathfindingObstaclesManager & obstacles; ///< A reference to all the obstacles of the scene
     Node * finalNode; //If computation succeeded, the final node is stored here.
     NodePosition destination;
-    NodePosition start;
+    int startX; ///< The start X position, in "world" coordinates (not in "node" coordinates!).
+    int startY; ///< The start Y position, in "world" coordinates (not in "node" coordinates!).
     DistanceFunPtr distanceFunction;
-    bool allowsDiagonal;
+    bool allowsDiagonal; ///< True to allow diagonals when planning the path.
+    unsigned int maxComplexityFactor;
+    float cellWidth;
+    float cellHeight;
+    float leftBorder;
+    float rightBorder;
+    float topBorder;
+    float bottomBorder;
 
     static const float sqrt2;
 };
@@ -335,13 +399,18 @@ private:
 const float SearchContext::sqrt2 = 1.414213562;
 
 }
+
 PathfindingAutomatism::PathfindingAutomatism() :
+    pathFound(false),
     allowDiagonals(true),
     acceleration(400),
     maxSpeed(200),
     angularMaxSpeed(180),
     rotateObject(true),
     angleOffset(0),
+    cellWidth(20),
+    cellHeight(20),
+    extraBorder(0),
     speed(0),
     angularSpeed(0),
     timeOnSegment(0),
@@ -349,49 +418,53 @@ PathfindingAutomatism::PathfindingAutomatism() :
     currentSegment(0),
     reachedEnd(false)
 {
-
 }
 
 void PathfindingAutomatism::MoveTo(RuntimeScene & scene, float x, float y)
 {
     if ( !sceneManager ) return;
-    float cellWidth = sceneManager->GetCellWidth();
-    float cellHeight = sceneManager->GetCellHeight();
-
-    int targetCellX = GDRound(x/cellWidth);
-    int targetCellY = GDRound(y/cellHeight);
-    int startCellX = GDRound(object->GetX()/cellWidth);// TODO: Use the center of the object?
-    int startCellY = GDRound(object->GetY()/cellHeight);
 
     path.clear();
+
+    //First be sure that there is a path to compute.
+    int targetCellX = GDRound(x/(float)cellWidth);
+    int targetCellY = GDRound(y/(float)cellHeight);
+    int startCellX = GDRound(object->GetX()/(float)cellWidth);
+    int startCellY = GDRound(object->GetY()/(float)cellHeight);
     if ( startCellX == targetCellX && startCellY == targetCellY ) {
         path.push_back(sf::Vector2f(object->GetX(), object->GetY()));
         path.push_back(sf::Vector2f(x, y));
         EnterSegment(0);
+        pathFound = true;
         return;
     }
 
     //Start searching for a path
-    //TODO: Default cost
-    //TODO: Heuristic plus agressive.
-    ::SearchContext ctx(*sceneManager, startCellX, startCellY, true); //TODO: Diag
-    if (ctx.ComputePathTo(targetCellX, targetCellY))
+    //TODO: Customizable heuristic.
+    ::SearchContext ctx(*sceneManager, allowDiagonals);
+    ctx.SetCellSize(cellWidth, cellHeight).SetStartPosition(object->GetX(), object->GetY());
+    ctx.SetObjectSize(object->GetX()-object->GetDrawableX()+extraBorder,
+        object->GetY()-object->GetDrawableY()+extraBorder,
+        object->GetWidth()-(object->GetX()-object->GetDrawableX())+extraBorder,
+        object->GetHeight()-(object->GetY()-object->GetDrawableY())+extraBorder);
+    if (ctx.ComputePathTo(x, y))
     {
         //Path found: memorize it
         const ::Node * node = ctx.GetFinalNode();
         while (node) {
-            std::cout << "N: " << node->pos.x*cellWidth << ";" << node->pos.y*cellHeight << std::endl;
-            path.push_back(sf::Vector2f(node->pos.x*cellWidth, node->pos.y*cellHeight));
+            path.push_back(sf::Vector2f(node->pos.x*(float)cellWidth, node->pos.y*(float)cellHeight));
             node = node->parent;
         }
 
         std::reverse(path.begin(), path.end());
         path[0] = sf::Vector2f(object->GetX(), object->GetY());
         EnterSegment(0);
+        pathFound = true;
         return;
     }
 
     //Not path found
+    pathFound = false;
 }
 
 void PathfindingAutomatism::EnterSegment(unsigned int segmentNumber)
@@ -441,7 +514,7 @@ void PathfindingAutomatism::DoStepPreEvents(RuntimeScene & scene)
     if ( currentSegment < path.size()-1 ) {
         newPos = path[currentSegment] + (path[currentSegment + 1] - path[currentSegment]) * (timeOnSegment / totalSegmentTime);
         pathAngle = atan2(path[currentSegment+1].y - path[currentSegment].y,
-            path[currentSegment+1].x - path[currentSegment].x)*180/3.14159;
+            path[currentSegment+1].x - path[currentSegment].x)*180/3.14159+angleOffset;
     }
     else
         newPos = path.back();
@@ -471,15 +544,103 @@ void PathfindingAutomatism::DoStepPostEvents(RuntimeScene & scene)
     }
 }
 
+float PathfindingAutomatism::GetNodeX(unsigned int index) const
+{
+    if (index<path.size()) return path[index].x;
+    return 0;
+}
+float PathfindingAutomatism::GetNodeY(unsigned int index) const
+{
+    if (index<path.size()) return path[index].y;
+    return 0;
+}
+unsigned int PathfindingAutomatism::GetNextNodeIndex() const
+{
+    if (currentSegment+1 < path.size())
+        return currentSegment+1;
+    else
+        return path.size()-1;
+}
+float PathfindingAutomatism::GetNextNodeX() const
+{
+    if ( path.empty() ) return 0;
+
+    if (currentSegment+1 < path.size())
+        return path[currentSegment+1].x;
+    else
+        return path.back().x;
+}
+float PathfindingAutomatism::GetNextNodeY() const
+{
+    if ( path.empty() ) return 0;
+
+    if (currentSegment+1 < path.size())
+        return path[currentSegment+1].y;
+    else
+        return path.back().y;
+}
+float PathfindingAutomatism::GetLastNodeX() const
+{
+    if ( path.size() < 2 ) return 0;
+
+    if (currentSegment < path.size()-1)
+        return path[currentSegment].x;
+    else
+        return path[path.size()-1].x;
+}
+float PathfindingAutomatism::GetLastNodeY() const
+{
+    if ( path.size() < 2 ) return 0;
+
+    if (currentSegment < path.size()-1)
+        return path[currentSegment].y;
+    else
+        return path[path.size()-1].y;
+}
+float PathfindingAutomatism::GetDestinationX() const
+{
+    if ( path.empty() ) return 0;
+    return path.back().x;
+}
+float PathfindingAutomatism::GetDestinationY() const
+{
+    if ( path.empty() ) return 0;
+    return path.back().y;
+}
+
 void PathfindingAutomatism::LoadFromXml(const TiXmlElement * elem)
 {
-    //TODO
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("allowDiagonals", allowDiagonals);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("acceleration", acceleration);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("maxSpeed", maxSpeed);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angularMaxSpeed", angularMaxSpeed);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("rotateObject", rotateObject);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angleOffset", angleOffset);
+    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("extraBorder", extraBorder);
+    {
+        int value = 0;
+        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("cellWidth", value);
+        if (value > 0) cellWidth = value;
+    }
+    {
+        int value = 0;
+        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("cellHeight", value);
+        if (value > 0) cellHeight = value;
+    }
 }
 
 #if defined(GD_IDE_ONLY)
 void PathfindingAutomatism::SaveToXml(TiXmlElement * elem) const
 {
-    //TODO
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("allowDiagonals", allowDiagonals);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("acceleration", acceleration);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("maxSpeed", maxSpeed);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("angularMaxSpeed", angularMaxSpeed);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("rotateObject", rotateObject);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("angleOffset", angleOffset);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("cellWidth", cellWidth);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("cellHeight", cellHeight);
+    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("extraBorder", extraBorder);
 }
 
 std::map<std::string, gd::PropgridPropertyDescriptor> PathfindingAutomatism::GetProperties(gd::Project & project) const
@@ -492,6 +653,9 @@ std::map<std::string, gd::PropgridPropertyDescriptor> PathfindingAutomatism::Get
     properties[ToString(_("Rotate speed"))].SetValue(ToString(angularMaxSpeed));
     properties[ToString(_("Rotate object"))].SetValue(rotateObject ? "true" : "false").SetType("Boolean");
     properties[ToString(_("Angle offset"))].SetValue(ToString(angleOffset));
+    properties[ToString(_("Virtual cell width"))].SetValue(ToString(cellWidth));
+    properties[ToString(_("Virtual cell height"))].SetValue(ToString(cellHeight));
+    properties[ToString(_("Extra border size"))].SetValue(ToString(extraBorder));
 
     return properties;
 }
@@ -506,6 +670,10 @@ bool PathfindingAutomatism::UpdateProperty(const std::string & name, const std::
         rotateObject = (value != "0");
         return true;
     }
+    if ( name == ToString(_("Extra border size")) ) {
+        extraBorder = ToDouble(value);
+        return true;
+    }
 
     if ( ToDouble(value) < 0 ) return false;
 
@@ -517,6 +685,10 @@ bool PathfindingAutomatism::UpdateProperty(const std::string & name, const std::
         angularMaxSpeed = ToDouble(value);
     else if ( name == ToString(_("Angle offset")) )
         angleOffset = ToDouble(value);
+    else if ( name == ToString(_("Virtual cell width")) )
+        cellWidth = ToInt(value);
+    else if ( name == ToString(_("Virtual cell height")) )
+        cellHeight = ToInt(value);
     else
         return false;
 
