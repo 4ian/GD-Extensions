@@ -45,7 +45,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxBitmapButton" name="ID_BITMAPBUTTON3" variable="BitmapButton3" member="yes">
-											<bitmap>res/addicon.png</bitmap>
+											<bitmap code='gd::SkinHelper::GetIcon(&quot;add&quot;, 16)' />
 											<default>1</default>
 											<tooltip>Create a path</tooltip>
 											<handler function="OnBitmapButton3Click1" entry="EVT_BUTTON" />
@@ -56,7 +56,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxBitmapButton" name="ID_BITMAPBUTTON4" variable="BitmapButton4" member="yes">
-											<bitmap>res/deleteicon.png</bitmap>
+											<bitmap code='gd::SkinHelper::GetIcon(&quot;delete&quot;, 16)' />
 											<default>1</default>
 											<tooltip>Delete this path</tooltip>
 											<handler function="OnBitmapButton4Click" entry="EVT_BUTTON" />
@@ -67,7 +67,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxBitmapButton" name="ID_BITMAPBUTTON5" variable="BitmapButton5" member="yes">
-											<bitmap>res/editnom.png</bitmap>
+											<bitmap code='gd::SkinHelper::GetIcon(&quot;rename&quot;, 16)' />
 											<default>1</default>
 											<tooltip>Change the name</tooltip>
 											<handler function="OnBitmapButton5Click" entry="EVT_BUTTON" />
@@ -104,7 +104,7 @@
 														<object class="wxBoxSizer" variable="BoxSizer1" member="no">
 															<object class="sizeritem">
 																<object class="wxBitmapButton" name="ID_BITMAPBUTTON1" variable="BitmapButton1" member="yes">
-																	<bitmap>res/addicon.png</bitmap>
+																	<bitmap code='gd::SkinHelper::GetIcon(&quot;add&quot;, 16)' />
 																	<tooltip>Add a point</tooltip>
 																	<handler function="OnBitmapButton1Click" entry="EVT_BUTTON" />
 																</object>
@@ -125,7 +125,7 @@
 															</object>
 															<object class="sizeritem">
 																<object class="wxBitmapButton" name="ID_BITMAPBUTTON2" variable="BitmapButton2" member="yes">
-																	<bitmap>res/deleteicon.png</bitmap>
+																	<bitmap code='gd::SkinHelper::GetIcon(&quot;delete&quot;, 16)' />
 																	<tooltip>Delete a point</tooltip>
 																	<handler function="OnBitmapButton2Click" entry="EVT_BUTTON" />
 																</object>

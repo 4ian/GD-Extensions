@@ -4,14 +4,14 @@ Copyright (c) 2013-2014 Florian Rival (Florian.Rival@gmail.com)
  */
 
 /**
- * PlatformObjectsManager manages the common objects shared by objects having a 
+ * PlatformObjectsManager manages the common objects shared by objects having a
  * platform automatism: In particular, the platforms automatisms are required to declare
- * themselves ( see gdjs.PlatformObjectsManager.addPlatform ) to the manager of their associated scene 
+ * themselves ( see gdjs.PlatformObjectsManager.addPlatform ) to the manager of their associated scene
  * ( see gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers ).
  *
  * @class PlatformObjectsManager
  * @namespace gdjs
- * @constructor 
+ * @constructor
  */
 gdjs.PlatformObjectsManager = function(runtimeScene, sharedData)
 {
@@ -43,14 +43,14 @@ gdjs.PlatformObjectsManager.prototype.removePlatform = function(platformAutomati
  * @class Vertex
  * @namespace gdjs.PlatformObjectsManager
  * @private
- * @constructor 
+ * @constructor
  */
 gdjs.PlatformObjectsManager.Vertex = function(x,y,radius) {
     this.x = x;
     this.y = y;
     this.radius = radius;
 };
-     
+
 /**
  * Return an axis aligned bouding box for the vertex.
  * @method getAABB
@@ -105,7 +105,7 @@ gdjs.PlatformObjectsManager.prototype.getAllPlatformsAround = function(object, m
  *
  * @class PlatformRuntimeAutomatism
  * @namespace gdjs
- * @constructor 
+ * @constructor
  */
 gdjs.PlatformRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
@@ -121,8 +121,8 @@ gdjs.PlatformRuntimeAutomatism = function(runtimeScene, automatismData, owner)
         this._platformType = gdjs.PlatformRuntimeAutomatism.NORMALPLAFTORM;
 
     //Note that we can't use getX(), getWidth()... of owner here: The owner is not fully constructed.
-    this._oldX = 0; 
-    this._oldY = 0; 
+    this._oldX = 0;
+    this._oldY = 0;
     this._oldWidth = 0;
     this._oldHeight = 0;
 
@@ -150,7 +150,7 @@ gdjs.PlatformRuntimeAutomatism.prototype.ownerRemovedFromScene = function() {
 };
 
 gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene) {
-    
+
     //Scene change is not supported
     /*if ( parentScene != &scene ) //Parent scene has changed
     {
@@ -163,18 +163,18 @@ gdjs.PlatformRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene
     }*/
 
     //No need for update as we take care of this below.
-    /*if ( this._hshgNeedUpdate ) { 
+    /*if ( this._hshgNeedUpdate ) {
         this._manager._platformsHSHG.update();
         this._manager._hshgNeedUpdate = false;
     }*/
 
     //Make sure the platform is or is not in the platforms manager.
-    if (!this.activated() && this._registeredInManager) 
+    if (!this.activated() && this._registeredInManager)
     {
         this._manager.removePlatform(this);
         this._registeredInManager = false;
     }
-    else if (this.activated() && !this._registeredInManager) 
+    else if (this.activated() && !this._registeredInManager)
     {
         this._manager.addPlatform(this);
         this._registeredInManager = true;

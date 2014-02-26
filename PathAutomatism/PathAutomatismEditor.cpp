@@ -39,12 +39,14 @@ freely, subject to the following restrictions:
 #include <limits>
 #include <algorithm>
 #include <boost/shared_ptr.hpp>
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
+#include "GDCore/Tools/Localization.h"
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/numdlg.h>
 #include <wx/filedlg.h>
+#include "GDCore/IDE/SkinHelper.h"
 #include "GDCore/IDE/CommonBitmapManager.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCpp/Project.h"
@@ -149,15 +151,15 @@ PathAutomatismEditor::PathAutomatismEditor(wxWindow* parent, gd::Project & game_
 	pathChoice = new wxChoice(this, ID_CHOICE1, wxDefaultPosition, wxSize(136,-1), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
 	pathChoice->SetSelection( pathChoice->Append(_("Object main path")) );
 	FlexGridSizer13->Add(pathChoice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	BitmapButton3 = new wxBitmapButton(this, ID_BITMAPBUTTON3, wxBitmap(wxImage(_T("res/addicon.png"))), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON3"));
+	BitmapButton3 = new wxBitmapButton(this, ID_BITMAPBUTTON3, gd::SkinHelper::GetIcon("add", 16), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON3"));
 	BitmapButton3->SetDefault();
 	BitmapButton3->SetToolTip(_("Create a path"));
 	FlexGridSizer13->Add(BitmapButton3, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	BitmapButton4 = new wxBitmapButton(this, ID_BITMAPBUTTON4, wxBitmap(wxImage(_T("res/deleteicon.png"))), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON4"));
+	BitmapButton4 = new wxBitmapButton(this, ID_BITMAPBUTTON4, gd::SkinHelper::GetIcon("delete", 16), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON4"));
 	BitmapButton4->SetDefault();
 	BitmapButton4->SetToolTip(_("Delete this path"));
 	FlexGridSizer13->Add(BitmapButton4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, -2);
-	BitmapButton5 = new wxBitmapButton(this, ID_BITMAPBUTTON5, wxBitmap(wxImage(_T("res/editnom.png"))), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON5"));
+	BitmapButton5 = new wxBitmapButton(this, ID_BITMAPBUTTON5, gd::SkinHelper::GetIcon("rename", 16), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON5"));
 	BitmapButton5->SetDefault();
 	BitmapButton5->SetToolTip(_("Change the name"));
 	FlexGridSizer13->Add(BitmapButton5, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -171,14 +173,14 @@ PathAutomatismEditor::PathAutomatismEditor(wxWindow* parent, gd::Project & game_
 	FlexGridSizer2->AddGrowableRow(2);
 	FlexGridSizer6 = new wxFlexGridSizer(0, 0, 0, 0);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
-	BitmapButton1 = new wxBitmapButton(this, ID_BITMAPBUTTON1, wxBitmap(wxImage(_T("res/addicon.png"))), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
+	BitmapButton1 = new wxBitmapButton(this, ID_BITMAPBUTTON1, gd::SkinHelper::GetIcon("add", 16), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
 	BitmapButton1->SetToolTip(_("Add a point"));
 	BoxSizer1->Add(BitmapButton1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	BitmapButton6 = new wxBitmapButton(this, ID_BITMAPBUTTON6, wxBitmap(wxImage(_T("res/addmore.png"))), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON6"));
 	BitmapButton6->SetDefault();
 	BitmapButton6->SetToolTip(_("Add..."));
 	BoxSizer1->Add(BitmapButton6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	BitmapButton2 = new wxBitmapButton(this, ID_BITMAPBUTTON2, wxBitmap(wxImage(_T("res/deleteicon.png"))), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
+	BitmapButton2 = new wxBitmapButton(this, ID_BITMAPBUTTON2, gd::SkinHelper::GetIcon("delete", 16), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
 	BitmapButton2->SetToolTip(_("Delete a point"));
 	BoxSizer1->Add(BitmapButton2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer6->Add(BoxSizer1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
@@ -341,7 +343,7 @@ PathAutomatismEditor::PathAutomatismEditor(wxWindow* parent, gd::Project & game_
     //Setup shared datas
 	if ( !scene || scene->automatismsInitialSharedDatas.find(automatism.GetName()) == scene->automatismsInitialSharedDatas.end())
 	{
-	    wxLogError(_("Unable to access to shared datas."));
+	    gd::LogError(_("Unable to access to shared datas."));
 	    return;
 	}
 
@@ -349,7 +351,7 @@ PathAutomatismEditor::PathAutomatismEditor(wxWindow* parent, gd::Project & game_
 
     if ( sharedDatas == boost::shared_ptr<ScenePathDatas>() )
     {
-	    wxLogError(_("Unable to access to shared datas : Bad data type."));
+	    gd::LogError(_("Unable to access to shared datas : Bad data type."));
 	    return;
     }
 

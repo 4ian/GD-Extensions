@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 #include <wx/intl.h>
 #include <wx/string.h>
 //*)
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
 #ifdef __WXMSW__
 #include <wx/msw/winundef.h>
 #endif
@@ -45,6 +45,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/Scene.h"
 #include "PhysicsAutomatism.h"
 #include "ScenePhysicsDatas.h"
+#include "GDCore/Tools/Localization.h"
 
 #include "CustomPolygonDialog.h"
 
@@ -261,7 +262,7 @@ scene(scene_)
     //Setup shared datas
 	if ( !scene || scene->automatismsInitialSharedDatas.find(automatism.GetName()) == scene->automatismsInitialSharedDatas.end())
 	{
-	    wxLogError(_("Unable to access to shared datas."));
+	    gd::LogError(_("Unable to access to shared datas."));
 	    return;
 	}
 
@@ -269,7 +270,7 @@ scene(scene_)
 
     if ( sharedDatas == boost::shared_ptr<ScenePhysicsDatas>() )
     {
-	    wxLogError(_("Unable to access to shared datas : Bad data type."));
+	    gd::LogError(_("Unable to access to shared datas : Bad data type."));
 	    return;
     }
 

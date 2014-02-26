@@ -33,12 +33,13 @@ freely, subject to the following restrictions:
 #include <wx/image.h>
 #include <wx/string.h>
 //*)
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
-#include "GDCore/IDE/wxTools/SkinHelper.h"
+#include "GDCore/IDE/SkinHelper.h"
 #include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
+#include "GDCore/Tools/Localization.h"
 
 #include "Box3DObject.h"
 
@@ -263,7 +264,7 @@ void Box3DObjectEditor::OnfrontAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 
@@ -274,7 +275,7 @@ void Box3DObjectEditor::OntopAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 
@@ -286,7 +287,7 @@ void Box3DObjectEditor::OnbottomAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 
@@ -297,7 +298,7 @@ void Box3DObjectEditor::OnleftAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 
@@ -308,7 +309,7 @@ void Box3DObjectEditor::OnrightAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 
@@ -319,7 +320,7 @@ void Box3DObjectEditor::OnbackAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 

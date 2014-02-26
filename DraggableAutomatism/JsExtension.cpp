@@ -25,15 +25,10 @@ freely, subject to the following restrictions:
 */
 #if defined(GD_IDE_ONLY)
 #include "GDCore/PlatformDefinition/PlatformExtension.h"
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/Tools/Version.h"
 #include <boost/version.hpp>
 #include <iostream>
-#include <wx/intl.h>
-//Ensure the wxWidgets macro "_" returns a std::string
-#if defined(_)
-    #undef _
-#endif
-#define _(s) std::string(wxGetTranslation((s)).mb_str())
 
 /**
  * \brief This class declares information about the JS extension.

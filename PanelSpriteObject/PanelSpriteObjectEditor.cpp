@@ -32,9 +32,10 @@ freely, subject to the following restrictions:
 #include <wx/image.h>
 #include <wx/string.h>
 //*)
-#include <wx/log.h>
+#include "GDCore/Tools/Log.h"
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
-#include "GDCore/IDE/wxTools/SkinHelper.h"
+#include "GDCore/IDE/SkinHelper.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
@@ -267,7 +268,7 @@ void PanelSpriteObjectEditor::OnfrontAddFromBtClick(wxCommandEvent& event)
 {
     if ( !m_mgr.GetPane( resourcesEditor ).IsShown() )
     {
-        wxLogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
+        gd::LogMessage(_("Please display the image bank's editor and select an image before clicking on this button."));
         return;
     }
 

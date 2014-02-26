@@ -54,6 +54,7 @@ public:
     double GetDeceleration() const { return deceleration; };
     double GetMaxSpeed() const { return maxSpeed; };
     double GetJumpSpeed() const { return jumpSpeed; };
+    double GetSlopeMaxAngle() const { return slopeMaxAngle; };
 
     void SetGravity(double gravity_) { gravity = gravity_; };
     void SetMaxFallingSpeed(double maxFallingSpeed_) { maxFallingSpeed = maxFallingSpeed_; };
@@ -61,6 +62,7 @@ public:
     void SetDeceleration(double deceleration_) { deceleration = deceleration_; };
     void SetMaxSpeed(double maxSpeed_) { maxSpeed = maxSpeed_; };
     void SetJumpSpeed(double jumpSpeed_) { jumpSpeed = jumpSpeed_; };
+    bool SetSlopeMaxAngle(double slopeMaxAngle_);
     void SetCanJump() { canJump = true; };
 
     void IgnoreDefaultControls(bool ignore = true) { ignoreDefaultControls = ignore; };
@@ -112,7 +114,7 @@ private:
      * \param candidates The platform to be tested for collision
      * \param exceptTheseOnes The platforms to be excluded from the test
      */
-    std::set<PlatformAutomatism*> GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+    std::set<PlatformAutomatism*> GetPlatformsCollidingWith(const std::set<PlatformAutomatism*> & candidates,
         const std::set<PlatformAutomatism*> & exceptTheseOnes);
 
     /**
@@ -122,7 +124,7 @@ private:
      * \param exceptThisOne If not NULL, this platform won't be tested for collision.
      * \param excludeJumpThrus If set to true, the jump thru platform will be excluded.
      */
-    bool IsCollidingWith(const std::set<PlatformAutomatism*> & candidates, 
+    bool IsCollidingWith(const std::set<PlatformAutomatism*> & candidates,
         PlatformAutomatism * exceptThisOne = NULL, bool excludeJumpThrus = false);
 
     /**
@@ -145,12 +147,14 @@ private:
      */
     std::set<PlatformAutomatism*> GetJumpthruCollidingWith(const std::set<PlatformAutomatism*> & candidates);
 
-    double gravity; //In pixels.seconds^-2
-    double maxFallingSpeed; //In pixels.seconds^-1
-    double acceleration; //In pixels.seconds^-2
-    double deceleration; //In pixels.seconds^-2
-    double maxSpeed; //In pixels.seconds^-1
-    double jumpSpeed; //In pixels.seconds^-1
+    double gravity; ///< In pixels.seconds^-2
+    double maxFallingSpeed; ///< In pixels.seconds^-1
+    double acceleration; ///< In pixels.seconds^-2
+    double deceleration; ///< In pixels.seconds^-2
+    double maxSpeed; ///< In pixels.seconds^-1
+    double jumpSpeed; ///< In pixels.seconds^-1
+    double slopeMaxAngle; ///< In degrees
+    double slopeClimbingFactor; ///< Equals to tan(slopeMaxAngle).
 
     RuntimeScene * parentScene; ///< The scene the object belongs to.
     ScenePlatformObjectsManager * sceneManager; ///< The platform objects manager associated to the scene.

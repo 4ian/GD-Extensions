@@ -8,18 +8,18 @@ Copyright (c) 2013-2014 Florian Rival (Florian.Rival@gmail.com)
  * considered as a platform by objects having PlatformerObject Automatism.
  *
  * @class PlatformerObjectRuntimeAutomatism
- * @constructor 
+ * @constructor
  */
 gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
-    this._gravity = parseFloat(automatismData.attr.gravity);
-    this._maxFallingSpeed = parseFloat(automatismData.attr.maxFallingSpeed);
-    this._acceleration = parseFloat(automatismData.attr.acceleration);
-    this._deceleration = parseFloat(automatismData.attr.deceleration);
-    this._maxSpeed = parseFloat(automatismData.attr.maxSpeed);
-    this._jumpSpeed = parseFloat(automatismData.attr.jumpSpeed);
+    this._gravity = parseFloat(automatismData.attr.gravity, 10);
+    this._maxFallingSpeed = parseFloat(automatismData.attr.maxFallingSpeed, 10);
+    this._acceleration = parseFloat(automatismData.attr.acceleration, 10);
+    this._deceleration = parseFloat(automatismData.attr.deceleration, 10);
+    this._maxSpeed = parseFloat(automatismData.attr.maxSpeed, 10);
+    this._jumpSpeed = parseFloat(automatismData.attr.jumpSpeed, 10);
     this._isOnFloor = false;
     this._isOnLadder = false;
     this._floorPlatform = null;
@@ -38,8 +38,9 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
     this._potentialCollidingObjects = {}; //Hashtable of platforms (Keys: Objects id, values: automatisms) near the object, updated with _updatePotentialCollidingObjects.
     this._collidingObjects = {};
     this._overlappedJumpThru = {};
-    this._oldHeight = owner.getHeight();
+    this._oldHeight = 0;//owner.getHeight(); //Be careful, object might not be initialized.
     this._hasReallyMoved = false;
+    this.setSlopeMaxAngle(parseFloat(automatismData.attr.slopeMaxAngle, 10));
 
 	//Create the shared manager if necessary.
 	if ( !gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.containsKey(runtimeScene.getName()) ) {
@@ -52,7 +53,7 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
 gdjs.PlatformerObjectRuntimeAutomatism.prototype = Object.create( gdjs.RuntimeAutomatism.prototype );
 gdjs.PlatformerObjectRuntimeAutomatism.thisIsARuntimeAutomatismConstructor = "PlatformAutomatism::PlatformerObjectAutomatism";
 
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene) 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene)
 {
     var LEFTKEY = 37;
     var UPKEY = 38;
@@ -121,7 +122,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
         //Colliding: Try to push out from the solid.
         //Note that jump thru are never obstacle on X axis.
         while ( this._isCollidingWith(this._potentialCollidingObjects, floorPlatformId, /*excludeJumpthrus=*/true) ) {
-            if ( (requestedDeltaX > 0 && object.getX() <= oldX) || 
+            if ( (requestedDeltaX > 0 && object.getX() <= oldX) ||
                  (requestedDeltaX < 0 && object.getX() >= oldX) ) {
                 object.setX(oldX); //Unable to move the object without being stuck in an obstacle.
                 break;
@@ -205,15 +206,15 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
             var step = 0;
             var stillInFloor = false;
             do {
-                if ( step >= Math.floor(Math.abs(requestedDeltaX)) ) { //Slope is too step ( > 50% )
+                if ( step >= Math.floor(Math.abs(requestedDeltaX*this._slopeClimbingFactor)) ) { //Slope is too step ( > 50% )
 
-                    object.setY(object.getY()-(Math.abs(requestedDeltaX)-step)); //Try to add the decimal part.
+                    object.setY(object.getY()-(Math.abs(requestedDeltaX*this._slopeClimbingFactor)-step)); //Try to add the decimal part.
                     if ( gdjs.RuntimeObject.collisionTest(object, this._floorPlatform.owner) )
                         stillInFloor = true; //Too steep.
 
                     break;
                 }
-         
+
                 //Try to get out of the floor.
                 object.setY(object.getY()-1);
                 step++;
@@ -232,7 +233,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
             var step = 0;
             var noMoreOnFloor = false;
             while ( !this._isCollidingWith(this._potentialCollidingObjects) ) {
-                if ( step > Math.abs(requestedDeltaX) ) { //Slope is too step ( > 50% )
+                if ( step > Math.abs(requestedDeltaX*this._slopeClimbingFactor) ) { //Slope is too step ( > 50% )
                     noMoreOnFloor = true;
                     break;
                 }
@@ -244,7 +245,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
             if ( noMoreOnFloor )
                 object.setY(oldY); //Unable to follow the floor: Go back to the original position. Fall will be triggered next tick.
             else
-                object.setY(object.getY()-1); //Floor touched: Go back 1 pixel over.   
+                object.setY(object.getY()-1); //Floor touched: Go back 1 pixel over.
         }
 
     }
@@ -260,7 +261,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
         {
             this._jumping = false;
             this._currentJumpSpeed = 0;
-            if ( (requestedDeltaY > 0 && object.getY() <= oldY) || 
+            if ( (requestedDeltaY > 0 && object.getY() <= oldY) ||
                  (requestedDeltaY < 0 && object.getY() >= oldY) ) {
                 object.setY(oldY); //Unable to move the object without being stuck in an obstacle.
                 break;
@@ -299,7 +300,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
                     this._floorPlatform = this._collidingObjects[k];
                     this._floorLastX = this._floorPlatform.owner.getX();
                     this._floorLastY = this._floorPlatform.owner.getY();
-                    
+
                     collidingWithAnObject = true;
                     break;
                 }
@@ -327,7 +328,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPreEvents = function(runt
 
 gdjs.PlatformerObjectRuntimeAutomatism.prototype.doStepPostEvents = function(runtimeScene) {
     //Scene change is not supported
-    /*   
+    /*
     if ( parentScene != &scene ) //Parent scene has changed
     {
         parentScene = &scene;
@@ -352,7 +353,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype._isCollidingWith = function(can
         if (candidates.hasOwnProperty(k)) {
             var platform = candidates[k];
 
-            if ( k === exceptThisOne ) continue;
+            if ( platform.owner.id === exceptThisOne ) continue;
             if ( platform.getPlatformType() === gdjs.PlatformRuntimeAutomatism.LADDER ) continue;
             if ( excludeJumpThrus && platform.getPlatformType() === gdjs.PlatformRuntimeAutomatism.JUMPTHRU ) continue;
 
@@ -466,12 +467,12 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype._updatePotentialCollidingObject
 
     //This is the naive implementation when the platforms manager is simply containing a list
     //of all existing platforms:
-    
+
     /*var o1w = this.owner.getWidth();
     var o1h = this.owner.getHeight();
     var obj1BoundingRadius = Math.sqrt(o1w*o1w+o1h*o1h)/2.0 + maxMovementLength;
 
-    //Get all platforms and keep only 
+    //Get all platforms and keep only
     var allPlatforms = this._manager.getAllPlatforms();
     for (var k in allPlatforms.items) {
         if (allPlatforms.items.hasOwnProperty(k)) {
@@ -483,7 +484,7 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype._updatePotentialCollidingObject
             var x = this.owner.getDrawableX()+this.owner.getCenterX()-(obj2.getDrawableX()+obj2.getCenterX());
             var y = this.owner.getDrawableY()+this.owner.getCenterY()-(obj2.getDrawableY()+obj2.getCenterY());
             var obj2BoundingRadius = Math.sqrt(o2w*o2w+o2h*o2h)/2.0;
-            
+
             if ( Math.sqrt(x*x+y*y) <= obj1BoundingRadius + obj2BoundingRadius ) {
                 if ( !this._potentialCollidingObjects.hasOwnProperty(k) )
                     this._potentialCollidingObjects[k] = allPlatforms.items[k];
@@ -505,27 +506,27 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.simulateControl = function(inpu
     else if ( input === "Jump" ) this._jumpKey = true;
 };
 
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.getGravity = function() 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getGravity = function()
 {
     return this._gravity;
 };
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.getMaxFallingSpeed = function() 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getMaxFallingSpeed = function()
 {
     return this._maxFallingSpeed;
 };
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.getAcceleration = function() 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getAcceleration = function()
 {
     return this._acceleration;
 };
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.getDeceleration = function() 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getDeceleration = function()
 {
     return this._deceleration;
 };
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.getMaxSpeed = function() 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getMaxSpeed = function()
 {
     return this._maxSpeed;
 };
-gdjs.PlatformerObjectRuntimeAutomatism.prototype.getJumpSpeed = function() 
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.getJumpSpeed = function()
 {
     return this._jumpSpeed;
 };
@@ -553,6 +554,16 @@ gdjs.PlatformerObjectRuntimeAutomatism.prototype.setMaxSpeed = function(maxSpeed
 gdjs.PlatformerObjectRuntimeAutomatism.prototype.setJumpSpeed = function(jumpSpeed)
 {
     this._jumpSpeed = jumpSpeed;
+};
+gdjs.PlatformerObjectRuntimeAutomatism.prototype.setSlopeMaxAngle = function(slopeMaxAngle)
+{
+    if (slopeMaxAngle < 0 || slopeMaxAngle >= 90) return;
+
+    this._slopeMaxAngle = slopeMaxAngle;
+    if ( slopeMaxAngle == 45 )
+        this._slopeClimbingFactor = 1; //Avoid rounding errors
+    else
+        this._slopeClimbingFactor = Math.tan(slopeMaxAngle*3.1415926/180.0);
 };
 gdjs.PlatformerObjectRuntimeAutomatism.prototype.setCanJump = function()
 {

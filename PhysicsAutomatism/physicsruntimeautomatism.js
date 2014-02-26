@@ -4,7 +4,7 @@ Copyright (c) 2013-2014 Florian Rival (Florian.Rival@gmail.com)
  */
 
 /**
- * Manage the common objects shared by objects having a 
+ * Manage the common objects shared by objects having a
  * physics automatism.
  */
 gdjs.PhysicsSharedData = function(runtimeScene, sharedData)
@@ -21,35 +21,35 @@ gdjs.PhysicsSharedData = function(runtimeScene, sharedData)
 	//Setup world and contact listener
 	var b2World = Box2D.Dynamics.b2World;
 	var b2Vec2 = Box2D.Common.Math.b2Vec2;
-	this.world = new b2World(new b2Vec2(parseFloat(sharedData.attr.gravityX), 
+	this.world = new b2World(new b2Vec2(parseFloat(sharedData.attr.gravityX),
 		-parseFloat(sharedData.attr.gravityY)), true);
 	//this.world.SetAutoClearForces(false);
- 
+
  	this.contactListener = new Box2D.Dynamics.b2ContactListener();
 	this.contactListener.BeginContact = function (contact) {
 
-    	if ( contact.GetFixtureA().GetBody() == null || 
-    		 contact.GetFixtureB().GetBody() == null ) 
+    	if ( contact.GetFixtureA().GetBody() == null ||
+    		 contact.GetFixtureB().GetBody() == null )
     		return;
 
 		var automatismA = contact.GetFixtureA().GetBody().GetUserData(),
 		automatismB = contact.GetFixtureB().GetBody().GetUserData();
-		 
+
 		automatismA.currentContacts.push(automatismB);
 		automatismB.currentContacts.push(automatismA);
 	};
 	this.contactListener.EndContact = function (contact) {
 
-    	if ( contact.GetFixtureA().GetBody() == null || 
-    		 contact.GetFixtureB().GetBody() == null ) 
-    		return;
+        if ( contact.GetFixtureA().GetBody() === null ||
+            contact.GetFixtureB().GetBody() === null )
+        return;
 
 		var automatismA = contact.GetFixtureA().GetBody().GetUserData(),
 		automatismB = contact.GetFixtureB().GetBody().GetUserData();
-		
+
 		var i = automatismA.currentContacts.indexOf(automatismB);
 		if ( i !== -1 ) automatismA.currentContacts.remove(i);
-		
+
 		i = automatismB.currentContacts.indexOf(automatismA);
 		if ( i !== -1 ) automatismB.currentContacts.remove(i);
 	};
@@ -61,8 +61,8 @@ gdjs.PhysicsSharedData.prototype.step = function(dt) {
 	this.totalTime += dt;
 
 	if(this.totalTime > this.fixedTimeStep) {
-	   var numberOfSteps = Math.floor(this.totalTime / this.fixedTimeStep);
-	   this.totalTime -= numberOfSteps * this.fixedTimeStep;
+        var numberOfSteps = Math.floor(this.totalTime / this.fixedTimeStep);
+        this.totalTime -= numberOfSteps * this.fixedTimeStep;
 
         if ( numberOfSteps > 5 ) numberOfSteps = 5; //Process 5 steps at max.
 
@@ -80,7 +80,7 @@ gdjs.PhysicsSharedData.prototype.step = function(dt) {
  * moved in a realistic way thanks to a physics engine.
  *
  * @class PhysicsRuntimeAutomatism
- * @constructor 
+ * @constructor
  */
 gdjs.PhysicsRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
@@ -111,7 +111,7 @@ gdjs.PhysicsRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 		var initialData = runtimeScene.getInitialSharedDataForAutomatism(automatismData.attr.Name);
 		var data = new gdjs.PhysicsSharedData(runtimeScene, initialData);
 		gdjs.PhysicsRuntimeAutomatism.scenesSharedData.put(runtimeScene.getName(), data);
-	}	
+	}
 	this._sharedData = gdjs.PhysicsRuntimeAutomatism.scenesSharedData.get(runtimeScene.getName());
 
 	//Do not create body now: the object is not fully created.
@@ -120,7 +120,7 @@ gdjs.PhysicsRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 gdjs.PhysicsRuntimeAutomatism.prototype = Object.create( gdjs.RuntimeAutomatism.prototype );
 gdjs.PhysicsRuntimeAutomatism.thisIsARuntimeAutomatismConstructor = "PhysicsAutomatism::PhysicsAutomatism";
 gdjs.PhysicsRuntimeAutomatism.scenesSharedData = new Hashtable();
-    
+
 gdjs.PhysicsRuntimeAutomatism.prototype.onDeActivate = function() {
 	if ( this._box2DBody !== null ) {
 		this._sharedData.world.DestroyBody(this._box2DBody);
@@ -174,7 +174,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.createBody = function() {
 		var box = new b2PolygonShape();
 		box.SetAsBox(
 			((this.owner.getWidth() > 0 ? this.owner.getWidth() : 1)*
-				this._sharedData.invScaleX)/2, 
+				this._sharedData.invScaleX)/2,
 			((this.owner.getHeight() > 0 ? this.owner.getHeight() : 1)*
 				this._sharedData.invScaleY)/2);
 
@@ -195,7 +195,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScene)
 	if ( this._box2DBody === null ) this.createBody();
 
 	//Simulate the world
-	if ( !this._sharedData.stepped ) 
+	if ( !this._sharedData.stepped )
 		this._sharedData.step(runtimeScene.getElapsedTime()/1000);
 
     //Update object position according to Box2D body
@@ -219,18 +219,27 @@ gdjs.PhysicsRuntimeAutomatism.prototype.doStepPostEvents = function(runtimeScene
 	if ( this._box2DBody === null ) this.createBody();
 
 	//Ensure the Box2D body width and height are correct.
-	if ( this._objectOldWidth !== this.owner.getWidth() || 
+	if ( this._objectOldWidth !== this.owner.getWidth() ||
 		this._objectOldHeight !== this.owner.getHeight() ) {
+
+        //Recreate the body, but remember its movement.
+        var oldAngularVelocity = this._box2DBody.GetAngularVelocity();
+        var oldXVelocity = this._box2DBody.GetLinearVelocity().x;
+        var oldYVelocity = this._box2DBody.GetLinearVelocity().y;
+
 		this._sharedData.world.DestroyBody(this._box2DBody);
 		this.createBody();
+
+        this._box2DBody.SetAngularVelocity(oldAngularVelocity);
+        this._box2DBody.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(oldXVelocity, oldYVelocity));
 	}
 
 	this._sharedData.stepped = false;
 
 	//Ensure that the Box2D body position is correct
-    if ( this._objectOldX == this.owner.getX() && 
-    	this._objectOldY == this.owner.getY() && 
-    	this._objectOldAngle == this.owner.getAngle())
+    if ( this._objectOldX == this.owner.getX() &&
+        this._objectOldY == this.owner.getY() &&
+        this._objectOldAngle == this.owner.getAngle())
         return;
 
     var pos = new Box2D.Common.Math.b2Vec2(
@@ -338,7 +347,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.applyForceTowardPosition = function(xPos
     var angle = Math.atan2(yPosition*this._sharedData.invScaleY+this._box2DBody.GetPosition().y,
                         xPosition*this._sharedData.invScaleX-this._box2DBody.GetPosition().x);
 
-    this._box2DBody.ApplyForce(new Box2D.Common.Math.b2Vec2(Math.cos(angle)*length, 
+    this._box2DBody.ApplyForce(new Box2D.Common.Math.b2Vec2(Math.cos(angle)*length,
         -Math.sin(angle)*length), this._box2DBody.GetPosition());
 };
 
@@ -396,7 +405,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.addRevoluteJoint = function( xPosition, 
 
     var jointDef = new Box2D.Dynamics.Joints.b2RevoluteJointDef();
     jointDef.Initialize(this._box2DBody, this._sharedData.world.GetGroundBody(),
-                        new Box2D.Common.Math.b2Vec2( xPosition*this._sharedData.invScaleX, 
+                        new Box2D.Common.Math.b2Vec2( xPosition*this._sharedData.invScaleX,
                         	-yPosition*this._sharedData.invScaleY));
 
     this._sharedData.world.CreateJoint(jointDef);
@@ -406,7 +415,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.setGravity = function( xGravity, yGravit
 {
     if ( this._box2DBody === null ) this.createBody();
 
-    this._sharedData.world.SetGravity(new Box2D.Common.Math.b2Vec2( 
+    this._sharedData.world.SetGravity(new Box2D.Common.Math.b2Vec2(
     	xGravity*this._sharedData.invScaleX, -yGravity*this._sharedData.invScaleY));
 }
 
@@ -421,11 +430,11 @@ gdjs.PhysicsRuntimeAutomatism.prototype.addGearJointBetweenObjects = function( o
 
     //Gear joint need a revolute joint to the ground for the two objects
     var jointDef1 = new Box2D.Dynamics.Joints.b2RevoluteJointDef();
-    jointDef1.Initialize(this._sharedData.world.GetGroundBody(), this._box2DBody, 
+    jointDef1.Initialize(this._sharedData.world.GetGroundBody(), this._box2DBody,
     	this._box2DBody.GetWorldCenter());
 
     var jointDef2 = new Box2D.Dynamics.Joints.b2RevoluteJointDef();
-    jointDef2.Initialize(this._sharedData.world.GetGroundBody(), otherBody, 
+    jointDef2.Initialize(this._sharedData.world.GetGroundBody(), otherBody,
     	otherBody.GetWorldCenter());
 
     var jointDef = new Box2D.Dynamics.Joints.b2GearJointDef();
@@ -442,7 +451,7 @@ gdjs.PhysicsRuntimeAutomatism.prototype.setLinearVelocityX = function( xVelocity
 {
     if ( this._box2DBody === null ) this.createBody();
 
-    this._box2DBody.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(xVelocity, 
+    this._box2DBody.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(xVelocity,
     	this._box2DBody.GetLinearVelocity().y));
 
 }
