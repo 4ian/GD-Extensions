@@ -12,27 +12,27 @@
 gdjs.TextRuntimeObject = function(runtimeScene, objectData)
 {
     gdjs.RuntimeObject.call(this, runtimeScene, objectData);
-    
+
     this._runtimeScene = runtimeScene;
     this._characterSize = parseInt(objectData.CharacterSize.attr.value);
     this._fontName = "Arial";
     this._bold = objectData.attr.bold === "true";
     this._italic = objectData.attr.italic === "true";
     this._underlined = objectData.attr.underlined === "true";
-    this._color = [parseInt(objectData.Color.attr.r), 
+    this._color = [parseInt(objectData.Color.attr.r),
                 parseInt(objectData.Color.attr.g),
                 parseInt(objectData.Color.attr.b)];
     if ( objectData.Font.attr.value !== "" ) {
         this._fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
     }
-     
+
     this._str = objectData.String.attr.value;
-    
+
     if ( this._text == undefined ) this._text = new PIXI.Text(" ", {align:"left"});
     this._text.anchor.x = 0.5;
     this._text.anchor.y = 0.5;
     runtimeScene.getLayer("").addChildToPIXIContainer(this._text, this.zOrder);
-    
+
     this._updateTextStyle();
     this.setString(this._str);
 };
@@ -57,7 +57,7 @@ gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
 
 gdjs.TextRuntimeObject.prototype._updateTextPosition = function() {
     this._text.position.x = this.x+this._text.width/2;
-    this._text.position.y = this.y+this._text.height/2;  
+    this._text.position.y = this.y+this._text.height/2;
     this.hitBoxesDirty = true;
 };
 
@@ -93,6 +93,8 @@ gdjs.TextRuntimeObject.prototype.getString = function() {
 };
 
 gdjs.TextRuntimeObject.prototype.setString = function(str) {
+    if ( str === this._str ) return;
+
     this._str = str;
     this._text.setText(str.length === 0 ? " " : str);
     this._text.updateText(); //Work around a PIXI.js bug.

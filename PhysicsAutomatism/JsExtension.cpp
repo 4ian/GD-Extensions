@@ -28,12 +28,7 @@ freely, subject to the following restrictions:
 #include "GDCore/Tools/Version.h"
 #include <boost/version.hpp>
 #include <iostream>
-#include <wx/intl.h>
-//Ensure the wxWidgets macro "_" returns a std::string
-#if defined(_)
-    #undef _
-#endif
-#define _(s) std::string(wxGetTranslation((s)).mb_str())
+#include "GDCore/Tools/Localization.h"
 
 /**
  * \brief This class declares information about the JS extension.
@@ -55,7 +50,7 @@ public:
         CloneExtension("Game Develop C++ platform", "PhysicsAutomatism");
 
         GetAutomatismMetadata("PhysicsAutomatism::PhysicsAutomatism")
-            .SetIncludeFile("PhysicsAutomatism/Box2DWeb/Box2dWeb-2.1.a.3.min.js")
+            .SetIncludeFile("PhysicsAutomatism/box2d.js/box2d.js")
             .AddIncludeFile("PhysicsAutomatism/physicsruntimeautomatism.js");
 
         std::map<std::string, gd::InstructionMetadata > & autActions = GetAllActionsForAutomatism("PhysicsAutomatism::PhysicsAutomatism");
