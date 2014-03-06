@@ -14,27 +14,29 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
     gdjs.RuntimeObject.call(this, runtimeScene, objectData);
 
     this._runtimeScene = runtimeScene;
-    this._characterSize = parseInt(objectData.CharacterSize.attr.value);
+    this._characterSize = parseInt(objectData.CharacterSize.attr.value, 10);
     this._fontName = "Arial";
     this._bold = objectData.attr.bold === "true";
     this._italic = objectData.attr.italic === "true";
     this._underlined = objectData.attr.underlined === "true";
-    this._color = [parseInt(objectData.Color.attr.r),
-                parseInt(objectData.Color.attr.g),
-                parseInt(objectData.Color.attr.b)];
+    this._color = [parseInt(objectData.Color.attr.r, 10),
+                parseInt(objectData.Color.attr.g, 10),
+                parseInt(objectData.Color.attr.b, 10)];
     if ( objectData.Font.attr.value !== "" ) {
         this._fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
     }
 
     this._str = objectData.String.attr.value;
 
-    if ( this._text == undefined ) this._text = new PIXI.Text(" ", {align:"left"});
+    if ( this._text === undefined ) this._text = new PIXI.Text(" ", {align:"left"});
     this._text.anchor.x = 0.5;
     this._text.anchor.y = 0.5;
     runtimeScene.getLayer("").addChildToPIXIContainer(this._text, this.zOrder);
 
+    this._text.setText(this._str.length === 0 ? " " : this._str);
+    this._text.updateText(); //Work around a PIXI.js bug.
     this._updateTextStyle();
-    this.setString(this._str);
+    this._updateTextPosition();
 };
 
 gdjs.TextRuntimeObject.prototype = Object.create( gdjs.RuntimeObject.prototype );
@@ -129,7 +131,7 @@ gdjs.TextRuntimeObject.prototype.setItalic = function(enable) {
 };
 
 gdjs.TextRuntimeObject.prototype.hide = function(enable) {
-    if ( enable == undefined ) enable = true;
+    if ( enable === undefined ) enable = true;
     this._hidden = enable;
     this._text.visible = !enable;
 };
@@ -153,9 +155,9 @@ gdjs.TextRuntimeObject.prototype.setColor = function(str) {
     var color = str.split(";");
     if ( color.length < 3 ) return;
 
-    this._color[0] = parseInt(color[0]);
-    this._color[1] = parseInt(color[1]);
-    this._color[2] = parseInt(color[2]);
+    this._color[0] = parseInt(color[0], 10);
+    this._color[1] = parseInt(color[1], 10);
+    this._color[2] = parseInt(color[2], 10);
     this._updateTextStyle();
 };
 
