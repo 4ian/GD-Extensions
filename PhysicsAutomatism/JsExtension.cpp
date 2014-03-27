@@ -50,7 +50,7 @@ public:
         CloneExtension("Game Develop C++ platform", "PhysicsAutomatism");
 
         GetAutomatismMetadata("PhysicsAutomatism::PhysicsAutomatism")
-            .SetIncludeFile("PhysicsAutomatism/box2d.js/box2d.js")
+            .SetIncludeFile("PhysicsAutomatism/box2djs/box2d.js")
             .AddIncludeFile("PhysicsAutomatism/physicsruntimeautomatism.js");
 
         std::map<std::string, gd::InstructionMetadata > & autActions = GetAllActionsForAutomatism("PhysicsAutomatism::PhysicsAutomatism");

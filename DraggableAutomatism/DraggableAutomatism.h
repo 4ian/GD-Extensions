@@ -59,6 +59,8 @@ public:
      */
     bool IsDragged() const { return dragged; };
 
+    virtual void OnDeActivate();
+
 private:
 
     virtual void DoStepPreEvents(RuntimeScene & scene);

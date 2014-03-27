@@ -85,6 +85,12 @@ void DraggableAutomatism::DoStepPreEvents(RuntimeScene & scene)
     }
 }
 
+void DraggableAutomatism::OnDeActivate()
+{
+    if (dragged) somethingDragged = false;
+    dragged = false;
+}
+
 #if defined(GD_IDE_ONLY)
 void DraggableAutomatism::SaveToXml(TiXmlElement * elem) const
 {
