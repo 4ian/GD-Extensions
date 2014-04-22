@@ -41,7 +41,7 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 #include "GDCore/IDE/ArbitraryResourceWorker.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
-#include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
+#include "GDCore/IDE/Dialogs/PropertyDescriptor.h"
 #include "SoundObjectEditor.h"
 #endif
 
@@ -276,9 +276,9 @@ void SoundObject::LoadEdittimeIcon()
     soundSprite.setTexture(soundIcon);
 }
 
-std::map<std::string, gd::PropgridPropertyDescriptor> SoundObject::GetInitialInstanceProperties(const gd::InitialInstance & position, gd::Project & game, gd::Layout & scene)
+std::map<std::string, gd::PropertyDescriptor> SoundObject::GetInitialInstanceProperties(const gd::InitialInstance & position, gd::Project & game, gd::Layout & scene)
 {
-    std::map<std::string, gd::PropgridPropertyDescriptor> properties;
+    std::map<std::string, gd::PropertyDescriptor> properties;
     properties[ToString(_("Z"))] = position.floatInfos.find("z") != position.floatInfos.end() ?
                                    ToString(position.floatInfos.find("z")->second) :
                                    "0";

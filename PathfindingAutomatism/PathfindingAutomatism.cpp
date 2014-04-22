@@ -45,7 +45,7 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 #include <map>
 #include "GDCore/Tools/Localization.h"
-#include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
+#include "GDCore/IDE/Dialogs/PropertyDescriptor.h"
 #endif
 
 namespace
@@ -643,9 +643,9 @@ void PathfindingAutomatism::SaveToXml(TiXmlElement * elem) const
     GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("extraBorder", extraBorder);
 }
 
-std::map<std::string, gd::PropgridPropertyDescriptor> PathfindingAutomatism::GetProperties(gd::Project & project) const
+std::map<std::string, gd::PropertyDescriptor> PathfindingAutomatism::GetProperties(gd::Project & project) const
 {
-    std::map<std::string, gd::PropgridPropertyDescriptor> properties;
+    std::map<std::string, gd::PropertyDescriptor> properties;
 
     properties[ToString(_("Allows diagonals"))].SetValue(allowDiagonals ? "true" : "false").SetType("Boolean");
     properties[ToString(_("Acceleration"))].SetValue(ToString(acceleration));

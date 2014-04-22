@@ -8,7 +8,7 @@ class GD_EXTENSION_API ErrorManager
 {
     public:
 
-    static ErrorManager *GetInstance()
+    static ErrorManager *Get()
     {
         if ( !_singleton )
         {

@@ -592,7 +592,7 @@ void PathAutomatismEditor::OnPanel1Paint(wxPaintEvent& event)
     wxSize panelSize = previewPnl->GetSize();
 
     //Draw background
-    dc.SetBrush(gd::CommonBitmapManager::GetInstance()->transparentBg);
+    dc.SetBrush(gd::CommonBitmapManager::Get()->transparentBg);
     dc.DrawRectangle(0,0, panelSize.GetWidth(), panelSize.GetHeight());
 
     //Draw the image
@@ -614,7 +614,7 @@ void PathAutomatismEditor::OnPanel1Paint(wxPaintEvent& event)
     dc.SetPen(wxPen(wxColor(50, 57, 122)));
     dc.DrawLines(points.size(), &points[0]);
 
-    wxBitmap point(gd::CommonBitmapManager::GetInstance()->point);
+    wxBitmap point(gd::CommonBitmapManager::Get()->point);
 
     //Draw points
     for(unsigned int a = 0; a < path->size(); a++)

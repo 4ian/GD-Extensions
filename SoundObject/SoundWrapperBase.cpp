@@ -158,10 +158,10 @@ float SoundWrapper::GetPitch() const
 bool SoundWrapper::LoadFromFileImpl(const std::string &filename, const RuntimeScene &scene)
 {
     #if !defined(GD_IDE_ONLY)
-    if(gd::RessourcesLoader::GetInstance()->HasFile(filename))
+    if(gd::RessourcesLoader::Get()->HasFile(filename))
     {
-        if(m_buffer.loadFromMemory(gd::RessourcesLoader::GetInstance()->LoadBinaryFile(filename),
-                                   gd::RessourcesLoader::GetInstance()->GetBinaryFileSize(filename)))
+        if(m_buffer.loadFromMemory(gd::RessourcesLoader::Get()->LoadBinaryFile(filename),
+                                   gd::RessourcesLoader::Get()->GetBinaryFileSize(filename)))
         {
             m_sound.setBuffer(m_buffer);
             return true;
@@ -284,10 +284,10 @@ float MusicWrapper::GetPitch() const
 bool MusicWrapper::LoadFromFileImpl(const std::string &filename, const RuntimeScene &scene)
 {
     #if !defined(GD_IDE_ONLY)
-    if(gd::RessourcesLoader::GetInstance()->HasFile(filename))
+    if(gd::RessourcesLoader::Get()->HasFile(filename))
     {
-        if(m_music.openFromMemory(gd::RessourcesLoader::GetInstance()->LoadBinaryFile(filename),
-                                  gd::RessourcesLoader::GetInstance()->GetBinaryFileSize(filename)))
+        if(m_music.openFromMemory(gd::RessourcesLoader::Get()->LoadBinaryFile(filename),
+                                  gd::RessourcesLoader::Get()->GetBinaryFileSize(filename)))
         {
             return true;
         }

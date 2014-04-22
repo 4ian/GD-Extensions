@@ -76,7 +76,7 @@ public:
      */
     const std::vector< std::pair<sf::IpAddress, short unsigned int> > & GetRecipientsList() const { return recipientsList; };
 
-    static NetworkManager *GetInstance()
+    static NetworkManager *Get()
     {
         if ( !_singleton )
         {

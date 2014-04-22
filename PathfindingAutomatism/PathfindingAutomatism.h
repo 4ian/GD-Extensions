@@ -109,7 +109,7 @@ public:
      */
     virtual void SaveToXml(TiXmlElement * elem) const;
 
-    virtual std::map<std::string, gd::PropgridPropertyDescriptor> GetProperties(gd::Project & project) const;
+    virtual std::map<std::string, gd::PropertyDescriptor> GetProperties(gd::Project & project) const;
     virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project);
     #endif
 

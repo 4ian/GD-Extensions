@@ -94,8 +94,8 @@ bool VideoWrapper::Load(std::string filename)
         #if defined(GD_IDE_ONLY)
         clip = TheoraVideoManager::getSingletonPtr()->createVideoClip(filename, TH_RGBA);
         #else
-        TheoraMemoryLoader *memLoad = new TheoraMemoryLoader(filename, (unsigned char*)gd::RessourcesLoader::GetInstance()->LoadBinaryFile(filename),
-                                                                       gd::RessourcesLoader::GetInstance()->GetBinaryFileSize(filename));
+        TheoraMemoryLoader *memLoad = new TheoraMemoryLoader(filename, (unsigned char*)gd::RessourcesLoader::Get()->LoadBinaryFile(filename),
+                                                                       gd::RessourcesLoader::Get()->GetBinaryFileSize(filename));
         clip = TheoraVideoManager::getSingletonPtr()->createVideoClip(memLoad, TH_RGBA);
         #endif
     }

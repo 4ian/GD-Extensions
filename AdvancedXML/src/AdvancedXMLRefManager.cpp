@@ -49,7 +49,7 @@ namespace AdvancedXML
         m_refs.clear();
     }
 
-    RefManager* RefManager::GetInstance(RuntimeScene *scene)
+    RefManager* RefManager::Get(RuntimeScene *scene)
     {
         if((*inst)[scene] == NULL)
         {

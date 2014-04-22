@@ -37,7 +37,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <map>
 #include "GDCore/Tools/Localization.h"
-#include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
+#include "GDCore/IDE/Dialogs/PropertyDescriptor.h"
 #endif
 
 
@@ -129,9 +129,9 @@ void PlatformAutomatism::SaveToXml(TiXmlElement * elem) const
         GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("platformType", "NormalPlatform")
 }
 
-std::map<std::string, gd::PropgridPropertyDescriptor> PlatformAutomatism::GetProperties(gd::Project & project) const
+std::map<std::string, gd::PropertyDescriptor> PlatformAutomatism::GetProperties(gd::Project & project) const
 {
-    std::map<std::string, gd::PropgridPropertyDescriptor> properties;
+    std::map<std::string, gd::PropertyDescriptor> properties;
 
     std::string platformTypeStr = ToString(_("Platform"));
     if ( platformType == Ladder)

@@ -124,7 +124,7 @@ void TextObject::DrawInitialInstance(gd::InitialInstance & instance, sf::RenderT
                  (IsItalic() ? sf::Text::Italic : 0) |
                  (IsUnderlined() ? sf::Text::Underlined : 0) );
     if ( font ) sfText.setFont(*font);
-    else sfText.setFont(*FontManager::GetInstance()->GetFont(""));
+    else sfText.setFont(*FontManager::Get()->GetFont(""));
     sfText.setOrigin(sfText.getLocalBounds().width/2, sfText.getLocalBounds().height/2);
     sfText.setPosition( instance.GetX()+sfText.getOrigin().x, instance.GetY()+sfText.getOrigin().y );
     sfText.setRotation( instance.GetAngle() );
@@ -142,14 +142,14 @@ sf::Vector2f TextObject::GetInitialInstanceDefaultSize(gd::InitialInstance & ins
                  (IsItalic() ? sf::Text::Italic : 0) |
                  (IsUnderlined() ? sf::Text::Underlined : 0) );
     if ( font ) sfText.setFont(*font);
-    else sfText.setFont(*FontManager::GetInstance()->GetFont(""));
+    else sfText.setFont(*FontManager::Get()->GetFont(""));
 
     return sf::Vector2f(sfText.getLocalBounds().width, sfText.getLocalBounds().height+ sfText.getLocalBounds().top);
 }
 
 void TextObject::LoadResources(gd::Project & project, gd::Layout & layout)
 {
-    font = FontManager::GetInstance()->GetFont(fontName);
+    font = FontManager::Get()->GetFont(fontName);
 }
 
 void TextObject::DoSaveToXml(TiXmlElement * elem)
@@ -310,7 +310,7 @@ void RuntimeTextObject::ChangeFont(const std::string & fontName_)
     if ( !text.getFont() || fontName_ != fontName )
     {
         fontName = fontName_;
-        text.setFont(*FontManager::GetInstance()->GetFont(fontName));
+        text.setFont(*FontManager::Get()->GetFont(fontName));
         text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height/2);
         OnPositionChanged();
         SetSmooth(smoothed); //Ensure texture smoothing is up to date.

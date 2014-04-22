@@ -36,7 +36,7 @@ namespace AdvancedXML
     {
         public:
         ~RefManager();
-        static RefManager* GetInstance(RuntimeScene *scene);
+        static RefManager* Get(RuntimeScene *scene);
         static void Destroy();
 
         /**

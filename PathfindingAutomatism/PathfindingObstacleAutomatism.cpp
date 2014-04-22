@@ -36,7 +36,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <map>
 #include "GDCore/Tools/Localization.h"
-#include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
+#include "GDCore/IDE/Dialogs/PropertyDescriptor.h"
 #endif
 
 
@@ -116,9 +116,9 @@ void PathfindingObstacleAutomatism::SaveToXml(TiXmlElement * elem) const
     GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("cost", cost);
 }
 
-std::map<std::string, gd::PropgridPropertyDescriptor> PathfindingObstacleAutomatism::GetProperties(gd::Project & project) const
+std::map<std::string, gd::PropertyDescriptor> PathfindingObstacleAutomatism::GetProperties(gd::Project & project) const
 {
-    std::map<std::string, gd::PropgridPropertyDescriptor> properties;
+    std::map<std::string, gd::PropertyDescriptor> properties;
     properties[ToString(_("Impassable obstacle"))].SetValue(impassable ? "true" : "false").SetType("Boolean");
     properties[ToString(_("Cost (if not impassable)"))].SetValue(ToString(cost));
 

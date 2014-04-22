@@ -71,8 +71,8 @@ public:
                     const gd::Project & project = codeGenerator.GetProject();
                     const gd::Layout & scene = codeGenerator.GetLayout();
 
-                    boost::shared_ptr<FunctionEvent> functionEvent = FunctionEvent::SearchForFunctionInEvents(scene.GetEvents(), functionName);
-                    if ( functionEvent == boost::shared_ptr<FunctionEvent>() )
+                    const FunctionEvent * functionEvent = FunctionEvent::SearchForFunctionInEvents(scene.GetEvents(), functionName);
+                    if ( !functionEvent )
                     {
                         std::cout << "Function \""+functionName+"\" not found!" << std::endl;
                         return "//Function \""+functionName+"\" not found.\n";

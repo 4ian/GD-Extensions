@@ -36,7 +36,7 @@ class GD_EXTENSION_API ReceivedDataManager
 {
     public:
 
-    static ReceivedDataManager *GetInstance()
+    static ReceivedDataManager *Get()
     {
         if ( !_singleton )
         {

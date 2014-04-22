@@ -69,6 +69,21 @@ vector < vector<gd::Instruction>* > FunctionEvent::GetAllActionsVectors()
 
     return allActions;
 }
+vector < const vector<gd::Instruction>* > FunctionEvent::GetAllConditionsVectors() const
+{
+    vector < const vector<gd::Instruction>* > allConditions;
+    allConditions.push_back(&conditions);
+
+    return allConditions;
+}
+
+vector < const vector<gd::Instruction>* > FunctionEvent::GetAllActionsVectors() const
+{
+    vector < const vector<gd::Instruction>* > allActions;
+    allActions.push_back(&actions);
+
+    return allActions;
+}
 
 void FunctionEvent::SaveToXml(TiXmlElement * elem) const
 {
@@ -87,7 +102,7 @@ void FunctionEvent::SaveToXml(TiXmlElement * elem) const
     gd::EventsListSerialization::SaveActions(actions, actionsElem);
 
     //Sous évènements
-    if ( !GetSubEvents().empty() )
+    if ( !GetSubEvents().IsEmpty() )
     {
         TiXmlElement * subeventsElem;
         subeventsElem = new TiXmlElement( "Events" );
@@ -128,7 +143,7 @@ void FunctionEvent::LoadFromXml(gd::Project & project, const TiXmlElement * elem
  */
 void FunctionEvent::Render(wxDC & dc, int x, int y, unsigned int width, gd::EventsEditorItemsAreas & areas, gd::EventsEditorSelection & selection, const gd::Platform & platform)
 {
-    gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::GetInstance();
+    gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::Get();
     int border = renderingHelper->instructionsListBorder;
     const int functionTextHeight = 20;
 
@@ -162,7 +177,7 @@ unsigned int FunctionEvent::GetRenderedHeight(unsigned int width, const gd::Plat
 {
     if ( eventHeightNeedUpdate )
     {
-        gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::GetInstance();
+        gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::Get();
         int border = renderingHelper->instructionsListBorder;
         const int functionTextHeight = 20;
 
@@ -191,7 +206,7 @@ gd::BaseEvent::EditEventReturnType FunctionEvent::EditEvent(wxWindow* parent_, g
  */
 void FunctionEvent::Init(const FunctionEvent & event)
 {
-    events = CloneVectorOfEvents(event.events);
+    events = *event.events.Clone();
     name = event.name;
     objectsPassedAsArgument = event.objectsPassedAsArgument;
     conditions = event.conditions;
@@ -221,44 +236,25 @@ FunctionEvent& FunctionEvent::operator=(const FunctionEvent & event)
     return *this;
 }
 
-boost::shared_ptr<FunctionEvent> FunctionEvent::SearchForFunctionInEvents(const std::vector < boost::shared_ptr<gd::BaseEvent> > & events, const std::string & functionName)
+const FunctionEvent* FunctionEvent::SearchForFunctionInEvents(const gd::EventsList & events, const std::string & functionName)
 {
     for (unsigned int i = 0;i<events.size();++i)
     {
-        boost::shared_ptr<FunctionEvent> functionEvent = boost::dynamic_pointer_cast<FunctionEvent>(events[i]);
-        if ( functionEvent != boost::shared_ptr<FunctionEvent>() )
+        try {
+            const FunctionEvent & functionEvent = dynamic_cast<const FunctionEvent&>(events[i]);
+
+            if ( functionEvent.GetName() == functionName )
+                return &functionEvent;
+        } catch(...) {}
+
+        if ( events[i].CanHaveSubEvents() )
         {
-            if ( functionEvent->GetName() == functionName )
-                return functionEvent;
-        }
-
-        if ( events[i]->CanHaveSubEvents() )
-        {
-            boost::shared_ptr<FunctionEvent> result = SearchForFunctionInEvents(events[i]->GetSubEvents(), functionName);
-            if ( result != boost::shared_ptr<FunctionEvent>() ) return result;
-        }
-    }
-
-    return boost::shared_ptr<FunctionEvent>();
-}
-
-std::vector< boost::shared_ptr<FunctionEvent> > FunctionEvent::GetAllFunctionsInEvents(const std::vector < boost::shared_ptr<gd::BaseEvent> > & events)
-{
-    std::vector< boost::shared_ptr<FunctionEvent> > results;
-
-    for (unsigned int i = 0;i<events.size();++i)
-    {
-        boost::shared_ptr<FunctionEvent> functionEvent = boost::dynamic_pointer_cast<FunctionEvent>(events[i]);
-        if ( functionEvent != boost::shared_ptr<FunctionEvent>() ) results.push_back(functionEvent);
-
-        if ( events[i]->CanHaveSubEvents() )
-        {
-            std::vector< boost::shared_ptr<FunctionEvent> >  subResults = GetAllFunctionsInEvents(events[i]->GetSubEvents());
-            std::copy(subResults.begin(), subResults.end(), std::back_inserter(results));
+            const FunctionEvent * result = SearchForFunctionInEvents(events[i].GetSubEvents(), functionName);
+            if (result) return result;
         }
     }
 
-    return results;
+    return NULL;
 }
 
 #endif

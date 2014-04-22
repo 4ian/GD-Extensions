@@ -35,7 +35,7 @@ class RuntimeScene;
 class TiXmlElement;
 #if defined(GD_IDE_ONLY)
 #include <map>
-namespace gd { class PropgridPropertyDescriptor; }
+namespace gd { class PropertyDescriptor; }
 namespace gd { class Project; }
 namespace gd { class Layout; }
 #endif
@@ -59,7 +59,7 @@ public:
     /**
      * \brief The different types of platforms.
      */
-    enum PlatformType 
+    enum PlatformType
     {
         NormalPlatform,
         Jumpthru,
@@ -79,7 +79,7 @@ public:
 
     virtual void LoadFromXml(const TiXmlElement * elem);
     #if defined(GD_IDE_ONLY)
-    virtual std::map<std::string, gd::PropgridPropertyDescriptor> GetProperties(gd::Project & project) const;
+    virtual std::map<std::string, gd::PropertyDescriptor> GetProperties(gd::Project & project) const;
     virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project);
     virtual void SaveToXml(TiXmlElement * elem) const;
     #endif

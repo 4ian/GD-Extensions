@@ -42,7 +42,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <map>
 #include "GDCore/Tools/Localization.h"
-#include "GDCore/IDE/Dialogs/PropgridPropertyDescriptor.h"
+#include "GDCore/IDE/Dialogs/PropertyDescriptor.h"
 #endif
 
 PlatformerObjectAutomatism::PlatformerObjectAutomatism() :
@@ -553,9 +553,9 @@ void PlatformerObjectAutomatism::SaveToXml(TiXmlElement * elem) const
 
 }
 
-std::map<std::string, gd::PropgridPropertyDescriptor> PlatformerObjectAutomatism::GetProperties(gd::Project & project) const
+std::map<std::string, gd::PropertyDescriptor> PlatformerObjectAutomatism::GetProperties(gd::Project & project) const
 {
-    std::map<std::string, gd::PropgridPropertyDescriptor> properties;
+    std::map<std::string, gd::PropertyDescriptor> properties;
 
     properties[ToString(_("Gravity"))].SetValue(ToString(gravity));
     properties[ToString(_("Jump speed"))].SetValue(ToString(jumpSpeed));

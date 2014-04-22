@@ -292,7 +292,7 @@ void CustomPolygonDialog::OnpreviewPnlPaint(wxPaintEvent& event)
     float yOffset = (previewPnlVerticalScroll->GetThumbPosition() - previewPnlVerticalScroll->GetRange()/2);
 
     //Draw background
-    dc.SetBrush(gd::CommonBitmapManager::GetInstance()->transparentBg);
+    dc.SetBrush(gd::CommonBitmapManager::Get()->transparentBg);
     dc.DrawRectangle(0,0, panelSize.GetWidth(), panelSize.GetHeight());
 
     //Draw Collision Polygon
@@ -344,7 +344,7 @@ void CustomPolygonDialog::OnpreviewPnlPaint(wxPaintEvent& event)
     }
 
     //Draw origin
-    wxBitmap point(gd::CommonBitmapManager::GetInstance()->point);
+    wxBitmap point(gd::CommonBitmapManager::Get()->point);
     dc.DrawBitmap(point,
                   (0-point.GetWidth()/2)    -xOffset,
                   (0-point.GetHeight()/2)   -yOffset,

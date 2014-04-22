@@ -46,6 +46,7 @@ bool GD_EXTENSION_API PickObjectsLinkedTo(RuntimeScene & scene,
                                           std::map <std::string, std::vector<RuntimeObject*> *> pickedObjectsLists,
                                           RuntimeObject * object)
 {
+    if (!object) return false;
     bool isTrue = false;
 
     //Create a boolean for each object
@@ -67,7 +68,7 @@ bool GD_EXTENSION_API PickObjectsLinkedTo(RuntimeScene & scene,
         const std::vector<RuntimeObject*> & arr1 = *it->second;
         std::vector<RuntimeObject*> linkedObjects = ObjectsLinksManager::managers[&scene].GetObjectsLinkedWith(object);
 
-        for(unsigned int k = 0;k<arr1.size();++k) 
+        for(unsigned int k = 0;k<arr1.size();++k)
         {
             if ( std::find(linkedObjects.begin(), linkedObjects.end(), arr1[k]) != linkedObjects.end()) {
                 pickedList[i][k] = true;
@@ -102,16 +103,19 @@ bool GD_EXTENSION_API PickObjectsLinkedTo(RuntimeScene & scene,
 
 void GD_EXTENSION_API LinkObjects(RuntimeScene & scene, RuntimeObject * a, RuntimeObject * b)
 {
+    if (!a || !b) return;
     ObjectsLinksManager::managers[&scene].LinkObjects(a, b);
 }
 
 void GD_EXTENSION_API RemoveLinkBetween(RuntimeScene & scene, RuntimeObject * a, RuntimeObject * b )
 {
+    if (!a || !b) return;
     ObjectsLinksManager::managers[&scene].RemoveLinkBetween(a, b);
 }
 
 void GD_EXTENSION_API RemoveAllLinksOf(RuntimeScene & scene, RuntimeObject * object)
 {
+    if (!object) return;
     ObjectsLinksManager::managers[&scene].RemoveAllLinksOf(object);
 }
 

@@ -76,6 +76,30 @@ vector < gd::Expression* > TimedEvent::GetAllExpressions()
     return allExpressions;
 }
 
+vector < const vector<gd::Instruction>* > TimedEvent::GetAllConditionsVectors() const
+{
+    vector < const vector<gd::Instruction>* > allConditions;
+    allConditions.push_back(&conditions);
+
+    return allConditions;
+}
+
+vector < const vector<gd::Instruction>* > TimedEvent::GetAllActionsVectors() const
+{
+    vector < const vector<gd::Instruction>* > allActions;
+    allActions.push_back(&actions);
+
+    return allActions;
+}
+
+vector < const gd::Expression* > TimedEvent::GetAllExpressions() const
+{
+    vector < const gd::Expression* > allExpressions;
+    allExpressions.push_back(&timeout);
+
+    return allExpressions;
+}
+
 void TimedEvent::SaveToXml(TiXmlElement * eventElem) const
 {
     TiXmlElement * objectElem = new TiXmlElement( "Name" );
@@ -97,7 +121,7 @@ void TimedEvent::SaveToXml(TiXmlElement * eventElem) const
     gd::EventsListSerialization::SaveActions(actions, actionsElem);
 
     //Sous évènements
-    if ( !GetSubEvents().empty() )
+    if ( !GetSubEvents().IsEmpty() )
     {
         TiXmlElement * subeventsElem;
         subeventsElem = new TiXmlElement( "Events" );
@@ -137,7 +161,7 @@ void TimedEvent::LoadFromXml(gd::Project & project, const TiXmlElement * eventEl
  */
 void TimedEvent::Render(wxDC & dc, int x, int y, unsigned int width, gd::EventsEditorItemsAreas & areas, gd::EventsEditorSelection & selection, const gd::Platform & platform)
 {
-    gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::GetInstance();
+    gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::Get();
     int border = renderingHelper->instructionsListBorder;
     const int functionTextHeight = 20;
 
@@ -171,7 +195,7 @@ unsigned int TimedEvent::GetRenderedHeight(unsigned int width, const gd::Platfor
 {
     if ( eventHeightNeedUpdate )
     {
-        gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::GetInstance();
+        gd::EventsRenderingHelper * renderingHelper = gd::EventsRenderingHelper::Get();
         int border = renderingHelper->instructionsListBorder;
         const int functionTextHeight = 20;
 
@@ -200,7 +224,7 @@ gd::BaseEvent::EditEventReturnType TimedEvent::EditEvent(wxWindow* parent, gd::P
  */
 void TimedEvent::Init(const TimedEvent & event)
 {
-    events = CloneVectorOfEvents(event.events);
+    events = *event.events.Clone();
 
     name = event.name;
     timeout = event.timeout;

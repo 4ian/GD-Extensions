@@ -36,49 +36,49 @@ namespace AdvancedXML
 {
     void GD_EXTENSION_API CreateNewDocument(const std::string &refname, RuntimeScene &scene)
     {
-        RefManager::GetInstance(&scene)->CreateNewDocument(refname);
+        RefManager::Get(&scene)->CreateNewDocument(refname);
     }
 
     void GD_EXTENSION_API LoadXmlFile(const std::string &filename, const std::string &refname, RuntimeScene &scene)
     {
-        RefManager::GetInstance(&scene)->LoadDocument(filename, refname);
+        RefManager::Get(&scene)->LoadDocument(filename, refname);
     }
 
     void GD_EXTENSION_API SaveXmlFile(const std::string &filename, const std::string &refname, RuntimeScene &scene)
     {
-        RefManager::GetInstance(&scene)->SaveDocument(filename, refname);
+        RefManager::Get(&scene)->SaveDocument(filename, refname);
     }
 
     void GD_EXTENSION_API CreateNewElement(const std::string &refname, const int type, const std::string &content, RuntimeScene &scene)
     {
         if(type == 0)
-            RefManager::GetInstance(&scene)->CreateElement<TiXmlElement>(refname, content);
+            RefManager::Get(&scene)->CreateElement<TiXmlElement>(refname, content);
         else if(type == 1)
-            RefManager::GetInstance(&scene)->CreateElement<TiXmlText>(refname, content);
+            RefManager::Get(&scene)->CreateElement<TiXmlText>(refname, content);
         else if(type == 2)
-            RefManager::GetInstance(&scene)->CreateElement<TiXmlComment>(refname, content);
+            RefManager::Get(&scene)->CreateElement<TiXmlComment>(refname, content);
     }
 
     void GD_EXTENSION_API DeleteAnElement(const std::string &refname, RuntimeScene &scene)
     {
-        TiXmlNode *nodeToRemove = RefManager::GetInstance(&scene)->GetRef(refname);
+        TiXmlNode *nodeToRemove = RefManager::Get(&scene)->GetRef(refname);
 
         if(nodeToRemove)
         {
-            RefManager::GetInstance(&scene)->DeleteChildRefs(refname);
+            RefManager::Get(&scene)->DeleteChildRefs(refname);
             if(nodeToRemove->Parent())
             {
                 nodeToRemove->Parent()->RemoveChild(nodeToRemove);
             }
-            RefManager::GetInstance(&scene)->SetRef(refname, 0);
+            RefManager::Get(&scene)->SetRef(refname, 0);
         }
     }
 
     void GD_EXTENSION_API InsertElementIntoAnother(const std::string &refNameOfElementToAdd, const std::string &refNameOfParentElement, const std::string &refNameOfNextElement, RuntimeScene &scene)
     {
-        TiXmlNode *parentEle = RefManager::GetInstance(&scene)->GetRef(refNameOfParentElement);
-        TiXmlNode *nextEle = RefManager::GetInstance(&scene)->GetRef(refNameOfNextElement);
-        TiXmlNode *toBeAddedEle = RefManager::GetInstance(&scene)->GetRef(refNameOfElementToAdd);
+        TiXmlNode *parentEle = RefManager::Get(&scene)->GetRef(refNameOfParentElement);
+        TiXmlNode *nextEle = RefManager::Get(&scene)->GetRef(refNameOfNextElement);
+        TiXmlNode *toBeAddedEle = RefManager::Get(&scene)->GetRef(refNameOfElementToAdd);
 
         if ( parentEle == NULL || toBeAddedEle == NULL )
             return; //These element cannot be invalid
@@ -92,7 +92,7 @@ namespace AdvancedXML
             {
                 TiXmlNode *insertedEle = 0;
                 insertedEle = parentEle->InsertBeforeChild(nextEle, *toBeAddedEle);
-                RefManager::GetInstance(&scene)->SetRef(refNameOfElementToAdd, insertedEle);
+                RefManager::Get(&scene)->SetRef(refNameOfElementToAdd, insertedEle);
             }
 
         }
@@ -100,30 +100,30 @@ namespace AdvancedXML
 
     void GD_EXTENSION_API BrowseTo(const std::string baseRefName, const std::string &futureRefName, const std::string &pathToFutureRefName, RuntimeScene &scene)
     {
-        RefManager::GetInstance(&scene)->CreateRef(baseRefName, futureRefName, pathToFutureRefName);
+        RefManager::Get(&scene)->CreateRef(baseRefName, futureRefName, pathToFutureRefName);
     }
 
     void GD_EXTENSION_API NextSibling(const std::string &futureRefName, const std::string &baseRefName, const std::string &tagName, RuntimeScene &scene)
     {
-        if(!RefManager::GetInstance(&scene)->GetRef(baseRefName))
+        if(!RefManager::Get(&scene)->GetRef(baseRefName))
             return;
 
-        RefManager::GetInstance(&scene)->SetRef(futureRefName,
-                                                tagName == "" ? RefManager::GetInstance(&scene)->GetRef(baseRefName)->NextSibling() :
-                                                                RefManager::GetInstance(&scene)->GetRef(baseRefName)->NextSibling(tagName.c_str()));
+        RefManager::Get(&scene)->SetRef(futureRefName,
+                                                tagName == "" ? RefManager::Get(&scene)->GetRef(baseRefName)->NextSibling() :
+                                                                RefManager::Get(&scene)->GetRef(baseRefName)->NextSibling(tagName.c_str()));
     }
 
     bool GD_EXTENSION_API IsRefValid(const std::string &refName, RuntimeScene &scene)
     {
-        return RefManager::GetInstance(&scene)->GetRef(refName) ? true : false;
+        return RefManager::Get(&scene)->GetRef(refName) ? true : false;
     }
 
     int GD_EXTENSION_API GetRefType(const std::string &refName, RuntimeScene &scene)
     {
-        if(!RefManager::GetInstance(&scene)->GetRef(refName))
+        if(!RefManager::Get(&scene)->GetRef(refName))
             return -1;
 
-        int type = RefManager::GetInstance(&scene)->GetRef(refName)->Type();
+        int type = RefManager::Get(&scene)->GetRef(refName)->Type();
 
         if(type == TiXmlNode::ELEMENT)
             return 0;
@@ -141,7 +141,7 @@ namespace AdvancedXML
 
     std::string GD_EXTENSION_API GetText(const std::string &refName, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refName);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refName);
 
         if(refNode)
         {
@@ -153,7 +153,7 @@ namespace AdvancedXML
 
     void GD_EXTENSION_API SetText(const std::string &refName, const std::string &text, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refName);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refName);
 
         if(refNode)
         {
@@ -163,7 +163,7 @@ namespace AdvancedXML
 
     std::string GD_EXTENSION_API GetAttributeString(const std::string &refname, const std::string &property, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refname);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refname);
 
         if(refNode)
         {
@@ -186,7 +186,7 @@ namespace AdvancedXML
 
     double GD_EXTENSION_API GetAttributeNumber(const std::string &refname, const std::string &property, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refname);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refname);
 
         if(refNode)
         {
@@ -211,7 +211,7 @@ namespace AdvancedXML
 
     void GD_EXTENSION_API SetAttributeString(const std::string &refname, const std::string &property, const std::string &value, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refname);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refname);
 
         if(refNode)
         {
@@ -225,7 +225,7 @@ namespace AdvancedXML
 
     void GD_EXTENSION_API SetAttributeNumber(const std::string &refname, const std::string &property, const double &value, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refname);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refname);
 
         if(refNode)
         {
@@ -239,7 +239,7 @@ namespace AdvancedXML
 
     void GD_EXTENSION_API RemoveAttribute(const std::string &refname, const std::string &property, RuntimeScene &scene)
     {
-        TiXmlNode *refNode = RefManager::GetInstance(&scene)->GetRef(refname);
+        TiXmlNode *refNode = RefManager::Get(&scene)->GetRef(refname);
 
         if(refNode)
         {

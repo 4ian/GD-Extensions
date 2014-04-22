@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 
 #ifndef FUNCTIONEVENT_H
 #define FUNCTIONEVENT_H
+#include "GDCore/Events/EventsList.h"
 #include "GDCore/Events/Event.h"
 #include "GDCpp/CommonTools.h"
 #include "GDCpp/SceneNameMangler.h"
@@ -57,9 +58,8 @@ public:
     virtual bool IsExecutable() const {return true;}
 
     virtual bool CanHaveSubEvents() const {return true;}
-    virtual const std::vector < gd::BaseEventSPtr > & GetSubEvents() const {return events;};
-    virtual std::vector < gd::BaseEventSPtr > & GetSubEvents() {return events;};
-    void SetSubEvents(std::vector < gd::BaseEventSPtr > & subEvents_) {events = subEvents_;};
+    virtual const gd::EventsList & GetSubEvents() const {return events;};
+    virtual gd::EventsList & GetSubEvents() {return events;};
 
     const std::vector < gd::Instruction > & GetConditions() const { return conditions; };
     std::vector < gd::Instruction > & GetConditions() { return conditions; };
@@ -77,6 +77,8 @@ public:
 
     virtual std::vector < std::vector<gd::Instruction>* > GetAllConditionsVectors();
     virtual std::vector < std::vector<gd::Instruction>* > GetAllActionsVectors();
+    virtual std::vector < const std::vector<gd::Instruction>* > GetAllConditionsVectors() const;
+    virtual std::vector < const std::vector<gd::Instruction>* > GetAllActionsVectors() const;
 
     virtual void SaveToXml(TiXmlElement * eventElem) const;
     virtual void LoadFromXml(gd::Project & project, const TiXmlElement * eventElem);
@@ -99,17 +101,13 @@ public:
     /**
      * Tool function to generate an unique C++ name for a function.
      */
-    static std::string MangleFunctionName(FunctionEvent & functionEvent) { return "GDFunction"+gd::SceneNameMangler::GetMangledSceneName(functionEvent.GetName())+ToString(&functionEvent); };
+    static std::string MangleFunctionName(const FunctionEvent & functionEvent) { return "GDFunction"+gd::SceneNameMangler::GetMangledSceneName(functionEvent.GetName())+ToString(&functionEvent); };
 
     /**
      * Tool function to search for a function event in an event list.
+     * \return NULL if the function was not found.
      */
-    static boost::shared_ptr<FunctionEvent> SearchForFunctionInEvents(const std::vector < boost::shared_ptr<gd::BaseEvent> > & events, const std::string & functionName);
-
-    /**
-     * Tool function to list function events in an event list.
-     */
-    static std::vector< boost::shared_ptr<FunctionEvent> > GetAllFunctionsInEvents(const std::vector < boost::shared_ptr<gd::BaseEvent> > & events);
+    static const FunctionEvent* SearchForFunctionInEvents(const gd::EventsList & events, const std::string & functionName);
 
     static const std::string globalDeclaration;
 
@@ -120,7 +118,7 @@ private:
     std::string objectsPassedAsArgument;
     std::vector < gd::Instruction > conditions;
     std::vector < gd::Instruction > actions;
-    std::vector < gd::BaseEventSPtr > events;
+    gd::EventsList events;
 
     bool nameSelected;
 };

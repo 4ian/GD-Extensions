@@ -41,13 +41,13 @@ namespace NetworkExtension
 
 void GD_EXTENSION_API ResetReceivedData()
 {
-    ReceivedDataManager::GetInstance()->values.clear();
-    ReceivedDataManager::GetInstance()->strings.clear();
+    ReceivedDataManager::Get()->values.clear();
+    ReceivedDataManager::Get()->strings.clear();
 }
 
 void GD_EXTENSION_API ActStopListening()
 {
-    NetworkManager::GetInstance()->StopListening();
+    NetworkManager::Get()->StopListening();
 }
 
 void GD_EXTENSION_API AddRecipient( const std::string & adressStr, short unsigned int port  )
@@ -56,19 +56,19 @@ void GD_EXTENSION_API AddRecipient( const std::string & adressStr, short unsigne
 
     if ( port == 0 ) port = 50001; //Default value
 
-    NetworkManager::GetInstance()->AddRecipient(address, port);
+    NetworkManager::Get()->AddRecipient(address, port);
 }
 
 void GD_EXTENSION_API RemoveAllRecipients()
 {
-    NetworkManager::GetInstance()->RemoveAllRecipients();
+    NetworkManager::Get()->RemoveAllRecipients();
 }
 
 void GD_EXTENSION_API ListenToPort( short unsigned int port )
 {
     if ( port == 0 ) port = 50001;
 
-    NetworkManager::GetInstance()->ListenToPort(port);
+    NetworkManager::Get()->ListenToPort(port);
 }
 
 void GD_EXTENSION_API SendValue( const std::string & title, double data )
@@ -78,7 +78,7 @@ void GD_EXTENSION_API SendValue( const std::string & title, double data )
             << title
             << static_cast<double>(data);
 
-    NetworkManager::GetInstance()->Send(packet);
+    NetworkManager::Get()->Send(packet);
 }
 
 void GD_EXTENSION_API SendString( const std::string & title, const std::string & data )
@@ -88,27 +88,27 @@ void GD_EXTENSION_API SendString( const std::string & title, const std::string &
             << title
             << data;
 
-    NetworkManager::GetInstance()->Send(packet);
+    NetworkManager::Get()->Send(packet);
 }
 
 void GD_EXTENSION_API ReceivePackets(  )
 {
-    NetworkManager::GetInstance()->ReceivePackets();
+    NetworkManager::Get()->ReceivePackets();
 }
 
 std::string GD_EXTENSION_API GetReceivedDataString( const std::string & title)
 {
-    return ReceivedDataManager::GetInstance()->strings[title];
+    return ReceivedDataManager::Get()->strings[title];
 }
 
 double GD_EXTENSION_API GetReceivedDataValue( const std::string & title )
 {
-    return ReceivedDataManager::GetInstance()->values[title];
+    return ReceivedDataManager::Get()->values[title];
 }
 
 std::string GD_EXTENSION_API GetLastError()
 {
-    return ErrorManager::GetInstance()->GetLastError();
+    return ErrorManager::Get()->GetLastError();
 }
 
 std::string GD_EXTENSION_API GetPublicAddress(float timeoutInSeconds)

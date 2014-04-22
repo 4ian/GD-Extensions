@@ -54,7 +54,7 @@ gdjs.LinksManager.prototype.removeLinkBetween = function(objA, objB) {
 		index = list.indexOf(objB);
 		if ( index !== -1) list.remove(index);
 	}
-	
+
 	if ( this.links.hasOwnProperty(objB.id) ) {
 		list = this.links[objB.id];
 		index = list.indexOf(objA);
@@ -79,19 +79,26 @@ gdjs.evtTools.linkedObjects.gdjsCallbackObjectDeletedFromScene = function(runtim
 };
 
 gdjs.evtTools.linkedObjects.linkObjects = function(runtimeScene, objA, objB) {
+	if (objA === null || objB === null) return;
+
 	gdjs.evtTools.linkedObjects.managers.get(runtimeScene.getName()).linkObjects(objA, objB);
 };
 
 gdjs.evtTools.linkedObjects.removeLinkBetween = function(runtimeScene, objA, objB) {
+	if (objA === null || objB === null) return;
+
 	gdjs.evtTools.linkedObjects.managers.get(runtimeScene.getName()).removeLinkBetween(objA, objB);
 };
 
-gdjs.evtTools.linkedObjects.removeAllLinksOf = function(runtimeScene, objA, objB) {
-	gdjs.evtTools.linkedObjects.managers.get(runtimeScene.getName()).removeAllLinksOf(objA, objB);
+gdjs.evtTools.linkedObjects.removeAllLinksOf = function(runtimeScene, objA) {
+	if (objA === null) return;
+
+	gdjs.evtTools.linkedObjects.managers.get(runtimeScene.getName()).removeAllLinksOf(objA);
 };
 
 gdjs.evtTools.linkedObjects.pickObjectsLinkedTo = function(runtimeScene, objectsLists, obj) {
 
+	if (obj === null) return false;
     var isTrue = false;
     var objectsValues = objectsLists.values();
 
@@ -115,12 +122,12 @@ gdjs.evtTools.linkedObjects.pickObjectsLinkedTo = function(runtimeScene, objects
             }
         }
     }
-    
+
     //Trim not picked objects from arrays.
     for(var i = 0, leni = objectsValues.length;i<leni;++i) {
         var arr = objectsValues[i];
         var finalSize = 0;
-        
+
         for(var k = 0, lenk = arr.length;k<lenk;++k) {
             var obj = arr[k];
             if ( arr[k].pick ) {
