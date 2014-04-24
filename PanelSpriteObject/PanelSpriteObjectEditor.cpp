@@ -38,7 +38,7 @@ freely, subject to the following restrictions:
 #include "GDCore/IDE/SkinHelper.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/CommonTools.h"
-#include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
+#include "GDCore/IDE/Dialogs/ResourcesEditor.h"
 #include "PanelSpriteObjectEditor.h"
 #include "PanelSpriteObject.h"
 

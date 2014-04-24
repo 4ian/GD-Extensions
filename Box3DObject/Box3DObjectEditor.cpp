@@ -38,7 +38,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/CommonTools.h"
 #include "GDCore/IDE/Dialogs/MainFrameWrapper.h"
 #include "GDCore/IDE/SkinHelper.h"
-#include "GDCpp/IDE/Dialogs/ResourcesEditor.h"
+#include "GDCore/IDE/Dialogs/ResourcesEditor.h"
 #include "GDCore/Tools/Localization.h"
 
 #include "Box3DObject.h"
