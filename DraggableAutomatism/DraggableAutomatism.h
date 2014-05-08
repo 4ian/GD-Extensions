@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include <SFML/System/Vector2.hpp>
 #include <map>
 class RuntimeScene;
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 namespace gd { class Layout; }
 
 /**
@@ -44,16 +44,6 @@ public:
     virtual ~DraggableAutomatism() {};
     virtual Automatism* Clone() const { return new DraggableAutomatism(*this); }
 
-    #if defined(GD_IDE_ONLY)
-    /** Save Automatism to XML
-     */
-    virtual void SaveToXml(TiXmlElement * elem) const;
-    #endif
-
-    /** Load Automatism from XML
-     */
-    virtual void LoadFromXml(const TiXmlElement * elem);
-
     /**
      * \brief Return true if the object is being dragged.
      */
@@ -62,7 +52,6 @@ public:
     virtual void OnDeActivate();
 
 private:
-
     virtual void DoStepPreEvents(RuntimeScene & scene);
 
     float xOffset;

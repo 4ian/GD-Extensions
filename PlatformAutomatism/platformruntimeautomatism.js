@@ -112,7 +112,7 @@ gdjs.PlatformRuntimeAutomatism = function(runtimeScene, automatismData, owner)
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
     //Load the platform type
-    this._platformType = automatismData.attr.platformType;
+    this._platformType = automatismData.platformType;
     if ( this._platformType == "Ladder" )
         this._platformType = gdjs.PlatformRuntimeAutomatism.LADDER;
     else if ( this._platformType == "Jumpthru" )

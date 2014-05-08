@@ -12,20 +12,21 @@
 gdjs.TiledSpriteRuntimeObject = function(runtimeScene, objectData)
 {
     gdjs.RuntimeObject.call(this, runtimeScene, objectData);
-    
-    var texture = runtimeScene.getGame().getImageManager().getPowerOf2PIXITexture(objectData.attr.texture);
+
+    var texture = runtimeScene.getGame().getImageManager().getPowerOf2PIXITexture(objectData.texture);
     if ( this._tiledSprite === undefined ) {
-        this._tiledSprite = new PIXI.TilingSprite(texture, 16, 16);
+        //var texture = PIXI.Texture.fromImage("p2.jpeg");
+        this._tiledSprite = new PIXI.TilingSprite(texture, 1024, 1024);
     }
     else {
         this._tiledSprite.setTexture(texture);
     }
 
-    this.setWidth(parseInt(objectData.attr.width));
-    this.setHeight(parseInt(objectData.attr.height));
+    this.setWidth(objectData.width);
+    this.setHeight(objectData.height);
     this._xOffset = 0;
     this._yOffset = 0;
-    
+
     this._runtimeScene = runtimeScene;
     runtimeScene.getLayer("").addChildToPIXIContainer(this._tiledSprite, this.zOrder);
 };
@@ -41,9 +42,9 @@ gdjs.TiledSpriteRuntimeObject.prototype.onDeletedFromScene = function(runtimeSce
  * Initialize the extra parameters that could be set for an instance.
  */
 gdjs.TiledSpriteRuntimeObject.prototype.extraInitializationFromInitialInstance = function(initialInstanceData) {
-    if ( initialInstanceData.attr.personalizedSize === "true" ) {
-        this.setWidth(parseFloat(initialInstanceData.attr.width));
-        this.setHeight(parseFloat(initialInstanceData.attr.height));
+    if ( initialInstanceData.customSize ) {
+        this.setWidth(initialInstanceData.width);
+        this.setHeight(initialInstanceData.height);
     }
 };
 

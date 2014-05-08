@@ -14,12 +14,12 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
 {
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
-    this._gravity = parseFloat(automatismData.attr.gravity, 10);
-    this._maxFallingSpeed = parseFloat(automatismData.attr.maxFallingSpeed, 10);
-    this._acceleration = parseFloat(automatismData.attr.acceleration, 10);
-    this._deceleration = parseFloat(automatismData.attr.deceleration, 10);
-    this._maxSpeed = parseFloat(automatismData.attr.maxSpeed, 10);
-    this._jumpSpeed = parseFloat(automatismData.attr.jumpSpeed, 10);
+    this._gravity = automatismData.gravity;
+    this._maxFallingSpeed = automatismData.maxFallingSpeed;
+    this._acceleration = automatismData.acceleration;
+    this._deceleration = automatismData.deceleration;
+    this._maxSpeed = automatismData.maxSpeed;
+    this._jumpSpeed = automatismData.jumpSpeed;
     this._isOnFloor = false;
     this._isOnLadder = false;
     this._floorPlatform = null;
@@ -28,7 +28,7 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
     this._jumping = false;
     this._currentJumpSpeed = 0;
     this._canJump = false;
-    this._ignoreDefaultControls = automatismData.attr.ignoreDefaultControls === "true";
+    this._ignoreDefaultControls = automatismData.ignoreDefaultControls;
     this._leftKey = false;
     this._rightKey = false;
     this._ladderKey = false;
@@ -40,7 +40,7 @@ gdjs.PlatformerObjectRuntimeAutomatism = function(runtimeScene, automatismData, 
     this._overlappedJumpThru = {};
     this._oldHeight = 0;//owner.getHeight(); //Be careful, object might not be initialized.
     this._hasReallyMoved = false;
-    this.setSlopeMaxAngle(parseFloat(automatismData.attr.slopeMaxAngle, 10));
+    this.setSlopeMaxAngle(automatismData.slopeMaxAngle);
 
 	//Create the shared manager if necessary.
 	if ( !gdjs.PlatformRuntimeAutomatism.platformsObjectsManagers.containsKey(runtimeScene.getName()) ) {

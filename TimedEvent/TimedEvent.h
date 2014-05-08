@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/ManualTimer.h"
 class RuntimeScene;
 namespace gd { class Instruction; }
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 class EventsCodeGenerationContext;
 namespace gd { class EventsEditorItemsAreas; }
 namespace gd { class EventsEditorSelection; }
@@ -82,8 +82,8 @@ public:
     virtual std::vector < const std::vector<gd::Instruction>* > GetAllActionsVectors() const;
     virtual std::vector < const gd::Expression* > GetAllExpressions() const;
 
-    virtual void SaveToXml(TiXmlElement * eventElem) const;
-    virtual void LoadFromXml(gd::Project & project, const TiXmlElement * eventElem);
+    virtual void SerializeTo(gd::SerializerElement & element) const;
+    virtual void UnserializeFrom(gd::Project & project, const gd::SerializerElement & element);
     /**
      * Called by event editor to draw the event.
      */

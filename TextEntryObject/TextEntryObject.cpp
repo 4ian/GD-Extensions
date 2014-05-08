@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #include <string>
 #include "GDCpp/Object.h"
 #include "GDCpp/ImageManager.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/RuntimeScene.h"

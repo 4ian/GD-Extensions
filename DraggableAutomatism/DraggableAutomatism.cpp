@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #include "DraggableAutomatism.h"
 #include "GDCpp/Scene.h"
 #include "GDCpp/RuntimeLayer.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -89,14 +89,4 @@ void DraggableAutomatism::OnDeActivate()
 {
     if (dragged) somethingDragged = false;
     dragged = false;
-}
-
-#if defined(GD_IDE_ONLY)
-void DraggableAutomatism::SaveToXml(TiXmlElement * elem) const
-{
-}
-#endif
-
-void DraggableAutomatism::LoadFromXml(const TiXmlElement * elem)
-{
 }

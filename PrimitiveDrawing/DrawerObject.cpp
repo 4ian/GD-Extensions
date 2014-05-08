@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/Project.h"
 #include "GDCpp/ImageManager.h"
 #include "GDCpp/Polygon.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/CommonTools.h"
@@ -78,134 +78,48 @@ RuntimeDrawerObject::RuntimeDrawerObject(RuntimeScene & scene, const gd::Object 
     DrawerObjectBase::operator=(drawerObject);
 }
 
-void DrawerObjectBase::LoadFromXml(gd::Project & project, const TiXmlElement * object)
+void DrawerObjectBase::UnserializeFrom(const gd::SerializerElement & element)
 {
-    if ( object->FirstChildElement( "FillColor" ) == NULL ||
-         object->FirstChildElement( "FillColor" )->Attribute("r") == NULL ||
-         object->FirstChildElement( "FillColor" )->Attribute("g") == NULL ||
-         object->FirstChildElement( "FillColor" )->Attribute("b") == NULL )
-    {
-        cout << "Les informations concernant la couleur de remplissage d'un objet Drawer manquent.";
-    }
-    else
-    {
-        int r = 255;
-        int g = 255;
-        int b = 255;
-        object->FirstChildElement("FillColor")->QueryIntAttribute("r", &r);
-        object->FirstChildElement("FillColor")->QueryIntAttribute("g", &g);
-        object->FirstChildElement("FillColor")->QueryIntAttribute("b", &b);
+    fillOpacity = element.GetChild("fillOpacity", 0, "FillOpacity").GetValue().GetInt();
+    outlineSize = element.GetChild("outlineSize", 0, "OutlineSize").GetValue().GetInt();
+    outlineOpacity = element.GetChild("outlineOpacity", 0, "OutlineOpacity").GetValue().GetInt();
 
-        SetFillColor(r,g,b);
-    }
+    fillColorR = element.GetChild("fillColor", 0, "FillColor").GetIntAttribute("r");
+    fillColorG = element.GetChild("fillColor", 0, "FillColor").GetIntAttribute("g");
+    fillColorB = element.GetChild("fillColor", 0, "FillColor").GetIntAttribute("b");
 
-    if ( object->FirstChildElement( "FillOpacity" ) == NULL ||
-         object->FirstChildElement( "FillOpacity" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant l'opacité du remplissage d'un objet Drawer manquent.";
-    }
-    else
-    {
-        object->FirstChildElement("FillOpacity")->QueryFloatAttribute("value", &fillOpacity);
-    }
+    outlineColorR = element.GetChild("outlineColor", 0, "OutlineColor").GetIntAttribute("r");
+    outlineColorG = element.GetChild("outlineColor", 0, "OutlineColor").GetIntAttribute("g");
+    outlineColorB = element.GetChild("outlineColor", 0, "OutlineColor").GetIntAttribute("b");
 
-
-    if ( object->FirstChildElement( "OutlineColor" ) == NULL ||
-         object->FirstChildElement( "OutlineColor" )->Attribute("r") == NULL ||
-         object->FirstChildElement( "OutlineColor" )->Attribute("g") == NULL ||
-         object->FirstChildElement( "OutlineColor" )->Attribute("b") == NULL )
-    {
-        cout << "Les informations concernant la couleur du contour d'un objet Drawer manquent.";
-    }
-    else
-    {
-        int r = 255;
-        int g = 255;
-        int b = 255;
-        object->FirstChildElement("OutlineColor")->QueryIntAttribute("r", &r);
-        object->FirstChildElement("OutlineColor")->QueryIntAttribute("g", &g);
-        object->FirstChildElement("OutlineColor")->QueryIntAttribute("b", &b);
-
-        SetOutlineColor(r,g,b);
-    }
-
-    if ( object->FirstChildElement( "OutlineOpacity" ) == NULL ||
-         object->FirstChildElement( "OutlineOpacity" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant l'opacité du contour d'un objet Drawer manquent.";
-    }
-    else
-    {
-        object->FirstChildElement("OutlineOpacity")->QueryFloatAttribute("value", &outlineOpacity);
-    }
-
-    if ( object->FirstChildElement( "OutlineSize" ) == NULL ||
-         object->FirstChildElement( "OutlineSize" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant la taille du contour d'un objet Drawer manquent.";
-    }
-    else
-    {
-        object->FirstChildElement("OutlineSize")->QueryIntAttribute("value", &outlineSize);
-    }
-
-    absoluteCoordinates = true;
-    if ( object->FirstChildElement( "AbsoluteCoordinates" ) == NULL ||
-         object->FirstChildElement( "AbsoluteCoordinates" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant le type des coordonnées d'un objet Drawer manquent.";
-    }
-    else
-    {
-        string result = object->FirstChildElement("AbsoluteCoordinates")->Attribute("value");
-        if ( result == "false" )
-            absoluteCoordinates = false;
-    }
+    absoluteCoordinates = element.GetChild("absoluteCoordinates", 0, "AbsoluteCoordinates").GetValue().GetBool();
 }
 
-void DrawerObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * object)
+void DrawerObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    DrawerObjectBase::LoadFromXml(project, object);
+    DrawerObjectBase::UnserializeFrom(element);
 }
 
 #if defined(GD_IDE_ONLY)
-void DrawerObjectBase::SaveToXml(TiXmlElement * object)
+void DrawerObjectBase::SerializeTo(gd::SerializerElement & element) const
 {
-    TiXmlElement * fillOpacityElem = new TiXmlElement( "FillOpacity" );
-    object->LinkEndChild( fillOpacityElem );
-    fillOpacityElem->SetDoubleAttribute("value", fillOpacity);
-
-    TiXmlElement * fillColorElem = new TiXmlElement( "FillColor" );
-    object->LinkEndChild( fillColorElem );
-    fillColorElem->SetAttribute("r", fillColorR);
-    fillColorElem->SetAttribute("g", fillColorG);
-    fillColorElem->SetAttribute("b", fillColorB);
-
-    TiXmlElement * outlineSizeElem = new TiXmlElement( "OutlineSize" );
-    object->LinkEndChild( outlineSizeElem );
-    outlineSizeElem->SetAttribute("value", outlineSize);
-
-    TiXmlElement * outlineOpacityElem = new TiXmlElement( "OutlineOpacity" );
-    object->LinkEndChild( outlineOpacityElem );
-    outlineOpacityElem->SetDoubleAttribute("value", outlineOpacity);
-
-    TiXmlElement * outlineColorElem = new TiXmlElement( "OutlineColor" );
-    object->LinkEndChild( outlineColorElem );
-    outlineColorElem->SetAttribute("r", outlineColorR);
-    outlineColorElem->SetAttribute("g", outlineColorG);
-    outlineColorElem->SetAttribute("b", outlineColorB);
-
-    TiXmlElement * absoluteCoordinatesElem = new TiXmlElement( "AbsoluteCoordinates" );
-    object->LinkEndChild( absoluteCoordinatesElem );
-    if ( absoluteCoordinates )
-        absoluteCoordinatesElem->SetAttribute("value", "true");
-    else
-        absoluteCoordinatesElem->SetAttribute("value", "false");
+    element.AddChild("fillOpacity").SetValue(fillOpacity);
+    element.AddChild("outlineSize").SetValue(outlineSize);
+    element.AddChild("outlineOpacity").SetValue(outlineOpacity);
+    element.AddChild("fillColor")
+        .SetAttribute("r", (int)fillColorR)
+        .SetAttribute("g", (int)fillColorG)
+        .SetAttribute("b", (int)fillColorB);
+    element.AddChild("outlineColor")
+        .SetAttribute("r", (int)outlineColorR)
+        .SetAttribute("g", (int)outlineColorG)
+        .SetAttribute("b", (int)outlineColorB);
+    element.AddChild("absoluteCoordinates").SetValue(absoluteCoordinates);
 }
 
-void DrawerObject::DoSaveToXml(TiXmlElement * object)
+void DrawerObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    DrawerObjectBase::SaveToXml(object);
+    DrawerObjectBase::SerializeTo(element);
 }
 #endif
 

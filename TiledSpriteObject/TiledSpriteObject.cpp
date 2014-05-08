@@ -39,7 +39,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Polygon.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/CommonTools.h"
 
 #if defined(GD_IDE_ONLY)
@@ -58,23 +58,19 @@ TiledSpriteObject::TiledSpriteObject(std::string name_) :
 {
 }
 
-void TiledSpriteObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * object)
+void TiledSpriteObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    if (!object) return;
-
-    textureName = object->Attribute("texture") ? std::string(object->Attribute("texture")) : "";
-    width = object->Attribute("width") ? ToFloat(object->Attribute("width")) : 128;
-    height = object->Attribute("height") ? ToFloat(object->Attribute("height")) : 128;
+    textureName = element.GetStringAttribute("texture");
+    width = element.GetDoubleAttribute("width", 128);
+    height = element.GetDoubleAttribute("height", 128);
 }
 
 #if defined(GD_IDE_ONLY)
-void TiledSpriteObject::DoSaveToXml(TiXmlElement * object)
+void TiledSpriteObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    if (!object) return;
-
-    object->SetAttribute("texture", textureName.c_str());
-    object->SetAttribute("width", width);
-    object->SetAttribute("height", height);
+    element.SetAttribute("texture", textureName);
+    element.SetAttribute("width", width);
+    element.SetAttribute("height", height);
 }
 
 void TiledSpriteObject::LoadResources(gd::Project & project, gd::Layout & layout)

@@ -46,10 +46,10 @@ public:
     }
 
     #if defined(GD_IDE_ONLY)
-    virtual void SaveToXml(TiXmlElement * eventElem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
-    virtual void LoadFromXml(const TiXmlElement * eventElem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 };
 
 #endif // SCENELIGHTOBSTACLEPHYSICSDATAS_H

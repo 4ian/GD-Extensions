@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 #include <boost/shared_ptr.hpp>
 #include "PlatformAutomatism.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -110,23 +110,22 @@ void PlatformAutomatism::OnDeActivate()
     registeredInManager = false;
 }
 
-void PlatformAutomatism::LoadFromXml(const TiXmlElement * elem)
+void PlatformAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    std::string platformTypeStr;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("platformType", platformTypeStr);
+    std::string platformTypeStr = element.GetStringAttribute("platformType");
     platformType = platformTypeStr == "Ladder" ?  Ladder : (platformTypeStr == "Jumpthru" ?
         Jumpthru : NormalPlatform);
 }
 
 #if defined(GD_IDE_ONLY)
-void PlatformAutomatism::SaveToXml(TiXmlElement * elem) const
+void PlatformAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
     if ( platformType == Ladder)
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("platformType", "Ladder")
+        element.SetAttribute("platformType", "Ladder");
     else if ( platformType == Jumpthru )
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("platformType", "Jumpthru")
+        element.SetAttribute("platformType", "Jumpthru");
     else
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("platformType", "NormalPlatform")
+        element.SetAttribute("platformType", "NormalPlatform");
 }
 
 std::map<std::string, gd::PropertyDescriptor> PlatformAutomatism::GetProperties(gd::Project & project) const

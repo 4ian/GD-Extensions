@@ -25,17 +25,14 @@ freely, subject to the following restrictions:
 */
 
 #include "SceneNetworkDatas.h"
-#include "GDCpp/tinyxml/tinyxml.h"
-#include "GDCpp/XmlMacros.h"
-#include <iostream>
+#include "GDCore/Serialization/SerializerElement.h"
 
 #if defined(GD_IDE_ONLY)
-void SceneNetworkDatas::SaveToXml(TiXmlElement * elem) const
+void SceneNetworkDatas::SerializeTo(gd::SerializerElement & element) const
 {
 }
 #endif
 
-void SceneNetworkDatas::LoadFromXml(const TiXmlElement * elem)
+void SceneNetworkDatas::UnserializeFrom(const gd::SerializerElement & element)
 {
 }
-

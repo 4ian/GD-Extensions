@@ -1,6 +1,6 @@
 /**
 
-Game Develop - Pathfinding Automatism Extension
+Game Develop - Top-down movement Automatism Extension
 Copyright (c) 2010-2014 Florian Rival (Florian.Rival@gmail.com)
 
 This software is provided 'as-is', without any express or implied
@@ -24,8 +24,8 @@ freely, subject to the following restrictions:
 
 */
 
-#ifndef PLATFORMEROBJECTAUTOMATISM_H
-#define PLATFORMEROBJECTAUTOMATISM_H
+#ifndef TOPDOWNMOVEMENTAUTOMATISM_H
+#define TOPDOWNMOVEMENTAUTOMATISM_H
 #include "GDCpp/Automatism.h"
 #include "GDCpp/Object.h"
 #include <SFML/System/Vector2.hpp>
@@ -40,63 +40,39 @@ class RuntimeScenePlatformData;
 /**
  * \brief Compute path for objects avoiding obstacles
  */
-class GD_EXTENSION_API PathfindingAutomatism : public Automatism
+class GD_EXTENSION_API TopDownMovementAutomatism : public Automatism
 {
 public:
-    PathfindingAutomatism();
-    virtual ~PathfindingAutomatism() {};
-    virtual Automatism* Clone() const { return new PathfindingAutomatism(*this); }
-
-    /**
-     * \brief Compute and move on the path to the specified destination.
-     */
-    void MoveTo(RuntimeScene & scene, float x, float y);
-
-    //Path information:
-    /**
-     * \brief Return true if the latest call to MoveTo succeeded.
-     */
-    bool PathFound() { return pathFound; }
-
-    /**
-     * \brief Return true if the object reached its destination
-     */
-    bool DestinationReached() { return reachedEnd; }
-
-    float GetNodeX(unsigned int index) const;
-    float GetNodeY(unsigned int index) const;
-    unsigned int GetNextNodeIndex() const;
-    unsigned int GetNodeCount() const { return path.size(); };
-    float GetNextNodeX() const;
-    float GetNextNodeY() const;
-    float GetLastNodeX() const;
-    float GetLastNodeY() const;
-    float GetDestinationX() const;
-    float GetDestinationY() const;
+    TopDownMovementAutomatism();
+    virtual ~TopDownMovementAutomatism() {};
+    virtual Automatism* Clone() const { return new TopDownMovementAutomatism(*this); }
 
     //Configuration:
     bool DiagonalsAllowed() { return allowDiagonals; };
     float GetAcceleration() { return acceleration; };
+    float GetDeceleration() { return deceleration; };
     float GetMaxSpeed() { return maxSpeed; };
     float GetAngularMaxSpeed() { return angularMaxSpeed; };
     bool IsObjectRotated() { return rotateObject; }
     float GetAngleOffset() { return angleOffset; };
-    unsigned int GetCellWidth() { return cellWidth; };
-    unsigned int GetCellHeight() { return cellHeight; };
-    float GetExtraBorder() { return extraBorder; };
 
     bool SetAllowDiagonals(bool allowDiagonals_) { allowDiagonals = allowDiagonals_; };
     float SetAcceleration(float acceleration_) { acceleration = acceleration_; };
+    float SetDeceleration(float deceleration_) { deceleration = deceleration_; };
     float SetMaxSpeed(float maxSpeed_) { maxSpeed = maxSpeed_; };
     float SetAngularMaxSpeed(float angularMaxSpeed_) { angularMaxSpeed = angularMaxSpeed_; };
     bool SetRotateObject(bool rotateObject_) { rotateObject = rotateObject_; };
     float SetAngleOffset(float angleOffset_) { angleOffset = angleOffset_; };
-    unsigned int SetCellWidth(unsigned int cellWidth_) { cellWidth = cellWidth_; };
-    unsigned int SetCellHeight(unsigned int cellHeight_) { cellHeight = cellHeight_; };
-    float SetExtraBorder(float extraBorder_) { extraBorder = extraBorder_; };
 
-    float GetSpeed() { return speed; };
-    float SetSpeed(float speed_) { speed = speed_; };
+    bool IsMoving() { return xVelocity != 0 || yVelocity != 0; };
+    float GetSpeed();
+
+    void IgnoreDefaultControls(bool ignore = true) { ignoreDefaultControls = ignore; };
+    void SimulateControl(const std::string & input);
+    void SimulateLeftKey() { leftKey = true; };
+    void SimulateRightKey() { rightKey = true; };
+    void SimulateUpKey() { upKey = true; };
+    void SimulateDownKey() { downKey = true; };
 
     /**
      * \brief Unserialize the automatism
@@ -115,33 +91,26 @@ public:
 
 private:
     virtual void DoStepPreEvents(RuntimeScene & scene);
-    virtual void DoStepPostEvents(RuntimeScene & scene);
-    void EnterSegment(unsigned int segmentNumber);
-
-    RuntimeScene * parentScene; ///< The scene the object belongs to.
-    ScenePathfindingObstaclesManager * sceneManager; ///< The platform objects manager associated to the scene.
-    std::vector<sf::Vector2f> path; ///< The computed path
-    bool pathFound;
 
     //Automatism configuration:
     bool allowDiagonals;
     float acceleration;
+    float deceleration;
     float maxSpeed;
     float angularMaxSpeed;
     bool rotateObject; ///< If true, the object is rotated according to the current segment's angle.
     float angleOffset; ///< Angle offset (added to the angle calculated with the segment)
-    unsigned int cellWidth;
-    unsigned int cellHeight;
-    float extraBorder;
 
-    //Attributes used for traveling on the path:
-    float speed;
+    //Attributes used when moving
+    float xVelocity;
+    float yVelocity;
     float angularSpeed;
-    float timeOnSegment;
-    float totalSegmentTime;
-    unsigned int currentSegment;
-    bool reachedEnd;
 
+    bool ignoreDefaultControls; ///< If set to true, do not track the default inputs.
+    bool leftKey;
+    bool rightKey;
+    bool upKey;
+    bool downKey;
 };
-#endif // PLATFORMEROBJECTAUTOMATISM_H
+#endif // TOPDOWNMOVEMENTAUTOMATISM_H
 

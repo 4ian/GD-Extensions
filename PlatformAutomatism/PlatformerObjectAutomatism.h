@@ -35,7 +35,7 @@ namespace gd { class Layout; }
 class RuntimeScene;
 class PlatformAutomatism;
 class ScenePlatformObjectsManager;
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 class RuntimeScenePlatformData;
 
 /**
@@ -83,15 +83,15 @@ public:
     virtual void OnOwnerChanged();
 
     /**
-     * \brief Load the automatism from XML
+     * \brief Unserialize the automatism
      */
-    virtual void LoadFromXml(const TiXmlElement * elem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 
     #if defined(GD_IDE_ONLY)
     /**
-     * \brief Save the automatism to XML
+     * \brief Serialize the automatism
      */
-    virtual void SaveToXml(TiXmlElement * elem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
 
     virtual std::map<std::string, gd::PropertyDescriptor> GetProperties(gd::Project & project) const;
     virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project);

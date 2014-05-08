@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 #include <SFML/System/Vector2.hpp>
 #include <map>
 class RuntimeScene;
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 namespace gd { class Layout; }
 class PathAutomatismEditor;
 class RuntimeScenePathDatas;
@@ -56,17 +56,17 @@ public:
 
     #if defined(GD_IDE_ONLY)
     /**
-     * Save Automatism to XML
+     * Serialize the automatism
      */
-    virtual void SaveToXml(TiXmlElement * elem) const;
-    void SavePathsFromXml(TiXmlElement * elem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
+    void SerializePathsTo(gd::SerializerElement & element) const;
     #endif
 
     /**
-     * Load Automatism from XML
+     * Unserialize the automatism
      */
-    virtual void LoadFromXml(const TiXmlElement * elem);
-    void LoadPathsFromXml(const TiXmlElement * elem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
+    void UnserializePathsFrom(const gd::SerializerElement & element);
 
     #if defined(GD_IDE_ONLY)
     /**

@@ -113,9 +113,9 @@ private:
     static sf::Sprite soundSprite;
     #endif
 
-    virtual void DoLoadFromXml(gd::Project & project, const TiXmlElement * elemScene);
+    virtual void DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
-    virtual void DoSaveToXml(TiXmlElement * elemScene);
+    virtual void DoSerializeTo(gd::SerializerElement & element) const;
     #endif
 };
 

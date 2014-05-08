@@ -39,7 +39,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Polygon.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCore/Serialization/SerializerElement.h"
 
 #if defined(GD_IDE_ONLY)
 #include "GDCpp/CommonTools.h"
@@ -69,129 +69,31 @@ Box3DObject::~Box3DObject()
 {
 }
 
-void Box3DObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * object)
+void Box3DObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    if ( object->FirstChildElement( "frontTexture" ) == NULL ||
-         object->FirstChildElement( "frontTexture" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : frontTexture is missing.";
-    }
-    else
-        frontTextureName = object->FirstChildElement("frontTexture")->Attribute("value");
-
-    if ( object->FirstChildElement( "topTexture" ) == NULL ||
-         object->FirstChildElement( "topTexture" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : topTexture is missing.";
-    }
-    else
-        topTextureName = object->FirstChildElement("topTexture")->Attribute("value");
-
-    if ( object->FirstChildElement( "bottomTexture" ) == NULL ||
-         object->FirstChildElement( "bottomTexture" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : bottomTexture is missing.";
-    }
-    else
-        bottomTextureName = object->FirstChildElement("bottomTexture")->Attribute("value");
-
-    if ( object->FirstChildElement( "leftTexture" ) == NULL ||
-         object->FirstChildElement( "leftTexture" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : leftTexture is missing.";
-    }
-    else
-        leftTextureName = object->FirstChildElement("leftTexture")->Attribute("value");
-
-    if ( object->FirstChildElement( "rightTexture" ) == NULL ||
-         object->FirstChildElement( "rightTexture" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : rightTexture is missing.";
-    }
-    else
-        rightTextureName = object->FirstChildElement("rightTexture")->Attribute("value");
-
-    if ( object->FirstChildElement( "backTexture" ) == NULL ||
-         object->FirstChildElement( "backTexture" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : backTexture is missing.";
-    }
-    else
-        backTextureName = object->FirstChildElement("backTexture")->Attribute("value");
-
-    if ( object->FirstChildElement( "width" ) == NULL ||
-         object->FirstChildElement( "width" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : width is missing.";
-    }
-    else
-        object->FirstChildElement("width")->QueryFloatAttribute("value", &width);
-
-    if ( object->FirstChildElement( "height" ) == NULL ||
-         object->FirstChildElement( "height" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : height is missing.";
-    }
-    else
-        object->FirstChildElement("height")->QueryFloatAttribute("value", &height);
-
-    if ( object->FirstChildElement( "depth" ) == NULL ||
-         object->FirstChildElement( "depth" )->Attribute("value") == NULL )
-    {
-        cout << "Box3DObject : depth is missing.";
-    }
-    else
-        object->FirstChildElement("depth")->QueryFloatAttribute("value", &depth);
+    frontTextureName = element.GetChild("frontTexture").GetValue().GetString();
+    topTextureName = element.GetChild("topTexture").GetValue().GetString();
+    bottomTextureName = element.GetChild("bottomTexture").GetValue().GetString();
+    leftTextureName = element.GetChild("leftTexture").GetValue().GetString();
+    rightTextureName = element.GetChild("rightTexture").GetValue().GetString();
+    backTextureName = element.GetChild("backTexture").GetValue().GetString();
+    width = element.GetChild("width").GetValue().GetInt();
+    height = element.GetChild("height").GetValue().GetInt();
+    depth = element.GetChild("depth").GetValue().GetInt();
 }
 
 #if defined(GD_IDE_ONLY)
-void Box3DObject::DoSaveToXml(TiXmlElement * object)
+void Box3DObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    {
-        TiXmlElement * elem = new TiXmlElement( "frontTexture" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", frontTextureName.c_str());
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "topTexture" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", topTextureName.c_str());
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "bottomTexture" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", bottomTextureName.c_str());
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "leftTexture" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", leftTextureName.c_str());
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "rightTexture" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", rightTextureName.c_str());
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "backTexture" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", backTextureName.c_str());
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "width" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", width);
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "height" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", height);
-    }
-    {
-        TiXmlElement * elem = new TiXmlElement( "depth" );
-        object->LinkEndChild( elem );
-        elem->SetAttribute("value", depth);
-    }
+    element.AddChild("frontTexture").SetValue(frontTextureName);
+    element.AddChild("topTexture").SetValue(topTextureName);
+    element.AddChild("bottomTexture").SetValue(bottomTextureName);
+    element.AddChild("leftTexture").SetValue(leftTextureName);
+    element.AddChild("rightTexture").SetValue(rightTextureName);
+    element.AddChild("backTexture").SetValue(backTextureName);
+    element.AddChild("width").SetValue(width);
+    element.AddChild("height").SetValue(height);
+    element.AddChild("depth").SetValue(depth);
 }
 
 void Box3DObject::LoadResources(gd::Project & project, gd::Layout & layout)

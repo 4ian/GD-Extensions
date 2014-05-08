@@ -26,41 +26,36 @@ freely, subject to the following restrictions:
 
 #include "ScenePathDatas.h"
 #include "PathAutomatism.h"
-#include "GDCpp/tinyxml/tinyxml.h"
-#include "GDCpp/XmlMacros.h"
+#include "GDCore/Serialization/SerializerElement.h"
 
 #if defined(GD_IDE_ONLY)
-void ScenePathDatas::SaveToXml(TiXmlElement * elem) const
+void ScenePathDatas::SerializeTo(gd::SerializerElement & element) const
 {
-    TiXmlElement * pathElem = new TiXmlElement( "Paths" );
-    elem->LinkEndChild( pathElem );
-
+    gd::SerializerElement & pathsElement = element.AddChild("paths");
+    pathsElement.ConsiderAsArrayOf("path");
     for(std::map<std::string, std::vector<sf::Vector2f> >::const_iterator it = globalPaths.begin(); it != globalPaths.end(); it++)
     {
-        TiXmlElement * str = new TiXmlElement( "Path" );
-        pathElem->LinkEndChild( str );
+        gd::SerializerElement & pathElement = pathsElement.AddChild("path");
 
-        str->SetAttribute("name", it->first.c_str());
-        str->SetAttribute("coords", PathAutomatism::GetStringFromCoordsVector(it->second, '/', ';').c_str());
+        pathElement.SetAttribute("name", it->first);
+        pathElement.SetAttribute("coords", PathAutomatism::GetStringFromCoordsVector(it->second, '/', ';'));
     }
 }
 #endif
 
-void ScenePathDatas::LoadFromXml(const TiXmlElement * elem)
+void ScenePathDatas::UnserializeFrom(const gd::SerializerElement & element)
 {
-    if(elem->FirstChildElement("Paths") == 0)
-        return;
-
     globalPaths.clear();
 
-    const TiXmlElement * childElem = elem->FirstChildElement("Paths")->FirstChildElement("Path");
-    while(childElem )
+    if (!element.HasChild("paths", "Paths")) return;
+
+    const gd::SerializerElement & pathsElement = element.GetChild("paths", 0, "Paths");
+    pathsElement.ConsiderAsArrayOf("path", "Path");
+    for (int i = 0; i < pathsElement.GetChildrenCount(); ++i)
     {
-        if(childElem->ToElement()->Attribute("name") == NULL || childElem->ToElement()->Attribute("coords") == NULL)
-            continue;
+        const gd::SerializerElement & pathElement = pathsElement.GetChild(i);
 
-        globalPaths[childElem->ToElement()->Attribute("name")] = PathAutomatism::GetCoordsVectorFromString(childElem->ToElement()->Attribute("coords"), '/', ';');
-        childElem = childElem->NextSiblingElement();
+        globalPaths[pathElement.GetStringAttribute("name")] = PathAutomatism::GetCoordsVectorFromString(pathElement.GetStringAttribute("coords"), '/', ';');
     }
-}
 
+}

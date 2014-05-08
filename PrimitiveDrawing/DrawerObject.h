@@ -71,9 +71,9 @@ public :
     DrawerObjectBase();
     virtual ~DrawerObjectBase() {};
 
-    virtual void LoadFromXml(gd::Project & project, const TiXmlElement * elemScene);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
-    virtual void SaveToXml(TiXmlElement * elemScene);
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
     inline void SetOutlineSize(float size) { outlineSize = size; };
@@ -144,9 +144,9 @@ public :
 
 private:
 
-    virtual void DoLoadFromXml(gd::Project & project, const TiXmlElement * elemScene);
+    virtual void DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
-    virtual void DoSaveToXml(TiXmlElement * elemScene);
+    virtual void DoSerializeTo(gd::SerializerElement & element) const;
 
     static sf::Texture edittimeIconImage;
     static sf::Sprite edittimeIcon;

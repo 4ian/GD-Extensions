@@ -35,6 +35,7 @@ class RuntimeScene;
 namespace gd { class Object; }
 namespace gd { class ImageManager; }
 namespace gd { class InitialInstance; }
+namespace gd { class SerializerElement; }
 #if defined(GD_IDE_ONLY)
 class wxBitmap;
 class wxWindow;
@@ -82,9 +83,9 @@ public :
 
 private:
 
-    virtual void DoLoadFromXml(gd::Project & project, const TiXmlElement * elemScene);
+    virtual void DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
-    virtual void DoSaveToXml(TiXmlElement * elemScene);
+    virtual void DoSerializeTo(gd::SerializerElement & element) const;
     #endif
 
     float width;

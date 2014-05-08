@@ -31,12 +31,12 @@ freely, subject to the following restrictions:
 #include "GDCpp/Object.h"
 
 #include "GDCpp/ImageManager.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Polygon.h"
 #include "GDCpp/CommonTools.h"
-#include "GDCpp/XmlMacros.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "TextObject.h"
 
 #if defined(GD_IDE_ONLY)
@@ -68,50 +68,20 @@ TextObject::~TextObject()
 {
 };
 
-void TextObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * elem)
+void TextObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    if ( elem->FirstChildElement( "String" ) && elem->FirstChildElement( "String" )->Attribute("value")  )
-        SetString(elem->FirstChildElement("String")->Attribute("value"));
+    SetString(element.GetChild("string", 0,"String").GetValue().GetString());
+    SetFontFilename(element.GetChild("font", 0,"Font").GetValue().GetString());
+    SetCharacterSize(element.GetChild("characterSize", 0, "CharacterSize").GetValue().GetInt());
+    SetColor(element.GetChild("color", 0,"Color").GetIntAttribute("r", 255),
+        element.GetChild("color", 0,"Color").GetIntAttribute("g", 255),
+        element.GetChild("color", 0,"Color").GetIntAttribute("b", 255));
 
-    if ( elem->FirstChildElement( "Font" ) && elem->FirstChildElement( "Font" )->Attribute("value") )
-        SetFontFilename(elem->FirstChildElement("Font")->Attribute("value"));
 
-    if ( elem->FirstChildElement( "CharacterSize" ) && elem->FirstChildElement( "CharacterSize" )->Attribute("value")  )
-    {
-        float size = 20;
-        elem->FirstChildElement("CharacterSize")->QueryFloatAttribute("value", &size);
-
-        SetCharacterSize(size);
-    }
-
-    if ( elem->FirstChildElement( "Color" ) && elem->FirstChildElement( "Color" )->Attribute("r") &&
-         elem->FirstChildElement( "Color" )->Attribute("g") && elem->FirstChildElement( "Color" )->Attribute("b") )
-    {
-        int r = 255;
-        int g = 255;
-        int b = 255;
-        elem->FirstChildElement("Color")->QueryIntAttribute("r", &r);
-        elem->FirstChildElement("Color")->QueryIntAttribute("g", &g);
-        elem->FirstChildElement("Color")->QueryIntAttribute("b", &b);
-
-        SetColor(r,g,b);
-    }
-
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("smoothed", smoothed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("bold", bold);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("italic", italic);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("underlined", underlined);
-
-    //Backward compatibility
-    if ( elem->FirstChildElement( "Style" ) && elem->FirstChildElement( "Style" )->Attribute("value")  )
-    {
-        int style = 0;
-        elem->FirstChildElement("Style")->QueryIntAttribute("value", &style);
-
-        SetBold( (sf::Text::Bold & style) != 0 );
-        SetUnderlined( (sf::Text::Underlined & style) != 0 );
-        SetItalic( (sf::Text::Italic & style) != 0 );
-    }
+    smoothed = element.GetBoolAttribute("smoothed");
+    bold = element.GetBoolAttribute("bold");
+    italic = element.GetBoolAttribute("italic");
+    underlined = element.GetBoolAttribute("underlined");
 }
 
 #if defined(GD_IDE_ONLY)
@@ -152,30 +122,19 @@ void TextObject::LoadResources(gd::Project & project, gd::Layout & layout)
     font = FontManager::Get()->GetFont(fontName);
 }
 
-void TextObject::DoSaveToXml(TiXmlElement * elem)
+void TextObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    TiXmlElement * str = new TiXmlElement( "String" );
-    elem->LinkEndChild( str );
-    str->SetAttribute("value", GetString().c_str());
+    element.AddChild("string").SetValue(GetString());
+    element.AddChild("font").SetValue(GetFontFilename());
+    element.AddChild("characterSize").SetValue(GetCharacterSize());
+    element.AddChild("color").SetAttribute("r", (int)GetColorR())
+        .SetAttribute("g", (int)GetColorG())
+        .SetAttribute("b", (int)GetColorB());
 
-    TiXmlElement * font = new TiXmlElement( "Font" );
-    elem->LinkEndChild( font );
-    font->SetAttribute("value", GetFontFilename().c_str());
-
-    TiXmlElement * characterSize = new TiXmlElement( "CharacterSize" );
-    elem->LinkEndChild( characterSize );
-    characterSize->SetAttribute("value", GetCharacterSize());
-
-    TiXmlElement * color = new TiXmlElement( "Color" );
-    elem->LinkEndChild( color );
-    color->SetAttribute("r", GetColorR());
-    color->SetAttribute("g", GetColorG());
-    color->SetAttribute("b", GetColorB());
-
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("smoothed", smoothed);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("bold", bold);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("italic", italic);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("underlined", underlined);
+    element.SetAttribute("smoothed", smoothed);
+    element.SetAttribute("bold", bold);
+    element.SetAttribute("italic", italic);
+    element.SetAttribute("underlined", underlined);
 }
 
 void TextObject::ExposeResources(gd::ArbitraryResourceWorker & worker)

@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #include "LightObstacleAutomatismEditor.h"
 #include "LightObject.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>

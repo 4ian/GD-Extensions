@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include <SFML/Network.hpp>
 #include "GDCpp/RuntimeObject.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/CommonTools.h"
 #include "ReceivedDataManager.h"
@@ -155,26 +155,26 @@ void NetworkAutomatism::GenerateObjectNetworkIdentifier( std::map <std::string, 
 }
 
 #if defined(GD_IDE_ONLY)
-void NetworkAutomatism::SaveToXml(TiXmlElement * elem) const
+void NetworkAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("sending", sending);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("xPosition", xPosition);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("yPosition", yPosition);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("angle", angle);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("width", width);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("height", height);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("dataPrefix", dataPrefix);
+    element.SetAttribute("sending", sending);
+    element.SetAttribute("xPosition", xPosition);
+    element.SetAttribute("yPosition", yPosition);
+    element.SetAttribute("angle", angle);
+    element.SetAttribute("width", width);
+    element.SetAttribute("height", height);
+    element.SetAttribute("dataPrefix", dataPrefix);
 }
 #endif
 
-void NetworkAutomatism::LoadFromXml(const TiXmlElement * elem)
+void NetworkAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("sending", sending);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("xPosition", xPosition);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("yPosition", yPosition);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("angle", angle);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("width", width);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("height", height);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("dataPrefix", dataPrefix);
+    sending = element.GetBoolAttribute("sending");
+    xPosition = element.GetBoolAttribute("xPosition");
+    yPosition = element.GetBoolAttribute("yPosition");
+    angle = element.GetBoolAttribute("angle");
+    width = element.GetBoolAttribute("width");
+    height = element.GetBoolAttribute("height");
+    dataPrefix = element.GetStringAttribute("dataPrefix");
 }
 

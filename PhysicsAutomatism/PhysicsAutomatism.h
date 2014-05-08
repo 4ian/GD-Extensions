@@ -36,7 +36,7 @@ freely, subject to the following restrictions:
 #include <vector>
 namespace gd { class Project; }
 namespace gd { class Layout; }
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 class RuntimeScene;
 class b2Body;
 class PhysicsAutomatismEditor;
@@ -60,15 +60,15 @@ public:
 
     #if defined(GD_IDE_ONLY)
     /**
-     * Save Automatism to XML
+     * Serialize the automatism
      */
-    virtual void SaveToXml(TiXmlElement * elem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
     /**
-     * Load Automatism from XML
+     * Unserialize the automatism
      */
-    virtual void LoadFromXml(const TiXmlElement * elem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 
     #if defined(GD_IDE_ONLY)
     /**

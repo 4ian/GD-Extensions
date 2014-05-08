@@ -13,16 +13,15 @@ gdjs.PhysicsSharedData = function(runtimeScene, sharedData)
 
 	this.totalTime = 0;
 	this.fixedTimeStep = 1/60;
-	this.scaleX = parseFloat(sharedData.attr.scaleX);
-	this.scaleY = parseFloat(sharedData.attr.scaleY);
+	this.scaleX = sharedData.scaleX;
+	this.scaleY = sharedData.scaleY;
 	this.invScaleX = 1/this.scaleX;
 	this.invScaleY = 1/this.scaleY;
 
 	//Setup world...
 	var b2World = Box2D.b2World;
 	var b2Vec2 = Box2D.b2Vec2;
-	this.world = new b2World(new b2Vec2(parseFloat(sharedData.attr.gravityX),
-		-parseFloat(sharedData.attr.gravityY)), true);
+	this.world = new b2World(new b2Vec2(sharedData.gravityX, -sharedData.gravityY), true);
 	this.world.SetAutoClearForces(false);
     this.staticBody = this.world.CreateBody(new Box2D.b2BodyDef());
 
@@ -104,20 +103,20 @@ gdjs.PhysicsRuntimeAutomatism = function(runtimeScene, automatismData, owner)
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
     this._box2DBody = null;
-    this._dynamic = automatismData.attr.dynamic === "true";
+    this._dynamic = automatismData.dynamic;
     this._objectOldWidth = 0;
     this._objectOldHeight = 0;
     this._objectOldX = 0;
     this._objectOldY = 0;
     this._objectOldAngle = 0;
-    this._angularDamping = parseFloat(automatismData.attr.angularDamping);
-    this._linearDamping = parseFloat(automatismData.attr.linearDamping);
-    this._isBullet = automatismData.attr.isBullet === "true";
-    this._fixedRotation = automatismData.attr.fixedRotation === "true";
-	this._massDensity = parseFloat(automatismData.attr.massDensity);
-	this._averageFriction = parseFloat(automatismData.attr.averageFriction);
-	this._averageRestitution = parseFloat(automatismData.attr.averageRestitution);
-    this._shapeType = automatismData.attr.shapeType;
+    this._angularDamping = automatismData.angularDamping;
+    this._linearDamping = automatismData.linearDamping;
+    this._isBullet = automatismData.isBullet;
+    this._fixedRotation = automatismData.fixedRotation;
+	this._massDensity = automatismData.massDensity;
+	this._averageFriction = automatismData.averageFriction;
+	this._averageRestitution = automatismData.averageRestitution;
+    this._shapeType = automatismData.shapeType;
 	if ( this.currentContacts !== undefined )
 		this.currentContacts.length = 0;
 	else
@@ -125,7 +124,7 @@ gdjs.PhysicsRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 
 	//Create the shared data if necessary.
 	if ( !gdjs.PhysicsRuntimeAutomatism.scenesSharedData.containsKey(runtimeScene.getName()) ) {
-		var initialData = runtimeScene.getInitialSharedDataForAutomatism(automatismData.attr.Name);
+		var initialData = runtimeScene.getInitialSharedDataForAutomatism(automatismData.name);
 		var data = new gdjs.PhysicsSharedData(runtimeScene, initialData);
 		gdjs.PhysicsRuntimeAutomatism.scenesSharedData.put(runtimeScene.getName(), data);
 	}

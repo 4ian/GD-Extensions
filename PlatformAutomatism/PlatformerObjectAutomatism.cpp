@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include "PlatformAutomatism.h"
 #include "ScenePlatformObjectsManager.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -527,29 +527,29 @@ void PlatformerObjectAutomatism::SimulateControl(const std::string & input)
     else if ( input == "Jump" ) jumpKey = true;
 }
 
-void PlatformerObjectAutomatism::LoadFromXml(const TiXmlElement * elem)
+void PlatformerObjectAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("gravity", gravity);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxFallingSpeed", maxFallingSpeed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("acceleration", acceleration);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("deceleration", deceleration);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_DOUBLE("slopeMaxAngle", slopeMaxAngle);
+    gravity = element.GetDoubleAttribute("gravity");
+    maxFallingSpeed = element.GetDoubleAttribute("maxFallingSpeed");
+    acceleration = element.GetDoubleAttribute("acceleration");
+    deceleration = element.GetDoubleAttribute("deceleration");
+    maxSpeed = element.GetDoubleAttribute("maxSpeed");
+    jumpSpeed = element.GetDoubleAttribute("jumpSpeed");
+    ignoreDefaultControls = element.GetBoolAttribute("ignoreDefaultControls");
+    slopeMaxAngle = element.GetDoubleAttribute("slopeMaxAngle");
 }
 
 #if defined(GD_IDE_ONLY)
-void PlatformerObjectAutomatism::SaveToXml(TiXmlElement * elem) const
+void PlatformerObjectAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("gravity", gravity);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxFallingSpeed", maxFallingSpeed);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("acceleration", acceleration);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("deceleration", deceleration);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("maxSpeed", maxSpeed);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("jumpSpeed", jumpSpeed);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("ignoreDefaultControls", ignoreDefaultControls);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("slopeMaxAngle", slopeMaxAngle);
+    element.SetAttribute("gravity", gravity);
+    element.SetAttribute("maxFallingSpeed", maxFallingSpeed);
+    element.SetAttribute("acceleration", acceleration);
+    element.SetAttribute("deceleration", deceleration);
+    element.SetAttribute("maxSpeed", maxSpeed);
+    element.SetAttribute("jumpSpeed", jumpSpeed);
+    element.SetAttribute("ignoreDefaultControls", ignoreDefaultControls);
+    element.SetAttribute("slopeMaxAngle", slopeMaxAngle);
 
 }
 

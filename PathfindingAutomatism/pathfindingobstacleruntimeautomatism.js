@@ -106,8 +106,8 @@ gdjs.PathfindingObstacleRuntimeAutomatism = function(runtimeScene, automatismDat
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
     //Load the automatism
-    this._impassable = automatismData.attr.impassable === "true";
-    this._cost = parseFloat(automatismData.attr.cost, 10);
+    this._impassable = automatismData.impassable;
+    this._cost = automatismData.cost;
     this._oldX = 0; //Note that we can't use getX(), getWidth()... of owner here:
     this._oldY = 0; //The owner is not yet fully constructed.
     this._oldWidth = 0;

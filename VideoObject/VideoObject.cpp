@@ -31,10 +31,9 @@ freely, subject to the following restrictions:
 #include "GDCpp/Object.h"
 
 #include "GDCpp/ImageManager.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
-#include "GDCpp/XmlMacros.h"
 #include "GDCpp/Polygon.h"
 #include "GDCpp/CommonTools.h"
 #include "VideoObject.h"
@@ -61,35 +60,30 @@ VideoObject::~VideoObject()
 {
 }
 
-void VideoObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * elem)
+void VideoObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("videoFile", videoFile);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("looping", looping);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("opacity", opacity);
+    videoFile = element.GetStringAttribute("videoFile");
+    looping = element.GetBoolAttribute("looping");
+    opacity = element.GetFloatAttribute("opacity");
 
-    int r = 255;
-    int g = 255;
-    int b = 255;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("colorR", r);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("colorG", g);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("colorB", b);
-    SetColor(r,g,b);
+    SetColor(
+        element.GetIntAttribute("colorR", 255),
+        element.GetIntAttribute("colorG", 255),
+        element.GetIntAttribute("colorB", 255));
 
-    int vol = 100;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("volume", vol);
-    SetVolume(vol);
+    SetVolume(element.GetIntAttribute("volume", 100));
 }
 
 #if defined(GD_IDE_ONLY)
-void VideoObject::DoSaveToXml(TiXmlElement * elem)
+void VideoObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("videoFile", videoFile);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("looping", looping);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("opacity", opacity);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("colorR", colorR);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("colorG", colorG);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("colorB", colorB);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("volume", static_cast<double>(GetVolume()));
+    element.SetAttribute("videoFile", videoFile);
+    element.SetAttribute("looping", looping);
+    element.SetAttribute("opacity", opacity);
+    element.SetAttribute("colorR", colorR);
+    element.SetAttribute("colorG", colorG);
+    element.SetAttribute("colorB", colorB);
+    element.SetAttribute("volume", static_cast<double>(GetVolume()));
 }
 #endif
 

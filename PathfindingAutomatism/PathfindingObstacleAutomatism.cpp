@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include <boost/shared_ptr.hpp>
 #include "PathfindingObstacleAutomatism.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -103,17 +103,17 @@ void PathfindingObstacleAutomatism::OnDeActivate()
     registeredInManager = false;
 }
 
-void PathfindingObstacleAutomatism::LoadFromXml(const TiXmlElement * elem)
+void PathfindingObstacleAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("impassable", impassable);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("cost", cost);
+    impassable = element.GetBoolAttribute("impassable");
+    cost = element.GetDoubleAttribute("cost");
 }
 
 #if defined(GD_IDE_ONLY)
-void PathfindingObstacleAutomatism::SaveToXml(TiXmlElement * elem) const
+void PathfindingObstacleAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("impassable", impassable);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("cost", cost);
+    element.SetAttribute("impassable", impassable);
+    element.SetAttribute("cost", cost);
 }
 
 std::map<std::string, gd::PropertyDescriptor> PathfindingObstacleAutomatism::GetProperties(gd::Project & project) const

@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 #include "ScenePathfindingObstaclesManager.h"
 #include "GDCpp/BuiltinExtensions/MathematicalTools.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -608,39 +608,37 @@ float PathfindingAutomatism::GetDestinationY() const
     return path.back().y;
 }
 
-void PathfindingAutomatism::LoadFromXml(const TiXmlElement * elem)
+void PathfindingAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("allowDiagonals", allowDiagonals);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("acceleration", acceleration);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("maxSpeed", maxSpeed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angularMaxSpeed", angularMaxSpeed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("rotateObject", rotateObject);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angleOffset", angleOffset);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("extraBorder", extraBorder);
+    allowDiagonals = element.GetBoolAttribute("allowDiagonals");
+    acceleration = element.GetDoubleAttribute("acceleration");
+    maxSpeed = element.GetDoubleAttribute("maxSpeed");
+    angularMaxSpeed = element.GetDoubleAttribute("angularMaxSpeed");
+    rotateObject = element.GetBoolAttribute("rotateObject");
+    angleOffset = element.GetDoubleAttribute("angleOffset");
+    extraBorder = element.GetDoubleAttribute("extraBorder");
     {
-        int value = 0;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("cellWidth", value);
+        int value = element.GetIntAttribute("cellWidth", 0);
         if (value > 0) cellWidth = value;
     }
     {
-        int value = 0;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("cellHeight", value);
+        int value = element.GetIntAttribute("cellHeight", 0);
         if (value > 0) cellHeight = value;
     }
 }
 
 #if defined(GD_IDE_ONLY)
-void PathfindingAutomatism::SaveToXml(TiXmlElement * elem) const
+void PathfindingAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("allowDiagonals", allowDiagonals);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("acceleration", acceleration);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("maxSpeed", maxSpeed);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("angularMaxSpeed", angularMaxSpeed);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("rotateObject", rotateObject);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("angleOffset", angleOffset);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("cellWidth", cellWidth);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("cellHeight", cellHeight);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("extraBorder", extraBorder);
+    element.SetAttribute("allowDiagonals", allowDiagonals);
+    element.SetAttribute("acceleration", acceleration);
+    element.SetAttribute("maxSpeed", maxSpeed);
+    element.SetAttribute("angularMaxSpeed", angularMaxSpeed);
+    element.SetAttribute("rotateObject", rotateObject);
+    element.SetAttribute("angleOffset", angleOffset);
+    element.SetAttribute("cellWidth", (int)cellWidth);
+    element.SetAttribute("cellHeight", (int)cellHeight);
+    element.SetAttribute("extraBorder", extraBorder);
 }
 
 std::map<std::string, gd::PropertyDescriptor> PathfindingAutomatism::GetProperties(gd::Project & project) const

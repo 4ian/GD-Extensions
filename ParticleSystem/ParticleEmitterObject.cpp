@@ -32,10 +32,10 @@ freely, subject to the following restrictions:
 #include "GDCpp/Object.h"
 #include "GDCpp/ImageManager.h"
 #include "GDCpp/RuntimeGame.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/FontManager.h"
 #include "GDCpp/Position.h"
-#include "GDCpp/XmlMacros.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/Project.h"
 #include "GDCpp/Polygon.h"
@@ -112,111 +112,98 @@ ParticleEmitterObject::ParticleEmitterObject(std::string name_) :
 {
 }
 
-void ParticleEmitterObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * elem)
+void ParticleEmitterObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    ParticleEmitterBase::LoadFromXml(elem);
+    ParticleEmitterBase::UnserializeFrom(element);
 
     #if defined(GD_IDE_ONLY)
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("particleEditionSimpleMode", particleEditionSimpleMode);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("emissionEditionSimpleMode", emissionEditionSimpleMode);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("gravityEditionSimpleMode", gravityEditionSimpleMode);
+    particleEditionSimpleMode = element.GetBoolAttribute("particleEditionSimpleMode");
+    emissionEditionSimpleMode = element.GetBoolAttribute("emissionEditionSimpleMode");
+    gravityEditionSimpleMode = element.GetBoolAttribute("gravityEditionSimpleMode");
     #endif
 }
 
-void ParticleEmitterBase::LoadFromXml(const TiXmlElement * elem)
+void ParticleEmitterBase::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("tank", tank);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("flow", flow);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterForceMin", emitterForceMin);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterForceMax", emitterForceMax);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterXDirection", emitterXDirection);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterYDirection", emitterYDirection);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterZDirection", emitterZDirection);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterAngleA", emitterAngleA);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("emitterAngleB", emitterAngleB);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("zoneRadius", zoneRadius);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleGravityX", particleGravityX);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleGravityY", particleGravityY);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleGravityZ", particleGravityZ);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("friction", friction);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleLifeTimeMin", particleLifeTimeMin);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleLifeTimeMax", particleLifeTimeMax);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleRed1", particleRed1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleRed2", particleRed2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleGreen1", particleGreen1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleGreen2", particleGreen2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleBlue1", particleBlue1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleBlue2", particleBlue2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAlpha1", particleAlpha1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAlpha2", particleAlpha2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("rendererParam1", rendererParam1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("rendererParam2", rendererParam2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleSize1", particleSize1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleSize2", particleSize2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAngle1", particleAngle1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAngle2", particleAngle2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAlphaRandomness1", particleAlphaRandomness1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAlphaRandomness2", particleAlphaRandomness2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleSizeRandomness1", particleSizeRandomness1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleSizeRandomness2", particleSizeRandomness2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAngleRandomness1", particleAngleRandomness1);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("particleAngleRandomness2", particleAngleRandomness2);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("additive", additive);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("destroyWhenNoParticles", destroyWhenNoParticles);
-    if ( elem->Attribute( "destroyWhenNoParticles" ) == NULL ) destroyWhenNoParticles = false;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("textureParticleName", textureParticleName);
+    tank = element.GetDoubleAttribute("tank");
+    flow = element.GetDoubleAttribute("flow");
+    emitterForceMin = element.GetDoubleAttribute("emitterForceMin");
+    emitterForceMax = element.GetDoubleAttribute("emitterForceMax");
+    emitterXDirection = element.GetDoubleAttribute("emitterXDirection");
+    emitterYDirection = element.GetDoubleAttribute("emitterYDirection");
+    emitterZDirection = element.GetDoubleAttribute("emitterZDirection");
+    emitterAngleA = element.GetDoubleAttribute("emitterAngleA");
+    emitterAngleB = element.GetDoubleAttribute("emitterAngleB");
+    zoneRadius = element.GetDoubleAttribute("zoneRadius");
+    particleGravityX = element.GetDoubleAttribute("particleGravityX");
+    particleGravityY = element.GetDoubleAttribute("particleGravityY");
+    particleGravityZ = element.GetDoubleAttribute("particleGravityZ");
+    friction = element.GetDoubleAttribute("friction");
+    particleLifeTimeMin = element.GetDoubleAttribute("particleLifeTimeMin");
+    particleLifeTimeMax = element.GetDoubleAttribute("particleLifeTimeMax");
+    particleRed1 = element.GetDoubleAttribute("particleRed1");
+    particleRed2 = element.GetDoubleAttribute("particleRed2");
+    particleGreen1 = element.GetDoubleAttribute("particleGreen1");
+    particleGreen2 = element.GetDoubleAttribute("particleGreen2");
+    particleBlue1 = element.GetDoubleAttribute("particleBlue1");
+    particleBlue2 = element.GetDoubleAttribute("particleBlue2");
+    particleAlpha1 = element.GetDoubleAttribute("particleAlpha1");
+    particleAlpha2 = element.GetDoubleAttribute("particleAlpha2");
+    rendererParam1 = element.GetDoubleAttribute("rendererParam1");
+    rendererParam2 = element.GetDoubleAttribute("rendererParam2");
+    particleSize1 = element.GetDoubleAttribute("particleSize1");
+    particleSize2 = element.GetDoubleAttribute("particleSize2");
+    particleAngle1 = element.GetDoubleAttribute("particleAngle1");
+    particleAngle2 = element.GetDoubleAttribute("particleAngle2");
+    particleAlphaRandomness1 = element.GetDoubleAttribute("particleAlphaRandomness1");
+    particleAlphaRandomness2 = element.GetDoubleAttribute("particleAlphaRandomness2");
+    particleSizeRandomness1 = element.GetDoubleAttribute("particleSizeRandomness1");
+    particleSizeRandomness2 = element.GetDoubleAttribute("particleSizeRandomness2");
+    particleAngleRandomness1 = element.GetDoubleAttribute("particleAngleRandomness1");
+    particleAngleRandomness2 = element.GetDoubleAttribute("particleAngleRandomness2");
+    additive = element.GetBoolAttribute("additive");
+    destroyWhenNoParticles = element.GetBoolAttribute("destroyWhenNoParticles", false);
+    textureParticleName = element.GetStringAttribute("textureParticleName");
+    maxParticleNb = element.GetIntAttribute("maxParticleNb", 5000);
 
     {
-        int result = 5000;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("maxParticleNb", result);
-        maxParticleNb = result;
-    }
-
-    {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("rendererType", result);
+        std::string result = element.GetStringAttribute("rendererType");
         if ( result == "Line") rendererType = Line;
         else if ( result == "Quad") rendererType = Quad;
         else rendererType = Point;
     }
     {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("redParam", result);
+        std::string result = element.GetStringAttribute("redParam");
         if ( result == "Mutable") redParam = Mutable;
         else if ( result == "Random") redParam = Random;
         else redParam = Enabled;
     }
     {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("greenParam", result);
+        std::string result = element.GetStringAttribute("greenParam");
         if ( result == "Mutable") greenParam = Mutable;
         else if ( result == "Random") greenParam = Random;
         else greenParam = Enabled;
     }
     {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("blueParam", result);
+        std::string result = element.GetStringAttribute("blueParam");
         if ( result == "Mutable") blueParam = Mutable;
         else if ( result == "Random") blueParam = Random;
         else blueParam = Enabled;
     }
     {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("alphaParam", result);
+        std::string result = element.GetStringAttribute("alphaParam");
         if ( result == "Mutable") alphaParam = Mutable;
         else if ( result == "Random") alphaParam = Random;
         else alphaParam = Enabled;
     }
     {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("sizeParam", result);
+        std::string result = element.GetStringAttribute("sizeParam");
         if ( result == "Mutable") sizeParam = Mutable;
         else if ( result == "Random") sizeParam = Random;
         else sizeParam = Nothing;
     }
     {
-        std::string result;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("angleParam", result);
+        std::string result = element.GetStringAttribute("angleParam");
         if ( result == "Mutable") angleParam = Mutable;
         else if ( result == "Random") angleParam = Random;
         else angleParam = Nothing;
@@ -224,92 +211,92 @@ void ParticleEmitterBase::LoadFromXml(const TiXmlElement * elem)
 }
 
 #if defined(GD_IDE_ONLY)
-void ParticleEmitterObject::DoSaveToXml(TiXmlElement * elem)
+void ParticleEmitterObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("particleEditionSimpleMode", particleEditionSimpleMode);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("emissionEditionSimpleMode", emissionEditionSimpleMode);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("gravityEditionSimpleMode", gravityEditionSimpleMode);
+    element.SetAttribute("particleEditionSimpleMode", particleEditionSimpleMode);
+    element.SetAttribute("emissionEditionSimpleMode", emissionEditionSimpleMode);
+    element.SetAttribute("gravityEditionSimpleMode", gravityEditionSimpleMode);
 
-    ParticleEmitterBase::SaveToXml(elem);
+    ParticleEmitterBase::SerializeTo(element);
 }
 
-void ParticleEmitterBase::SaveToXml(TiXmlElement * elem)
+void ParticleEmitterBase::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("tank", tank);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("flow", flow);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterForceMin", emitterForceMin);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterForceMax", emitterForceMax);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterXDirection", emitterXDirection);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterYDirection", emitterYDirection);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterZDirection", emitterZDirection);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterAngleA", emitterAngleA);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("emitterAngleB", emitterAngleB);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("zoneRadius", zoneRadius);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleGravityX", particleGravityX);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleGravityY", particleGravityY);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleGravityZ", particleGravityZ);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("friction", friction);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleLifeTimeMin", particleLifeTimeMin);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleLifeTimeMax", particleLifeTimeMax);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleRed1", particleRed1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleRed2", particleRed2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleGreen1", particleGreen1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleGreen2", particleGreen2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleBlue1", particleBlue1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleBlue2", particleBlue2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAlpha1", particleAlpha1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAlpha2", particleAlpha2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleSize1", particleSize1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleSize2", particleSize2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAngle1", particleAngle1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAngle2", particleAngle2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("rendererParam1", rendererParam1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("rendererParam2", rendererParam2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAlphaRandomness1", particleAlphaRandomness1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAlphaRandomness2", particleAlphaRandomness2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleSizeRandomness1", particleSizeRandomness1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleSizeRandomness2", particleSizeRandomness2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAngleRandomness1", particleAngleRandomness1);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("particleAngleRandomness2", particleAngleRandomness2);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("additive", additive);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("destroyWhenNoParticles", destroyWhenNoParticles);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("textureParticleName", textureParticleName);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("maxParticleNb", maxParticleNb);
+    element.SetAttribute("tank", tank);
+    element.SetAttribute("flow", flow);
+    element.SetAttribute("emitterForceMin", emitterForceMin);
+    element.SetAttribute("emitterForceMax", emitterForceMax);
+    element.SetAttribute("emitterXDirection", emitterXDirection);
+    element.SetAttribute("emitterYDirection", emitterYDirection);
+    element.SetAttribute("emitterZDirection", emitterZDirection);
+    element.SetAttribute("emitterAngleA", emitterAngleA);
+    element.SetAttribute("emitterAngleB", emitterAngleB);
+    element.SetAttribute("zoneRadius", zoneRadius);
+    element.SetAttribute("particleGravityX", particleGravityX);
+    element.SetAttribute("particleGravityY", particleGravityY);
+    element.SetAttribute("particleGravityZ", particleGravityZ);
+    element.SetAttribute("friction", friction);
+    element.SetAttribute("particleLifeTimeMin", particleLifeTimeMin);
+    element.SetAttribute("particleLifeTimeMax", particleLifeTimeMax);
+    element.SetAttribute("particleRed1", particleRed1);
+    element.SetAttribute("particleRed2", particleRed2);
+    element.SetAttribute("particleGreen1", particleGreen1);
+    element.SetAttribute("particleGreen2", particleGreen2);
+    element.SetAttribute("particleBlue1", particleBlue1);
+    element.SetAttribute("particleBlue2", particleBlue2);
+    element.SetAttribute("particleAlpha1", particleAlpha1);
+    element.SetAttribute("particleAlpha2", particleAlpha2);
+    element.SetAttribute("particleSize1", particleSize1);
+    element.SetAttribute("particleSize2", particleSize2);
+    element.SetAttribute("particleAngle1", particleAngle1);
+    element.SetAttribute("particleAngle2", particleAngle2);
+    element.SetAttribute("rendererParam1", rendererParam1);
+    element.SetAttribute("rendererParam2", rendererParam2);
+    element.SetAttribute("particleAlphaRandomness1", particleAlphaRandomness1);
+    element.SetAttribute("particleAlphaRandomness2", particleAlphaRandomness2);
+    element.SetAttribute("particleSizeRandomness1", particleSizeRandomness1);
+    element.SetAttribute("particleSizeRandomness2", particleSizeRandomness2);
+    element.SetAttribute("particleAngleRandomness1", particleAngleRandomness1);
+    element.SetAttribute("particleAngleRandomness2", particleAngleRandomness2);
+    element.SetAttribute("additive", additive);
+    element.SetAttribute("destroyWhenNoParticles", destroyWhenNoParticles);
+    element.SetAttribute("textureParticleName", textureParticleName);
+    element.SetAttribute("maxParticleNb", (int)maxParticleNb);
 
     std::string rendererTypeStr = "Point";
     if ( rendererType == Line ) rendererTypeStr = "Line";
     else if ( rendererType == Quad ) rendererTypeStr = "Quad";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("rendererType", rendererTypeStr);
+    element.SetAttribute("rendererType", rendererTypeStr);
 
     std::string redParamStr = "Enabled";
     if ( redParam == Mutable ) redParamStr = "Mutable";
     else if ( redParam == Random ) redParamStr = "Random";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("redParam", redParamStr);
+    element.SetAttribute("redParam", redParamStr);
 
     std::string greenParamStr = "Enabled";
     if ( greenParam == Mutable ) greenParamStr = "Mutable";
     else if ( greenParam == Random ) greenParamStr = "Random";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("greenParam", greenParamStr);
+    element.SetAttribute("greenParam", greenParamStr);
 
     std::string blueParamStr = "Enabled";
     if ( blueParam == Mutable ) blueParamStr = "Mutable";
     else if ( blueParam == Random ) blueParamStr = "Random";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("blueParam", blueParamStr);
+    element.SetAttribute("blueParam", blueParamStr);
 
     std::string alphaParamStr = "Enabled";
     if ( alphaParam == Mutable ) alphaParamStr = "Mutable";
     else if ( alphaParam == Random ) alphaParamStr = "Random";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("alphaParam", alphaParamStr);
+    element.SetAttribute("alphaParam", alphaParamStr);
 
     std::string sizeParamStr = "Nothing";
     if ( sizeParam == Mutable ) sizeParamStr = "Mutable";
     else if ( sizeParam == Random ) sizeParamStr = "Random";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("sizeParam", sizeParamStr);
+    element.SetAttribute("sizeParam", sizeParamStr);
 
     std::string angleParamStr = "Nothing";
     if ( angleParam == Mutable ) angleParamStr = "Mutable";
     else if ( angleParam == Random ) angleParamStr = "Random";
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("angleParam", angleParamStr);
+    element.SetAttribute("angleParam", angleParamStr);
 }
 #endif
 

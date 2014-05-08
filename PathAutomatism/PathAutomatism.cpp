@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #include "PathAutomatism.h"
 #include "PathAutomatismEditor.h"
 #include "GDCpp/Scene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -189,73 +189,60 @@ void PathAutomatism::DoStepPostEvents(RuntimeScene & scene)
 }
 
 #if defined(GD_IDE_ONLY)
-void PathAutomatism::SaveToXml(TiXmlElement * elem) const
+void PathAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    TiXmlElement * pathElem = new TiXmlElement( "Paths" );
-    elem->LinkEndChild( pathElem );
-    SavePathsFromXml(pathElem);
+    SerializePathsTo(element.AddChild("paths"));
 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_STRING("currentPath", GetCurrentPathName());
-
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("speed", GetSpeed());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("offsetX", GetOffsetX());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("offsetY", GetOffsetY());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("angleOffset", angleOffset);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("reverseAtEnd", ReverseAtEnd());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("stopAtEnd", StopAtEnd());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("followAngle", FollowAngle());
+    element.SetAttribute("currentPath", GetCurrentPathName());
+    element.SetAttribute("speed", GetSpeed());
+    element.SetAttribute("offsetX", GetOffsetX());
+    element.SetAttribute("offsetY", GetOffsetY());
+    element.SetAttribute("angleOffset", angleOffset);
+    element.SetAttribute("reverseAtEnd", ReverseAtEnd());
+    element.SetAttribute("stopAtEnd", StopAtEnd());
+    element.SetAttribute("followAngle", FollowAngle());
 }
 
-void PathAutomatism::SavePathsFromXml(TiXmlElement * elem) const
+void PathAutomatism::SerializePathsTo(gd::SerializerElement & element) const
 {
+    element.ConsiderAsArrayOf("path");
     for(std::map<std::string, std::vector<sf::Vector2f> >::const_iterator it = localePaths.begin(); it != localePaths.end(); it++)
     {
-        TiXmlElement * str = new TiXmlElement( "Path" );
-        elem->LinkEndChild( str );
+        gd::SerializerElement & pathElement = element.AddChild("path");
 
-        str->SetAttribute("name", it->first.c_str());
-        str->SetAttribute("coords", GetStringFromCoordsVector(it->second, '/', ';').c_str());
+        pathElement.SetAttribute("name", it->first);
+        pathElement.SetAttribute("coords", GetStringFromCoordsVector(it->second, '/', ';'));
     }
 }
 #endif
 
-void PathAutomatism::LoadFromXml(const TiXmlElement * elem)
+void PathAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    if(elem->FirstChildElement("Paths") != 0)
-        LoadPathsFromXml(elem->FirstChildElement("Paths"));
+    UnserializePathsFrom(element.GetChild("paths", 0, "Paths"));
 
-    std::string currentPath_;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("currentPath", currentPath_);
-
-    ChangeCurrentPath(currentPath_);
-
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("speed", speed);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("offsetX", offset.x);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("offsetY", offset.y);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angleOffset", angleOffset);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("reverseAtEnd", reverseAtEnd);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("stopAtEnd", stopAtEnd);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("followAngle", followAngle);
+    ChangeCurrentPath(element.GetStringAttribute("currentPath"));
+    speed = element.GetDoubleAttribute("speed");
+    offset.x = element.GetDoubleAttribute("offsetX");
+    offset.y = element.GetDoubleAttribute("offsetY");
+    angleOffset = element.GetDoubleAttribute("angleOffset");
+    reverseAtEnd = element.GetBoolAttribute("reverseAtEnd");
+    stopAtEnd = element.GetBoolAttribute("stopAtEnd");
+    followAngle = element.GetBoolAttribute("followAngle");
 }
 
-void PathAutomatism::LoadPathsFromXml(const TiXmlElement * elem)
+void PathAutomatism::UnserializePathsFrom(const gd::SerializerElement & element)
 {
     localePaths.clear();
 
-    const TiXmlElement * childElem = elem->FirstChildElement("Path");
-    while(childElem )
+    element.ConsiderAsArrayOf("path", "Path");
+    for(unsigned int i = 0;i<element.GetChildrenCount();++i)
     {
-        if(childElem->ToElement()->Attribute("name") == NULL || childElem->ToElement()->Attribute("coords") == NULL)
-            continue;
-
-        localePaths[childElem->ToElement()->Attribute("name")] = GetCoordsVectorFromString(childElem->ToElement()->Attribute("coords"), '/', ';');
-        childElem = childElem->NextSiblingElement();
+        const gd::SerializerElement & pathElement = element.GetChild(i);
+        localePaths[pathElement.GetStringAttribute("name")] = GetCoordsVectorFromString(pathElement.GetStringAttribute("coords"), '/', ';');
     }
 
-    if(localePaths.size() == 0)
-    {
+    if(localePaths.empty())
         localePaths["Object main path"] = std::vector<sf::Vector2f>(1, sf::Vector2f(0,0));
-    }
 }
 
 float PathAutomatism::GetOffsetX() const

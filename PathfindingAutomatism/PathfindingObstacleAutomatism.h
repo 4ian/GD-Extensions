@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/RuntimeObject.h"
 class ScenePathfindingObstaclesManager;
 class RuntimeScene;
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 #if defined(GD_IDE_ONLY)
 #include <map>
 namespace gd { class PropertyDescriptor; }
@@ -75,11 +75,11 @@ public:
      */
     void SetCost(float newCost) { cost = newCost; }
 
-    virtual void LoadFromXml(const TiXmlElement * elem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
     virtual std::map<std::string, gd::PropertyDescriptor> GetProperties(gd::Project & project) const;
     virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project);
-    virtual void SaveToXml(TiXmlElement * elem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
 private:

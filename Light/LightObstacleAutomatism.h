@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 #include <map>
 #include <set>
 #include "GDCpp/RuntimeScene.h"
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 namespace gd { class Layout; }
 class LightObstacleAutomatismEditor;
 

@@ -31,9 +31,8 @@ freely, subject to the following restrictions:
 #include "GDCpp/Object.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/ImageManager.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/FontManager.h"
-#include "GDCpp/XmlMacros.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Polygon.h"
 #include "GDCpp/CommonTools.h"
@@ -63,66 +62,47 @@ LightObject::LightObject(std::string name_) :
 {
 }
 
-void LightObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * elem)
+void LightObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    {
-        float intensity = 255;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("intensity", intensity);
-        SetIntensity(intensity);
-    }
-    {
-        float radius = 180;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("radius", radius);
-        SetRadius(radius);
-    }
-    {
-        int quality = 16;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("quality", quality);
-        SetQuality(quality);
-    }
+    SetIntensity(element.GetIntAttribute("intensity", 255));
+    SetRadius(element.GetIntAttribute("radius", 180));
+    SetQuality(element.GetIntAttribute("quality", 16));
 
     {
-        int r = 255;
-        int g = 255;
-        int b = 255;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("colorR", r);
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("colorG", g);
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("colorB", b);
+        int r = element.GetIntAttribute("colorR", 255);
+        int g = element.GetIntAttribute("colorG", 255);
+        int b = element.GetIntAttribute("colorB", 255);
         SetColor(sf::Color(r,g,b));
     }
 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("globalLight", globalLight);
+    globalLight = element.GetBoolAttribute("globalLight", false);
 
     {
-        int r = 255;
-        int g = 255;
-        int b = 255;
-        int a = 255;
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("globalColorR", r);
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("globalColorG", g);
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("globalColorB", b);
-        GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_INT("globalColorA", a);
+        int r = element.GetIntAttribute("globalColorR", 255);
+        int g = element.GetIntAttribute("globalColorG", 255);
+        int b = element.GetIntAttribute("globalColorB", 255);
+        int a = element.GetIntAttribute("globalColorA", 255);
         globalLightColor = sf::Color(r,g,b,a);
     }
 
 }
 
 #if defined(GD_IDE_ONLY)
-void LightObject::DoSaveToXml(TiXmlElement * elem)
+void LightObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("intensity", GetIntensity());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_DOUBLE("radius", GetRadius());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("quality", GetQuality());
+    element.SetAttribute("intensity", GetIntensity());
+    element.SetAttribute("radius", GetRadius());
+    element.SetAttribute("quality", GetQuality());
 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("colorR", GetColor().r);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("colorG", GetColor().g);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("colorB", GetColor().b);
+    element.SetAttribute("colorR", GetColor().r);
+    element.SetAttribute("colorG", GetColor().g);
+    element.SetAttribute("colorB", GetColor().b);
 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("globalLight", globalLight);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("globalColorR", globalLightColor.r);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("globalColorG", globalLightColor.g);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("globalColorB", globalLightColor.b);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("globalColorA", globalLightColor.a);
+    element.SetAttribute("globalLight", globalLight);
+    element.SetAttribute("globalColorR", globalLightColor.r);
+    element.SetAttribute("globalColorG", globalLightColor.g);
+    element.SetAttribute("globalColorB", globalLightColor.b);
+    element.SetAttribute("globalColorA", globalLightColor.a);
 }
 #endif
 

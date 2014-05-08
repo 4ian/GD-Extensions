@@ -25,17 +25,14 @@ freely, subject to the following restrictions:
 */
 
 #include "SceneLightObstacleDatas.h"
-#include "GDCpp/tinyxml/tinyxml.h"
-#include "GDCpp/XmlMacros.h"
-#include <iostream>
+#include "GDCore/Serialization/SerializerElement.h"
 
 #if defined(GD_IDE_ONLY)
-void SceneLightObstacleDatas::SaveToXml(TiXmlElement * elem) const
+void SceneLightObstacleDatas::SerializeTo(gd::SerializerElement & element) const
 {
 }
 #endif
 
-void SceneLightObstacleDatas::LoadFromXml(const TiXmlElement * elem)
+void SceneLightObstacleDatas::UnserializeFrom(const gd::SerializerElement & element)
 {
 }
-

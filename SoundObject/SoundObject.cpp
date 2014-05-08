@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/Object.h"
 
 #include "GDCpp/ImageManager.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/CommonTools.h"
 
@@ -120,146 +120,29 @@ RuntimeSoundObject::~RuntimeSoundObject()
     if (m_sound != NULL) delete m_sound;
 }
 
-void SoundObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * elem)
+void SoundObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    float zpos = 0;
-    std::string type = "Sound";
-
-    if ( elem->FirstChildElement( "Type" ) == NULL ||
-         elem->FirstChildElement( "Type" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant le type d'un objet son manquent.";
-    }
-    else
-    {
-        if(std::string(elem->FirstChildElement( "Type" )->Attribute("value")) != "")
-        {
-            type = elem->FirstChildElement( "Type" )->Attribute("value");
-        }
-        SetSoundType(type);
-    }
-
-    if ( elem->FirstChildElement( "Filename" ) == NULL ||
-         elem->FirstChildElement( "Filename" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant le nom du fichier d'un objet son manquent.";
-    }
-    else
-    {
-        SetSoundFileName(elem->FirstChildElement("Filename")->Attribute("value"));
-    }
-
-    if ( elem->FirstChildElement( "Volume" ) == NULL ||
-         elem->FirstChildElement( "Volume" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant le volume d'un objet son manquent.";
-    }
-    else
-    {
-        float volume = 50;
-        elem->FirstChildElement("Volume")->QueryFloatAttribute("value", &volume);
-        SetVolume(volume);
-    }
-
-    if ( elem->FirstChildElement( "Pitch" ) == NULL ||
-         elem->FirstChildElement( "Pitch" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant le pitch d'un objet son manquent.";
-    }
-    else
-    {
-        float pitch = 1;
-        elem->FirstChildElement("Pitch")->QueryFloatAttribute("value", &pitch);
-        SetPitch(pitch);
-    }
-
-    if ( elem->FirstChildElement( "MinDistance" ) == NULL ||
-         elem->FirstChildElement( "MinDistance" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant la distance minimale d'un son manquent.";
-    }
-    else
-    {
-        float mindistance = 1;
-        elem->FirstChildElement("MinDistance")->QueryFloatAttribute("value", &mindistance);
-        SetMinDistance(mindistance);
-    }
-
-    if ( elem->FirstChildElement( "Attenuation" ) == NULL ||
-         elem->FirstChildElement( "Attenuation" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant l'attenuation d'un son manquent.";
-    }
-    else
-    {
-        float attenuation = 1;
-        elem->FirstChildElement("Attenuation")->QueryFloatAttribute("value", &attenuation);
-        SetAttenuation(attenuation);
-    }
-
-    if ( elem->FirstChildElement( "Loop" ) == NULL ||
-         elem->FirstChildElement( "Loop" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant la répétition d'un objet son manquent.";
-    }
-    else
-    {
-        float loop = 0;
-        elem->FirstChildElement("Loop")->QueryFloatAttribute("value", &loop);
-
-        if(loop == 0)
-            SetLooping(false);
-        else
-            SetLooping(true);
-    }
-
-    if ( elem->FirstChildElement( "ZPos" ) == NULL ||
-         elem->FirstChildElement( "ZPos" )->Attribute("value") == NULL )
-    {
-        cout << "Les informations concernant la position en z d'un objet son manquent.";
-    }
-    else
-    {
-        elem->FirstChildElement("ZPos")->QueryFloatAttribute("value", &zpos);
-    }
-
-    SetZPos(zpos);
+    SetSoundType(element.GetChild("type", 0, "Type").GetValue().GetString());
+    SetSoundFileName(element.GetChild("filename", 0, "Filename").GetValue().GetString());
+    SetPitch(element.GetChild("volume", 0, "Volume").GetValue().GetDouble());
+    SetPitch(element.GetChild("pitch", 0, "Pitch").GetValue().GetDouble());
+    SetMinDistance(element.GetChild("minDistance", 0, "MinDistance").GetValue().GetDouble());
+    SetAttenuation(element.GetChild("attenuation", 0, "Attenuation").GetValue().GetDouble());
+    SetLooping(element.GetChild("loop", 0, "Loop").GetValue().GetBool());
+    SetZPos(element.GetChild("zPos", 0, "ZPos").GetValue().GetDouble());
 }
 
 #if defined(GD_IDE_ONLY)
-void SoundObject::DoSaveToXml(TiXmlElement * elem)
+void SoundObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    TiXmlElement * typeElem = new TiXmlElement( "Type" );
-    elem->LinkEndChild( typeElem );
-    typeElem->SetAttribute("value", type.c_str());
-
-    TiXmlElement * filename = new TiXmlElement( "Filename" );
-    elem->LinkEndChild( filename );
-    filename->SetAttribute("value", fileName.c_str());
-
-    TiXmlElement * loop = new TiXmlElement( "Loop" );
-    elem->LinkEndChild( loop );
-    loop->SetAttribute("value", IsLooping());
-
-    TiXmlElement * vol = new TiXmlElement( "Volume" );
-    elem->LinkEndChild( vol );
-    vol->SetAttribute("value", ToString(GetVolume()).c_str());
-
-    TiXmlElement * pitch = new TiXmlElement( "Pitch" );
-    elem->LinkEndChild( pitch );
-    pitch->SetAttribute("value", GetPitch());
-
-    TiXmlElement * att = new TiXmlElement( "Attenuation" );
-    elem->LinkEndChild( att );
-    att->SetAttribute("value", ToString(GetAttenuation()).c_str());
-
-    TiXmlElement * mind = new TiXmlElement( "MinDistance" );
-    elem->LinkEndChild( mind );
-    mind->SetAttribute("value", ToString(GetMinDistance()).c_str());
-
-    TiXmlElement * zpos = new TiXmlElement( "ZPos" );
-    elem->LinkEndChild( zpos );
-    zpos->SetAttribute("value", ToString(GetZPos()).c_str());
+    element.AddChild("type").SetValue(type);
+    element.AddChild("filename").SetValue(fileName);
+    element.AddChild("loop").SetValue(IsLooping());
+    element.AddChild("volume").SetValue(GetVolume());
+    element.AddChild("pitch").SetValue(GetPitch());
+    element.AddChild("attenuation").SetValue(GetAttenuation());
+    element.AddChild("minDistance").SetValue(GetMinDistance());
+    element.AddChild("zPos").SetValue(GetZPos());
 }
 #endif
 
@@ -367,12 +250,12 @@ void RuntimeSoundObject::SetZPos(float zpos)
 
 void RuntimeSoundObject::SetSoundType(const std::string &type)
 {
-    if(type == "Sound")
+    if(type == "Music")
     {
         if(m_sound)
             delete m_sound;
 
-        m_sound = new SoundWrapper();
+        m_sound = new MusicWrapper();
         m_type = type;
     }
     else
@@ -380,7 +263,7 @@ void RuntimeSoundObject::SetSoundType(const std::string &type)
         if(m_sound)
             delete m_sound;
 
-        m_sound = new MusicWrapper();
+        m_sound = new SoundWrapper();
         m_type = type;
     }
 }

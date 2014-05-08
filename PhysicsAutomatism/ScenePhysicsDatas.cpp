@@ -25,25 +25,23 @@ freely, subject to the following restrictions:
 */
 
 #include "ScenePhysicsDatas.h"
-#include "GDCpp/tinyxml/tinyxml.h"
-#include "GDCpp/XmlMacros.h"
-#include <iostream>
+#include "GDCore/Serialization/SerializerElement.h"
 
 #if defined(GD_IDE_ONLY)
-void ScenePhysicsDatas::SaveToXml(TiXmlElement * elem) const
+void ScenePhysicsDatas::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("gravityX", gravityX);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("gravityY", gravityY);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("scaleX", scaleX);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("scaleY", scaleY);
+    element.SetAttribute("gravityX", gravityX);
+    element.SetAttribute("gravityY", gravityY);
+    element.SetAttribute("scaleX", scaleX);
+    element.SetAttribute("scaleY", scaleY);
 }
+
 #endif
 
-void ScenePhysicsDatas::LoadFromXml(const TiXmlElement * elem)
+void ScenePhysicsDatas::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("gravityX", gravityX);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("gravityY", gravityY);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("scaleX", scaleX);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("scaleY", scaleY);
+    gravityX = element.GetDoubleAttribute("gravityX");
+    gravityY = element.GetDoubleAttribute("gravityY");
+    scaleX = element.GetDoubleAttribute("scaleX");
+    scaleY = element.GetDoubleAttribute("scaleY");
 }
-

@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 #include <SFML/System/Vector2.hpp>
 class ScenePlatformObjectsManager;
 class RuntimeScene;
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 #if defined(GD_IDE_ONLY)
 #include <map>
 namespace gd { class PropertyDescriptor; }
@@ -77,11 +77,11 @@ public:
      */
     void ChangePlatformType(const std::string & platformType_);
 
-    virtual void LoadFromXml(const TiXmlElement * elem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
     virtual std::map<std::string, gd::PropertyDescriptor> GetProperties(gd::Project & project) const;
     virtual bool UpdateProperty(const std::string & name, const std::string & value, gd::Project & project);
-    virtual void SaveToXml(TiXmlElement * elem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
 private:

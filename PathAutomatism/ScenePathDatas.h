@@ -49,10 +49,10 @@ public:
     }
 
     #if defined(GD_IDE_ONLY)
-    virtual void SaveToXml(TiXmlElement * eventElem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
-    virtual void LoadFromXml(const TiXmlElement * eventElem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 
     std::map<std::string, std::vector<sf::Vector2f> > globalPaths; ///< Map containing all the global paths
 

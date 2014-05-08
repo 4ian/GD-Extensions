@@ -65,7 +65,7 @@ public:
 
             aut.AddCondition("IsMoving",
                            _("Is moving"),
-                           _("Check if the object is moving ( whether it is on the floor or in the air )."),
+                           _("Check if the object is moving (whether it is on the floor or in the air)."),
                            _("_PARAM0_ is moving"),
                            "",
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -120,7 +120,7 @@ public:
 
             aut.AddCondition("Gravity",
                            _("Gravity"),
-                           _("Compare the gravity applied on the object ( in pixels per second per second )."),
+                           _("Compare the gravity applied on the object (in pixels per second per second)."),
                            _("Gravity of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -133,7 +133,7 @@ public:
 
             aut.AddAction("Gravity",
                            _("Gravity"),
-                           _("Change the gravity applied on an object ( in pixels per second per second )."),
+                           _("Change the gravity applied on an object (in pixels per second per second)."),
                            _("Do _PARAM2__PARAM3_ to the gravity applied on _PARAM0_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -146,7 +146,7 @@ public:
 
             aut.AddCondition("MaxFallingSpeed",
                            _("Maximum falling speed"),
-                           _("Compare the maximum falling speed of the object ( in pixels per second )."),
+                           _("Compare the maximum falling speed of the object (in pixels per second)."),
                            _("The maximum falling speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -159,7 +159,7 @@ public:
 
             aut.AddAction("MaxFallingSpeed",
                            _("Maximum falling speed"),
-                           _("Change the maximum falling speed of an object ( in pixels per second )."),
+                           _("Change the maximum falling speed of an object (in pixels per second)."),
                            _("Do _PARAM2__PARAM3_ to the maximum falling speed of _PARAM0_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -172,7 +172,7 @@ public:
 
             aut.AddCondition("Acceleration",
                            _("Acceleration"),
-                           _("Compare the acceleration of the object ( in pixels per second per second )."),
+                           _("Compare the acceleration of the object (in pixels per second per second)."),
                            _("The acceleration of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -185,7 +185,7 @@ public:
 
             aut.AddAction("Acceleration",
                            _("Acceleration"),
-                           _("Change the acceleration of an object ( in pixels per second per second )."),
+                           _("Change the acceleration of an object (in pixels per second per second)."),
                            _("Do _PARAM2__PARAM3_ to the acceleration of _PARAM0_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -198,7 +198,7 @@ public:
 
             aut.AddCondition("Deceleration",
                            _("Deceleration"),
-                           _("Compare the deceleration of the object ( in pixels per second per second )."),
+                           _("Compare the deceleration of the object (in pixels per second per second)."),
                            _("The deceleration of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -211,7 +211,7 @@ public:
 
             aut.AddAction("Deceleration",
                            _("Deceleration"),
-                           _("Change the deceleration of an object ( in pixels per second per second )."),
+                           _("Change the deceleration of an object (in pixels per second per second)."),
                            _("Do _PARAM2__PARAM3_ to the deceleration of _PARAM0_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -224,7 +224,7 @@ public:
 
             aut.AddCondition("MaxSpeed",
                            _("Maximum speed"),
-                           _("Compare the maximum speed of the object ( in pixels per second )."),
+                           _("Compare the maximum speed of the object (in pixels per second)."),
                            _("The maximum speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -237,7 +237,7 @@ public:
 
             aut.AddAction("MaxSpeed",
                            _("Maximum speed"),
-                           _("Change the maximum speed of an object ( in pixels per second )."),
+                           _("Change the maximum speed of an object (in pixels per second)."),
                            _("Do _PARAM2__PARAM3_ to the maximum speed of _PARAM0_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -250,7 +250,7 @@ public:
 
             aut.AddCondition("JumpSpeed",
                            _("Jump speed"),
-                           _("Compare the jump speed of the object ( in pixels per second )."),
+                           _("Compare the jump speed of the object (in pixels per second)."),
                            _("The jump speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",
@@ -263,7 +263,7 @@ public:
 
             aut.AddAction("JumpSpeed",
                            _("Jump speed"),
-                           _("Change the jump speed of an object ( in pixels per second )."),
+                           _("Change the jump speed of an object (in pixels per second)."),
                            _("Do _PARAM2__PARAM3_ to the jump speed of _PARAM0_"),
                            _("Options"),
                            "CppPlatform/Extensions/platformerobjecticon24.png",

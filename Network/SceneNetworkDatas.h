@@ -35,23 +35,23 @@ freely, subject to the following restrictions:
  */
 class GD_EXTENSION_API SceneNetworkDatas : public gd::AutomatismsSharedData
 {
-    public:
-        SceneNetworkDatas() {};
-        virtual ~SceneNetworkDatas() {};
-        virtual boost::shared_ptr<gd::AutomatismsSharedData> Clone() const { return boost::shared_ptr<gd::AutomatismsSharedData>(new SceneNetworkDatas(*this));}
+public:
+    SceneNetworkDatas() {};
+    virtual ~SceneNetworkDatas() {};
+    virtual boost::shared_ptr<gd::AutomatismsSharedData> Clone() const { return boost::shared_ptr<gd::AutomatismsSharedData>(new SceneNetworkDatas(*this));}
 
-        virtual boost::shared_ptr<AutomatismsRuntimeSharedData> CreateRuntimeSharedDatas()
-        {
-            return boost::shared_ptr<AutomatismsRuntimeSharedData>(new RuntimeSceneNetworkDatas(*this));
-        }
+    virtual boost::shared_ptr<AutomatismsRuntimeSharedData> CreateRuntimeSharedDatas()
+    {
+        return boost::shared_ptr<AutomatismsRuntimeSharedData>(new RuntimeSceneNetworkDatas(*this));
+    }
 
-        #if defined(GD_IDE_ONLY)
-        virtual void SaveToXml(TiXmlElement * eventElem) const;
-        #endif
+    #if defined(GD_IDE_ONLY)
+    virtual void SerializeTo(gd::SerializerElement & element) const;
+    #endif
 
-        virtual void LoadFromXml(const TiXmlElement * eventElem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 
-    private:
+private:
 };
 
 #endif // SCENENETWORKDATAS_H

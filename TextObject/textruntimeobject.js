@@ -14,19 +14,17 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
     gdjs.RuntimeObject.call(this, runtimeScene, objectData);
 
     this._runtimeScene = runtimeScene;
-    this._characterSize = parseInt(objectData.CharacterSize.attr.value, 10);
+    this._characterSize = objectData.characterSize;
     this._fontName = "Arial";
-    this._bold = objectData.attr.bold === "true";
-    this._italic = objectData.attr.italic === "true";
-    this._underlined = objectData.attr.underlined === "true";
-    this._color = [parseInt(objectData.Color.attr.r, 10),
-                parseInt(objectData.Color.attr.g, 10),
-                parseInt(objectData.Color.attr.b, 10)];
-    if ( objectData.Font.attr.value !== "" ) {
-        this._fontName = "\"gdjs_font_"+objectData.Font.attr.value+"\"";
+    this._bold = objectData.bold;
+    this._italic = objectData.italic;
+    this._underlined = objectData.underlined;
+    this._color = [objectData.color.r, objectData.color.g, objectData.color.b];
+    if ( objectData.font !== "" ) {
+        this._fontName = "\"gdjs_font_"+objectData.font+"\"";
     }
 
-    this._str = objectData.String.attr.value;
+    this._str = objectData.string;
 
     if ( this._text === undefined ) this._text = new PIXI.Text(" ", {align:"left"});
     this._text.anchor.x = 0.5;

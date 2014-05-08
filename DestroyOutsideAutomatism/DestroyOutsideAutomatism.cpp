@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #include "DestroyOutsideAutomatism.h"
 #include "GDCpp/Scene.h"
 #include "GDCpp/RuntimeLayer.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/RuntimeObject.h"
@@ -71,13 +71,13 @@ void DestroyOutsideAutomatism::DoStepPostEvents(RuntimeScene & scene)
 }
 
 #if defined(GD_IDE_ONLY)
-void DestroyOutsideAutomatism::SaveToXml(TiXmlElement * elem) const
+void DestroyOutsideAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    elem->SetAttribute("extraBorder", extraBorder);
+    element.SetAttribute("extraBorder", extraBorder);
 }
 #endif
 
-void DestroyOutsideAutomatism::LoadFromXml(const TiXmlElement * elem)
+void DestroyOutsideAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    elem->QueryFloatAttribute("extraBorder", &extraBorder);
+    extraBorder = element.GetDoubleAttribute("extraBorder");
 }

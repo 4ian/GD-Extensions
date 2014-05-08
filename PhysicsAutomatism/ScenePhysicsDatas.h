@@ -35,30 +35,28 @@ freely, subject to the following restrictions:
  */
 class ScenePhysicsDatas : public gd::AutomatismsSharedData
 {
-    public:
-        ScenePhysicsDatas() : AutomatismsSharedData(), gravityX(0), gravityY(0), scaleX(100), scaleY(100)
-        {
-        };
-        virtual ~ScenePhysicsDatas() {};
-        virtual boost::shared_ptr<gd::AutomatismsSharedData> Clone() const { return boost::shared_ptr<gd::AutomatismsSharedData>(new ScenePhysicsDatas(*this));}
+public:
+    ScenePhysicsDatas() : AutomatismsSharedData(), gravityX(0), gravityY(0), scaleX(100), scaleY(100)
+    {
+    };
+    virtual ~ScenePhysicsDatas() {};
+    virtual boost::shared_ptr<gd::AutomatismsSharedData> Clone() const { return boost::shared_ptr<gd::AutomatismsSharedData>(new ScenePhysicsDatas(*this));}
 
-        float gravityX;
-        float gravityY;
-        float scaleX;
-        float scaleY;
+    float gravityX;
+    float gravityY;
+    float scaleX;
+    float scaleY;
 
-        virtual boost::shared_ptr<AutomatismsRuntimeSharedData> CreateRuntimeSharedDatas()
-        {
-            return boost::shared_ptr<AutomatismsRuntimeSharedData>(new RuntimeScenePhysicsDatas(*this));
-        }
+    virtual boost::shared_ptr<AutomatismsRuntimeSharedData> CreateRuntimeSharedDatas()
+    {
+        return boost::shared_ptr<AutomatismsRuntimeSharedData>(new RuntimeScenePhysicsDatas(*this));
+    }
 
-        #if defined(GD_IDE_ONLY)
-        virtual void SaveToXml(TiXmlElement * eventElem) const;
-        #endif
+    #if defined(GD_IDE_ONLY)
+    virtual void SerializeTo(gd::SerializerElement & element) const;
+    #endif
 
-        virtual void LoadFromXml(const TiXmlElement * eventElem);
-
-    private:
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 };
 
 #endif // SCENEPHYSICSDATAS_H

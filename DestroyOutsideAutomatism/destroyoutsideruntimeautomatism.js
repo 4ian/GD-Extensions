@@ -8,13 +8,13 @@ Copyright (c) 2013-2014 Florian Rival (Florian.Rival@gmail.com)
  * moved using the mouse.
  *
  * @class DestroyOutsideRuntimeAutomatism
- * @constructor 
+ * @constructor
  */
 gdjs.DestroyOutsideRuntimeAutomatism = function(runtimeScene, automatismData, owner)
 {
     gdjs.RuntimeAutomatism.call(this, runtimeScene, automatismData, owner);
 
-    this._extraBorder = parseFloat(automatismData.attr.extraBorder);
+    this._extraBorder = automatismData.extraBorder;
 };
 
 gdjs.DestroyOutsideRuntimeAutomatism.prototype = Object.create( gdjs.RuntimeAutomatism.prototype );

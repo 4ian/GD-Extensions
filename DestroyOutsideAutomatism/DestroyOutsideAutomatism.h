@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include <SFML/System/Vector2.hpp>
 #include <map>
 class RuntimeScene;
-class TiXmlElement;
+namespace gd { class SerializerElement; }
 namespace gd { class Layout; }
 
 /**
@@ -45,14 +45,16 @@ public:
     virtual Automatism* Clone() const { return new DestroyOutsideAutomatism(*this); }
 
     #if defined(GD_IDE_ONLY)
-    /** Save Automatism to XML
+    /**
+     * \brief Serialize the automatism.
      */
-    virtual void SaveToXml(TiXmlElement * elem) const;
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
-    /** Load Automatism from XML
+    /**
+     * \brief Unserialize the automatism.
      */
-    virtual void LoadFromXml(const TiXmlElement * elem);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
 
     /**
      * \brief Return the value of the extra border.

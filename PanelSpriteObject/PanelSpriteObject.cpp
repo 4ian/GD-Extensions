@@ -38,7 +38,7 @@ freely, subject to the following restrictions:
 #include "GDCpp/Project.h"
 #include "GDCpp/Position.h"
 #include "GDCpp/Polygon.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/CommonTools.h"
 
 #if defined(GD_IDE_ONLY)
@@ -65,31 +65,27 @@ PanelSpriteObject::~PanelSpriteObject()
 {
 }
 
-void PanelSpriteObject::DoLoadFromXml(gd::Project & project, const TiXmlElement * object)
+void PanelSpriteObject::DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    if (!object) return;
-
-    textureName = object->Attribute("texture") ? std::string(object->Attribute("texture")) : "";
-    width = object->Attribute("width") ? ToFloat(object->Attribute("width")) : 32;
-    height = object->Attribute("height") ? ToFloat(object->Attribute("height")) : 32;
-    leftMargin = object->Attribute("leftMargin") ? ToFloat(object->Attribute("leftMargin")) : 0;
-    topMargin = object->Attribute("topMargin") ? ToFloat(object->Attribute("topMargin")) : 0;
-    rightMargin = object->Attribute("rightMargin") ? ToFloat(object->Attribute("rightMargin")) : 0;
-    bottomMargin = object->Attribute("bottomMargin") ? ToFloat(object->Attribute("bottomMargin")) : 0;
+    textureName = element.GetStringAttribute("texture");
+    width = element.GetIntAttribute("width", 32);
+    height = element.GetIntAttribute("height", 32);
+    leftMargin = element.GetIntAttribute("leftMargin");
+    topMargin = element.GetIntAttribute("topMargin");
+    rightMargin = element.GetIntAttribute("rightMargin");
+    bottomMargin = element.GetIntAttribute("bottomMargin");
 }
 
 #if defined(GD_IDE_ONLY)
-void PanelSpriteObject::DoSaveToXml(TiXmlElement * object)
+void PanelSpriteObject::DoSerializeTo(gd::SerializerElement & element) const
 {
-    if (!object) return;
-
-    object->SetAttribute("texture", textureName.c_str());
-    object->SetAttribute("width", width);
-    object->SetAttribute("height", height);
-    object->SetAttribute("leftMargin", leftMargin);
-    object->SetAttribute("topMargin", topMargin);
-    object->SetAttribute("rightMargin", rightMargin);
-    object->SetAttribute("bottomMargin", bottomMargin);
+    element.SetAttribute("texture", textureName);
+    element.SetAttribute("width", width);
+    element.SetAttribute("height", height);
+    element.SetAttribute("leftMargin", leftMargin);
+    element.SetAttribute("topMargin", topMargin);
+    element.SetAttribute("rightMargin", rightMargin);
+    element.SetAttribute("bottomMargin", bottomMargin);
 }
 
 void PanelSpriteObject::LoadResources(gd::Project & project, gd::Layout & layout)

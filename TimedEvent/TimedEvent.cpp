@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #if defined(GD_IDE_ONLY)
 
 #include "GDCore/Events/Serialization.h"
+#include "GDCore/Serialization/SerializerElement.h"
 #include "TimedEvent.h"
 #include "GDCpp/RuntimeScene.h"
 #include "GDCpp/tinyxml/tinyxml.h"
@@ -100,60 +101,22 @@ vector < const gd::Expression* > TimedEvent::GetAllExpressions() const
     return allExpressions;
 }
 
-void TimedEvent::SaveToXml(TiXmlElement * eventElem) const
+void TimedEvent::SerializeTo(gd::SerializerElement & element) const
 {
-    TiXmlElement * objectElem = new TiXmlElement( "Name" );
-    eventElem->LinkEndChild( objectElem );
-    objectElem->SetAttribute("value", name.c_str());
-
-    TiXmlElement * timeoutElem = new TiXmlElement( "Timeout" );
-    eventElem->LinkEndChild( timeoutElem );
-    timeoutElem->SetAttribute("value", timeout.GetPlainString().c_str());
-
-    //Les conditions
-    TiXmlElement * conditionsElem = new TiXmlElement( "Conditions" );
-    eventElem->LinkEndChild( conditionsElem );
-    gd::EventsListSerialization::SaveConditions(conditions, conditionsElem);
-
-    //Les actions
-    TiXmlElement * actionsElem = new TiXmlElement( "Actions" );
-    eventElem->LinkEndChild( actionsElem );
-    gd::EventsListSerialization::SaveActions(actions, actionsElem);
-
-    //Sous évènements
-    if ( !GetSubEvents().IsEmpty() )
-    {
-        TiXmlElement * subeventsElem;
-        subeventsElem = new TiXmlElement( "Events" );
-        eventElem->LinkEndChild( subeventsElem );
-
-        gd::EventsListSerialization::SaveEventsToXml(events, subeventsElem);
-    }
+    element.AddChild("name").SetValue(name);
+    element.AddChild("timeout").SetValue(timeout.GetPlainString());
+    gd::EventsListSerialization::SaveConditions(conditions, element.AddChild("conditions"));
+    gd::EventsListSerialization::SaveActions(actions, element.AddChild("actions"));
+    gd::EventsListSerialization::SerializeEventsTo(events, element.AddChild("events"));
 }
 
-void TimedEvent::LoadFromXml(gd::Project & project, const TiXmlElement * eventElem)
+void TimedEvent::UnserializeFrom(gd::Project & project, const gd::SerializerElement & element)
 {
-    if ( eventElem->FirstChildElement( "Name" ) != NULL )
-        name = eventElem->FirstChildElement("Name")->Attribute("value");
-
-    if ( eventElem->FirstChildElement( "Timeout" ) != NULL )
-        timeout = gd::Expression(eventElem->FirstChildElement("Timeout")->Attribute("value"));
-
-    //Conditions
-    if ( eventElem->FirstChildElement( "Conditions" ) != NULL )
-        gd::EventsListSerialization::OpenConditions(project, conditions, eventElem->FirstChildElement( "Conditions" ));
-    else
-        cout << "Aucune informations sur les conditions d'un évènement";
-
-    //Actions
-    if ( eventElem->FirstChildElement( "Actions" ) != NULL )
-        gd::EventsListSerialization::OpenActions(project, actions, eventElem->FirstChildElement( "Actions" ));
-    else
-        cout << "Aucune informations sur les actions d'un évènement";
-
-    //Subevents
-    if ( eventElem->FirstChildElement( "Events" ) != NULL )
-        gd::EventsListSerialization::LoadEventsFromXml(project, events, eventElem->FirstChildElement( "Events" ));
+    name = element.GetChild("name", 0, "Name").GetValue().GetString();
+    timeout = element.GetChild("timeout", 0, "Timeout").GetValue().GetString();
+    gd::EventsListSerialization::OpenConditions(project, conditions, element.GetChild("conditions", 0, "Conditions"));
+    gd::EventsListSerialization::OpenActions(project, actions, element.GetChild("actions", 0, "Actions"));
+    gd::EventsListSerialization::UnserializeEventsFrom(project, events, element.GetChild("events", 0, "Events"));
 }
 
 /**

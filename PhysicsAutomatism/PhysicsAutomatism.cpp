@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include "Box2D/Box2D.h"
 #include "Triangulation/triangulate.h"
 #include "GDCpp/RuntimeScene.h"
-#include "GDCpp/tinyxml/tinyxml.h"
+#include "GDCpp/Serialization/SerializerElement.h"
 #include "GDCpp/XmlMacros.h"
 #include "PhysicsAutomatismEditor.h"
 #include "GDCpp/CommonTools.h"
@@ -654,52 +654,49 @@ void PhysicsAutomatism::SetPolygonScaleY(float scY, RuntimeScene &scene)
 }
 
 #if defined(GD_IDE_ONLY)
-void PhysicsAutomatism::SaveToXml(TiXmlElement * elem) const
+void PhysicsAutomatism::SerializeTo(gd::SerializerElement & element) const
 {
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("dynamic", dynamic);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("fixedRotation", fixedRotation);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("isBullet", isBullet);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("massDensity", massDensity);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("averageFriction", averageFriction);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("linearDamping", linearDamping);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("angularDamping", angularDamping);
+    element.SetAttribute("dynamic", dynamic);
+    element.SetAttribute("fixedRotation", fixedRotation);
+    element.SetAttribute("isBullet", isBullet);
+    element.SetAttribute("massDensity", massDensity);
+    element.SetAttribute("averageFriction", averageFriction);
+    element.SetAttribute("linearDamping", linearDamping);
+    element.SetAttribute("angularDamping", angularDamping);
     if ( shapeType == Circle)
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("shapeType", "Circle")
+        element.SetAttribute("shapeType", "Circle");
     else if( shapeType == CustomPolygon )
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("shapeType", "CustomPolygon")
+        element.SetAttribute("shapeType", "CustomPolygon");
     else
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("shapeType", "Box")
+        element.SetAttribute("shapeType", "Box");
 
     if ( polygonPositioning == OnOrigin )
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("positioning", "OnOrigin")
-    /*else if ( polygonPositioning == OnTopLeftCorner )
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("positioning", "OnTopLeftCorner")*/
+        element.SetAttribute("positioning", "OnOrigin");
     else
-        GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("positioning", "OnCenter")
+        element.SetAttribute("positioning", "OnCenter");
 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_BOOL("autoResizing", automaticResizing);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("polygonWidth", polygonWidth);
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("polygonHeight", polygonHeight);
+    element.SetAttribute("autoResizing", automaticResizing);
+    element.SetAttribute("polygonWidth", polygonWidth);
+    element.SetAttribute("polygonHeight", polygonHeight);
 
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE("coordsList", PhysicsAutomatism::GetStringFromCoordsVector(GetPolygonCoords(), '/', ';').c_str());
-    GD_CURRENT_ELEMENT_SAVE_ATTRIBUTE_FLOAT("averageRestitution", averageRestitution);
+    element.SetAttribute("coordsList", PhysicsAutomatism::GetStringFromCoordsVector(GetPolygonCoords(), '/', ';'));
+    element.SetAttribute("averageRestitution", averageRestitution);
 }
 #endif
 
-void PhysicsAutomatism::LoadFromXml(const TiXmlElement * elem)
+void PhysicsAutomatism::UnserializeFrom(const gd::SerializerElement & element)
 {
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("dynamic", dynamic);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("fixedRotation", fixedRotation);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("isBullet", isBullet);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("massDensity", massDensity);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("averageFriction", averageFriction)
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("averageRestitution", averageRestitution);
+    dynamic = element.GetBoolAttribute("dynamic");
+    fixedRotation = element.GetBoolAttribute("fixedRotation");
+    isBullet = element.GetBoolAttribute("isBullet");
+    massDensity = element.GetDoubleAttribute("massDensity");
+    averageFriction = element.GetDoubleAttribute("averageFriction");
+    averageRestitution = element.GetDoubleAttribute("averageRestitution");
 
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("linearDamping", linearDamping);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("angularDamping", angularDamping);
+    linearDamping = element.GetDoubleAttribute("linearDamping");
+    angularDamping = element.GetDoubleAttribute("angularDamping");
 
-    std::string shape;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("shapeType", shape);
+    std::string shape = element.GetStringAttribute("shapeType");
     if ( shape == "Circle" )
         shapeType = Circle;
     else if (shape == "CustomPolygon")
@@ -707,22 +704,16 @@ void PhysicsAutomatism::LoadFromXml(const TiXmlElement * elem)
     else
         shapeType = Box;
 
-    std::string posi = "OnOrigin";
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("positioning", posi);
-    if(posi == "OnOrigin")
+    if(element.GetStringAttribute("positioning", "OnOrigin") == "OnOrigin")
         polygonPositioning = OnOrigin;
-    /*else if (posi == "OnTopLeftCorner")
-        polygonPositioning = OnTopLeftCorner;*/
     else
         polygonPositioning = OnCenter;
 
-    automaticResizing = false;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_BOOL("autoResizing", automaticResizing);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("polygonWidth", polygonWidth);
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_FLOAT("polygonHeight", polygonHeight);
+    automaticResizing = element.GetBoolAttribute("autoResizing", false);
+    polygonWidth = element.GetDoubleAttribute("polygonWidth");
+    polygonHeight = element.GetDoubleAttribute("polygonHeight");
 
-    std::string coordsStr;
-    GD_CURRENT_ELEMENT_LOAD_ATTRIBUTE_STRING("coordsList", coordsStr);
+    std::string coordsStr = element.GetStringAttribute("coordsList");
     SetPolygonCoords(PhysicsAutomatism::GetCoordsVectorFromString(coordsStr, '/', ';'));
 }
 

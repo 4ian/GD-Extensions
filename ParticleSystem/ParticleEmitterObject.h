@@ -53,9 +53,9 @@ public:
     ParticleEmitterBase(const ParticleEmitterBase & other) : particleSystem(NULL) { Init(other); };
     ParticleEmitterBase & operator=(const ParticleEmitterBase & other) {  if ( &other != this ) Init(other); return *this; }
 
-    virtual void LoadFromXml(const TiXmlElement * elemScene);
+    virtual void UnserializeFrom(const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
-    virtual void SaveToXml(TiXmlElement * elemScene);
+    virtual void SerializeTo(gd::SerializerElement & element) const;
     #endif
 
     /** Change texture at runtime
@@ -254,9 +254,9 @@ public :
     #endif
 
 private:
-    virtual void DoLoadFromXml(gd::Project & project, const TiXmlElement * elemScene);
+    virtual void DoUnserializeFrom(gd::Project & project, const gd::SerializerElement & element);
     #if defined(GD_IDE_ONLY)
-    virtual void DoSaveToXml(TiXmlElement * elemScene);
+    virtual void DoSerializeTo(gd::SerializerElement & element) const;
     #endif
 };
 

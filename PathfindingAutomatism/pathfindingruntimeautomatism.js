@@ -20,15 +20,15 @@ gdjs.PathfindingRuntimeAutomatism = function(runtimeScene, automatismData, owner
         this._path.length = 0;
 
     //Automatism configuration:
-    this._allowDiagonals = automatismData.attr.allowDiagonals === "true";
-    this._acceleration = parseFloat(automatismData.attr.acceleration, 10);
-    this._maxSpeed = parseFloat(automatismData.attr.maxSpeed, 10);
-    this._angularMaxSpeed = parseFloat(automatismData.attr.angularMaxSpeed, 10);
-    this._rotateObject = automatismData.attr.rotateObject === "true";
-    this._angleOffset = parseFloat(automatismData.attr.angleOffset, 10);
-    this._cellWidth = parseFloat(automatismData.attr.cellWidth, 10);
-    this._cellHeight = parseFloat(automatismData.attr.cellHeight, 10);
-    this._extraBorder = parseFloat(automatismData.attr.extraBorder, 10);
+    this._allowDiagonals = automatismData.allowDiagonals;
+    this._acceleration = automatismData.acceleration;
+    this._maxSpeed = automatismData.maxSpeed;
+    this._angularMaxSpeed = automatismData.angularMaxSpeed;
+    this._rotateObject = automatismData.rotateObject;
+    this._angleOffset = automatismData.angleOffset;
+    this._cellWidth = automatismData.cellWidth;
+    this._cellHeight = automatismData.cellHeight;
+    this._extraBorder = automatismData.extraBorder;
 
     //Attributes used for traveling on the path:
     this._pathFound = false;
