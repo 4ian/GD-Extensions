@@ -149,8 +149,6 @@ void TopDownMovementAutomatism::DoStepPreEvents(RuntimeScene & scene)
     object->SetX(object->GetX()+xVelocity*timeDelta);
     object->SetY(object->GetY()+yVelocity*timeDelta);
 
-    std::cout << xVelocity << ";" << yVelocity << std::endl;
-
     //Also update angle if needed
     if ( (xVelocity != 0 || yVelocity != 0) && rotateObject ) {
         float angularDiff = GDpriv::MathematicalTools::angleDifference(object->GetAngle(), directionInDeg+angleOffset);

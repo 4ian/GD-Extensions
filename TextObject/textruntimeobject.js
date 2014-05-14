@@ -32,7 +32,7 @@ gdjs.TextRuntimeObject = function(runtimeScene, objectData)
     runtimeScene.getLayer("").addChildToPIXIContainer(this._text, this.zOrder);
 
     this._text.setText(this._str.length === 0 ? " " : this._str);
-    this._text.updateText(); //Work around a PIXI.js bug.
+    this._justCreated = true; //Work around a PIXI.js bug. See updateTime method.
     this._updateTextStyle();
     this._updateTextPosition();
 };
@@ -53,6 +53,14 @@ gdjs.TextRuntimeObject.prototype._updateTextStyle = function() {
     style.font += this._characterSize+"px"+" "+this._fontName;
     style.fill = "rgb("+this._color[0]+","+this._color[1]+","+this._color[2]+")";
     this._text.setStyle(style);
+};
+
+gdjs.TextRuntimeObject.prototype.updateTime = function() {
+    if (this._justCreated) { //Work around a PIXI.js bug:
+        this._text.updateText();
+        this._updateTextPosition(); //Width seems not to be correct when text is not rendered yet.
+        this._justCreated = false;
+    }
 };
 
 gdjs.TextRuntimeObject.prototype._updateTextPosition = function() {

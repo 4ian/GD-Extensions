@@ -51,7 +51,7 @@ void DraggableAutomatism::DoStepPreEvents(RuntimeScene & scene)
         RuntimeLayer & theLayer = scene.GetRuntimeLayer(object->GetLayer());
         for (unsigned int cameraIndex = 0;cameraIndex < theLayer.GetCameraCount();++cameraIndex)
         {
-            sf::Vector2f mousePos = scene.renderWindow->convertCoords(sf::Mouse::getPosition(*scene.renderWindow),
+            sf::Vector2f mousePos = scene.renderWindow->mapPixelToCoords(sf::Mouse::getPosition(*scene.renderWindow),
                                                          theLayer.GetCamera(cameraIndex).GetSFMLView());
 
             if ( object->GetDrawableX() <= mousePos.x
@@ -77,7 +77,7 @@ void DraggableAutomatism::DoStepPreEvents(RuntimeScene & scene)
     //Being dragging ?
     if ( dragged ) {
         RuntimeLayer & theLayer = scene.GetRuntimeLayer(object->GetLayer());
-        sf::Vector2f mousePos = scene.renderWindow->convertCoords(sf::Mouse::getPosition(*scene.renderWindow),
+        sf::Vector2f mousePos = scene.renderWindow->mapPixelToCoords(sf::Mouse::getPosition(*scene.renderWindow),
                                                      theLayer.GetCamera(dragCameraIndex).GetSFMLView());
 
         object->SetX(mousePos.x-xOffset);
