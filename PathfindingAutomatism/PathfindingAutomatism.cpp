@@ -523,16 +523,8 @@ void PathfindingAutomatism::DoStepPreEvents(RuntimeScene & scene)
     object->SetY(newPos.y);
 
     //Also update angle if needed
-    if ( rotateObject ) {
-        float angularDiff = GDpriv::MathematicalTools::angleDifference(object->GetAngle(), pathAngle);
-        if ( abs(angularDiff) >= 3 ) {
-            float newAngle = object->GetAngle()+(angularDiff < 0 ? 1.0 : -1.0)*angularSpeed*timeDelta;
-            object->SetAngle(newAngle);
-
-            if ( object->GetAngle() != newAngle ) //Objects like sprite in 8 directions does not handle small increments...
-                object->SetAngle(pathAngle); //...so force them to be in the path angle anyway.
-        }
-    }
+    if ( rotateObject )
+        object->RotateTowardAngle(pathAngle, angularSpeed, scene);
 }
 
 void PathfindingAutomatism::DoStepPostEvents(RuntimeScene & scene)

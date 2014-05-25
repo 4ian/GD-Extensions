@@ -304,16 +304,8 @@ gdjs.PathfindingRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeSc
     this.owner.setX(newPos[0]);
     this.owner.setY(newPos[1]);
 
-    //Also update angle if needed
     if ( this._rotateObject ) {
-        var angularDiff = gdjs.evtTools.common.angleDifference(this.owner.getAngle(), pathAngle);
-        if ( Math.abs(angularDiff) >= 3 ) {
-            var newAngle = this.owner.getAngle()+(angularDiff < 0 ? 1.0 : -1.0)*this._angularSpeed*timeDelta;
-            this.owner.setAngle(newAngle);
-
-            if ( this.owner.getAngle() != newAngle ) //Objects like sprite in 8 directions does not handle small increments...
-                this.owner.setAngle(pathAngle); //...so force them to be in the path angle anyway.
-        }
+        this.owner.rotateTowardAngle(pathAngle, this._angularSpeed, runtimeScene);
     }
 };
 

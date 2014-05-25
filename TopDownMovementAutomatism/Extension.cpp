@@ -54,7 +54,7 @@ public:
                   "TopDownMovement",
                   _("The object can be moved left, up, right, down and optionally diagonals."),
                   "",
-                  "CppPlatform/Extensions/TopDownMovementicon24.png",
+                  "CppPlatform/Extensions/topdownmovementicon.png",
                   "TopDownMovementAutomatism",
                   boost::shared_ptr<gd::Automatism>(new TopDownMovementAutomatism),
                   boost::shared_ptr<gd::AutomatismsSharedData>(new gd::AutomatismsSharedData));
@@ -136,8 +136,8 @@ public:
                            _("Check if the object is moving."),
                            _("_PARAM0_ is moving"),
                            "",
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("IsMoving").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
@@ -147,8 +147,8 @@ public:
                            _("Change the acceleration of the object"),
                            _("Do _PARAM2__PARAM3_ to the acceleration of _PARAM0_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("operator", _("Modification's sign"))
@@ -160,8 +160,8 @@ public:
                            _("Compare the acceleration of the object"),
                            _("Acceleration of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("relationalOperator", _("Sign of the test"))
@@ -173,8 +173,8 @@ public:
                            _("Change the deceleration of the object"),
                            _("Do _PARAM2__PARAM3_ to the deceleration of _PARAM0_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("operator", _("Modification's sign"))
@@ -186,8 +186,8 @@ public:
                            _("Compare the deceleration of the object"),
                            _("Deceleration of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("relationalOperator", _("Sign of the test"))
@@ -199,8 +199,8 @@ public:
                            _("Change the maximum speed of the object"),
                            _("Do _PARAM2__PARAM3_ to the max. speed of _PARAM0_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("operator", _("Modification's sign"))
@@ -212,8 +212,8 @@ public:
                            _("Compare the maximum speed of the object"),
                            _("Max. speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("relationalOperator", _("Sign of the test"))
@@ -225,8 +225,8 @@ public:
                            _("Compare the speed of the object"),
                            _("Speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("relationalOperator", _("Sign of the test"))
@@ -238,8 +238,8 @@ public:
                            _("Change the maximum angular speed of the object"),
                            _("Do _PARAM2__PARAM3_ to the max. angular speed of _PARAM0_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("operator", _("Modification's sign"))
@@ -251,8 +251,8 @@ public:
                            _("Compare the maximum angular speed of the object"),
                            _("Max. angular speed of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("relationalOperator", _("Sign of the test"))
@@ -264,8 +264,8 @@ public:
                            _("Change the rotation offset applied when moving the object"),
                            _("Do _PARAM2__PARAM3_ to the rotation offset of _PARAM0_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("operator", _("Modification's sign"))
@@ -277,8 +277,8 @@ public:
                            _("Compare the rotation offset applied when moving the object"),
                            _("Rotation offset of _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("relationalOperator", _("Sign of the test"))
@@ -290,8 +290,8 @@ public:
                            _("Allow or restrict diagonal moves"),
                            _("Allow diagonal moves for _PARAM0_: _PARAM2_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("yesorno", _("Allow?"))
@@ -302,8 +302,8 @@ public:
                            _("Return true if the object is allowed to do diagonal moves"),
                            _("Size of the extra border applied to _PARAM0_ is _PARAM2__PARAM3_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("DiagonalsAllowed").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
@@ -313,8 +313,8 @@ public:
                            _("Enable or disable rotation of the object"),
                            _("Enable rotation of _PARAM0_: _PARAM2_"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .AddParameter("yesorno", _("Rotate object?"))
@@ -325,38 +325,38 @@ public:
                            _("Return true if the object is rotated when traveling on its path."),
                            _("_PARAM0_ is rotated when moving"),
                            _("Movement"),
-                           "CppPlatform/Extensions/AStaricon24.png",
-                           "CppPlatform/Extensions/AStaricon16.png")
+                           "CppPlatform/Extensions/topdownmovementicon24.png",
+                           "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("IsObjectRotated").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
 
-            aut.AddExpression("Acceleration", _("Acceleration"), _("Acceleration of the object"), _("Movement"), "CppPlatform/Extensions/AStaricon16.png")
+            aut.AddExpression("Acceleration", _("Acceleration"), _("Acceleration of the object"), _("Movement"), "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("GetAcceleration").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
 
-            aut.AddExpression("Deceleration", _("Deceleration"), _("Deceleration of the object"), _("Movement"), "CppPlatform/Extensions/AStaricon16.png")
+            aut.AddExpression("Deceleration", _("Deceleration"), _("Deceleration of the object"), _("Movement"), "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("GetDeceleration").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
 
-            aut.AddExpression("MaxSpeed", _("Maximum speed"), _("Maximum speed of the object"), _("Movement"), "CppPlatform/Extensions/AStaricon16.png")
+            aut.AddExpression("MaxSpeed", _("Maximum speed"), _("Maximum speed of the object"), _("Movement"), "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("GetMaxSpeed").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
 
-            aut.AddExpression("Speed", _("Speed"), _("Speed of the object"), _("Movement"), "CppPlatform/Extensions/AStaricon16.png")
+            aut.AddExpression("Speed", _("Speed"), _("Speed of the object"), _("Movement"), "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("GetSpeed").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
 
-            aut.AddExpression("AngularMaxSpeed", _("Angular maximum speed"), _("Angular maximum speed of the object"), _("Movement"), "CppPlatform/Extensions/AStaricon16.png")
+            aut.AddExpression("AngularMaxSpeed", _("Angular maximum speed"), _("Angular maximum speed of the object"), _("Movement"), "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("GetAngularMaxSpeed").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");
 
-            aut.AddExpression("AngleOffset", _("Rotation offset"), _("Rotation offset applied to the object"), _("Movement"), "CppPlatform/Extensions/AStaricon16.png")
+            aut.AddExpression("AngleOffset", _("Rotation offset"), _("Rotation offset applied to the object"), _("Movement"), "CppPlatform/Extensions/topdownmovementicon16.png")
                 .AddParameter("object", _("Object"))
                 .AddParameter("automatism", _("Automatism"), "TopDownMovementAutomatism", false)
                 .codeExtraInformation.SetFunctionName("GetAngleOffset").SetIncludeFile("TopDownMovementAutomatism/TopDownMovementAutomatism.h");

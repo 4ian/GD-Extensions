@@ -161,14 +161,7 @@ gdjs.TopDownMovementRuntimeAutomatism.prototype.doStepPreEvents = function(runti
 
     //Also update angle if needed
     if ( (this._xVelocity !== 0 || this._yVelocity !== 0) && this._rotateObject ) {
-        var angularDiff = gdjs.evtTools.common.angleDifference(object.getAngle(), directionInDeg+this._angleOffset);
-        if ( Math.abs(angularDiff) >= 3 ) {
-            var newAngle = object.getAngle()+(angularDiff < 0 ? 1.0 : -1.0)*this._angularSpeed*timeDelta;
-            object.setAngle(newAngle);
-
-            if ( object.getAngle() != newAngle ) //Objects like sprite in 8 directions does not handle small increments...
-                object.setAngle(directionInDeg+this._angleOffset); //...so force them to be in the path angle anyway.
-        }
+        object.rotateTowardAngle(directionInDeg+this._angleOffset, this._angularSpeed, runtimeScene);
     }
 
     this._leftKey = false;
