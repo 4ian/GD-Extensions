@@ -50,7 +50,7 @@ public:
                               _("Physics automatism"),
                               _("Automatism allowing to move objects as if they were subject to the laws of physics."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         {
             gd::AutomatismMetadata & aut = AddAutomatism("PhysicsAutomatism",

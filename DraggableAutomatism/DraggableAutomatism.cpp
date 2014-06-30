@@ -69,7 +69,7 @@ void DraggableAutomatism::DoStepPreEvents(RuntimeScene & scene)
         }
     }
     //End dragging ?
-    else if ( dragged && !sf::Mouse::isButtonPressed(sf::Mouse::Left) ) {
+    else if ( !sf::Mouse::isButtonPressed(sf::Mouse::Left) ) {
         dragged = false;
         somethingDragged = false;
     }

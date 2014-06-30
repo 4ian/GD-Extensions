@@ -54,14 +54,14 @@ gdjs.DraggableRuntimeAutomatism.prototype.doStepPreEvents = function(runtimeScen
         }
     }
     //End dragging ?
-    else if ( this._dragged && !runtimeScene.getGame().isMouseButtonPressed(0) ) {
+    else if ( !runtimeScene.getGame().isMouseButtonPressed(0) ) {
         this._dragged = false;
         gdjs.DraggableRuntimeAutomatism.draggingSomething = false;
     }
 
     //Being dragging ?
     if ( this._dragged ) {
-        if ( mousePos == null ) {
+        if ( mousePos === null ) {
             mousePos = runtimeScene.getLayer(this.owner.getLayer()).convertCoords(
                 runtimeScene.getGame().getMouseX(),
                 runtimeScene.getGame().getMouseY());

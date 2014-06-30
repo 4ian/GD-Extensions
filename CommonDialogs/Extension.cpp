@@ -44,7 +44,7 @@ public:
                               _("Common dialogs"),
                               _("Extension allowing to display common dialogs ( Message box, open file dialog... )"),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
         #if defined(GD_IDE_ONLY)
 
         AddAction("ShowMsgBox",

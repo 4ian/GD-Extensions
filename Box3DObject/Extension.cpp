@@ -46,7 +46,7 @@ public:
                               _("3D Box Object"),
                               _("Extension allowing to use 3D Box objects."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         {
             gd::ObjectMetadata & obj = AddObject("Box3D",

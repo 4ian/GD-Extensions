@@ -50,7 +50,7 @@ public:
                               _("Path Automatism"),
                               _("Automatism allowing to move objects on a predefined path"),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
             {
                 gd::AutomatismMetadata & aut = AddAutomatism("PathAutomatism",

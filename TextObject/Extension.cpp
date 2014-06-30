@@ -50,7 +50,7 @@ public:
                               _("Text object"),
                               _("Extension allowing to use an object displaying a text."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
 
         //Declaration of all objects available

@@ -47,7 +47,7 @@ public:
                               _("Pathfinding automatism"),
                               _("Compute paths for objects avoiding obstacles."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
         CloneExtension("Game Develop C++ platform", "PathfindingAutomatism");
 
         GetAutomatismMetadata("PathfindingAutomatism::PathfindingAutomatism")

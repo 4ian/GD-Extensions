@@ -57,7 +57,7 @@ public:
                               _("Function events"),
                               _("Extension allowing to use events behaving as functions."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         #if defined(GD_IDE_ONLY)
 

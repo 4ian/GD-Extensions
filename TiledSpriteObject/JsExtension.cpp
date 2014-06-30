@@ -26,36 +26,33 @@ freely, subject to the following restrictions:
 */
 #if defined(GD_IDE_ONLY)
 #include "GDCore/PlatformDefinition/PlatformExtension.h"
+#include "GDCore/Tools/Localization.h"
 #include "GDCore/Tools/Version.h"
 #include "TiledSpriteObject.h"
 #include <boost/version.hpp>
 #include <iostream>
-#include <wx/intl.h>
-//Ensure the wxWidgets macro "_" returns a std::string
-#if defined(_)
-    #undef _
-#endif
-#define _(s) std::string(wxGetTranslation((s)).mb_str())
+
+void DeclareTiledSpriteObjectExtension(gd::PlatformExtension & extension);
 
 /**
  * \brief This class declares information about the JS extension.
  */
-class JsExtension : public gd::PlatformExtension
+class TiledSpriteObjectJsExtension : public gd::PlatformExtension
 {
 public:
 
     /**
      * Constructor of an extension declares everything the extension contains : Objects, actions, conditions and expressions.
      */
-    JsExtension()
+    TiledSpriteObjectJsExtension()
     {
         SetExtensionInformation("TiledSpriteObject",
                               _("Tiled Sprite Object"),
                               _("Extension allowing to use tiled sprite objects."),
                               "Victor Levasseur and Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
-        CloneExtension("Game Develop C++ platform", "TiledSpriteObject");
+        DeclareTiledSpriteObjectExtension(*this);
 
         GetObjectMetadata("TiledSpriteObject::TiledSprite").SetIncludeFile("TiledSpriteObject/tiledspriteruntimeobject.js");
 
@@ -80,17 +77,22 @@ public:
         GetAllConditionsForObject("TiledSpriteObject::TiledSprite")["TiledSpriteObject::YOffset"].codeExtraInformation
             .SetFunctionName("getYOffset").SetIncludeFile("TiledSpriteObject/tiledspriteruntimeobject.js");
 
-        StripUnimplementedInstructionsAndExpressions(); //Unimplemented things are listed here:
+        GD_COMPLETE_EXTENSION_COMPILATION_INFORMATION();
     };
-    virtual ~JsExtension() {};
+    virtual ~TiledSpriteObjectJsExtension() {};
 };
 
+#if defined(EMSCRIPTEN)
+extern "C" gd::PlatformExtension * CreateGDJSTiledSpriteObjectExtension() {
+    return new TiledSpriteObjectJsExtension;
+}
+#else
 /**
  * Used by Game Develop to create the extension class
  * -- Do not need to be modified. --
  */
 extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
-    return new JsExtension;
+    return new TiledSpriteObjectJsExtension;
 }
 
 /**
@@ -100,4 +102,5 @@ extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
 extern "C" void GD_EXTENSION_API DestroyGDJSExtension(gd::PlatformExtension * p) {
     delete p;
 }
+#endif
 #endif

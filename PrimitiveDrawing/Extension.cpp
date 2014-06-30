@@ -45,7 +45,7 @@ public:
                       _("Primitive drawing"),
                       _("Extension allowing to draw shapes and manipulate images."),
                       "Florian Rival",
-                      "zlib/libpng License ( Open Source )");
+                      "zlib/libpng License (Open Source)");
 
         //Declaration of all objects available
         {

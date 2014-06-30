@@ -29,6 +29,41 @@ freely, subject to the following restrictions:
 #include "DraggableAutomatism.h"
 #include <boost/version.hpp>
 
+void DeclareDraggableAutomatismExtension(gd::PlatformExtension & extension)
+{
+    extension.SetExtensionInformation("DraggableAutomatism",
+                              _("Draggable Automatism"),
+                              _("Automatism allowing to move objects with the mouse"),
+                              "Florian Rival",
+                              "zlib/libpng License (Open Source)");
+
+    gd::AutomatismMetadata & aut = extension.AddAutomatism("Draggable",
+          _("Draggable object"),
+          _("Draggable"),
+          _("Allows objects to be moved using the mouse."),
+          "",
+          "CppPlatform/Extensions/draggableicon.png",
+          "DraggableAutomatism",
+          boost::shared_ptr<gd::Automatism>(new DraggableAutomatism),
+          boost::shared_ptr<gd::AutomatismsSharedData>());
+
+    #if defined(GD_IDE_ONLY)
+    aut.SetIncludeFile("DraggableAutomatism/DraggableAutomatism.h");
+
+    aut.AddCondition("Dragged",
+                   _("Being dragged"),
+                   _("Return true if the object is being dragged"),
+                   _("_PARAM0_ is being dragged"),
+                   "",
+                   "CppPlatform/Extensions/draggableicon24.png",
+                   "CppPlatform/Extensions/draggableicon16.png")
+        .AddParameter("object", _("Object"))
+        .AddParameter("automatism", _("Automatism"), "Draggable", false)
+        .codeExtraInformation.SetFunctionName("IsDragged").SetIncludeFile("DraggableAutomatism/DraggableAutomatism.h");
+    #endif
+
+}
+
 /**
  * \brief This class declares information about the extension.
  */
@@ -41,42 +76,13 @@ public:
      */
     Extension()
     {
-        SetExtensionInformation("DraggableAutomatism",
-                              _("Draggable Automatism"),
-                              _("Automatism allowing to move objects with the mouse"),
-                              "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
-
-        gd::AutomatismMetadata & aut = AddAutomatism("Draggable",
-              _("Draggable object"),
-              _("Draggable"),
-              _("Allows objects to be moved using the mouse."),
-              "",
-              "CppPlatform/Extensions/draggableicon.png",
-              "DraggableAutomatism",
-              boost::shared_ptr<gd::Automatism>(new DraggableAutomatism),
-              boost::shared_ptr<gd::AutomatismsSharedData>());
-
-        #if defined(GD_IDE_ONLY)
-        aut.SetIncludeFile("DraggableAutomatism/DraggableAutomatism.h");
-
-        aut.AddCondition("Dragged",
-                       _("Being dragged"),
-                       _("Return true if the object is being dragged"),
-                       _("_PARAM0_ is being dragged"),
-                       "",
-                       "CppPlatform/Extensions/draggableicon24.png",
-                       "CppPlatform/Extensions/draggableicon16.png")
-            .AddParameter("object", _("Object"))
-            .AddParameter("automatism", _("Automatism"), "Draggable", false)
-            .codeExtraInformation.SetFunctionName("IsDragged").SetIncludeFile("DraggableAutomatism/DraggableAutomatism.h");
-        #endif
-
+        DeclareDraggableAutomatismExtension(*this);
         GD_COMPLETE_EXTENSION_COMPILATION_INFORMATION();
     };
     virtual ~Extension() {};
 };
 
+#if !defined(EMSCRIPTEN)
 /**
  * Used by Game Develop to create the extension class
  * -- Do not need to be modified. --
@@ -92,4 +98,4 @@ extern "C" ExtensionBase * GD_EXTENSION_API CreateGDExtension() {
 extern "C" void GD_EXTENSION_API DestroyGDExtension(ExtensionBase * p) {
     delete p;
 }
-
+#endif

@@ -47,7 +47,7 @@ public:
                               _("Light"),
                               _("Allow to display lights and use light obstacles."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
             {
                 gd::ObjectMetadata & obj = AddObject("Light",

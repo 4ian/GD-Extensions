@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 
 */
 
-#if defined(GD_IDE_ONLY)
+#if defined(GD_IDE_ONLY) && !defined(GD_NO_WX_GUI)
 #ifndef TILEDSPRITEOBJECTEDITOR_H
 #define TILEDSPRITEOBJECTEDITOR_H
 

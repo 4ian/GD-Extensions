@@ -44,7 +44,7 @@ Extension::Extension()
                           _("Particle system"),
                           _("Extension allowing to display a large number of small particles."),
                           "Florian Rival",
-                          "zlib/libpng License ( Open Source )");
+                          "zlib/libpng License (Open Source)");
 
     //Declaration of all objects available
     {

@@ -53,7 +53,7 @@ public:
                               _("Timed events"),
                               _("Event which launch its conditions and actions only after a amount of time is reached."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         #if defined(GD_IDE_ONLY)
 

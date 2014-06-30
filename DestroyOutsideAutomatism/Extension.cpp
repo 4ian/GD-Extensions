@@ -29,6 +29,57 @@ freely, subject to the following restrictions:
 #include "DestroyOutsideAutomatism.h"
 #include <boost/version.hpp>
 
+void DeclareDestroyOutsideAutomatismExtension(gd::PlatformExtension & extension)
+{
+    extension.SetExtensionInformation("DestroyOutsideAutomatism",
+                              _("Destroy Outside Screen Automatism"),
+                              _("Automatism destroying object when they go outside the screen"),
+                              "Florian Rival",
+                              "zlib/libpng License (Open Source)");
+
+    gd::AutomatismMetadata & aut = extension.AddAutomatism("DestroyOutside",
+          _("Destroy when outside the screen"),
+          _("DestroyOutside"),
+          _("Automatically destroy the object when it goes outside the screen"),
+          "",
+          "CppPlatform/Extensions/destroyoutsideicon.png",
+          "DestroyOutsideAutomatism",
+          boost::shared_ptr<gd::Automatism>(new DestroyOutsideAutomatism),
+          boost::shared_ptr<gd::AutomatismsSharedData>());
+
+    #if defined(GD_IDE_ONLY)
+    aut.SetIncludeFile("DestroyOutsideAutomatism/DestroyOutsideAutomatism.h");
+
+    aut.AddCondition("ExtraBorder",
+                   _("Additional border"),
+                   _("Compare the additional border that the object must cross before being deleted."),
+                   _("The additional border of _PARAM0_ is _PARAM2__PARAM3_"),
+                   _(""),
+                   "CppPlatform/Extensions/destroyoutsideicon24.png",
+                   "CppPlatform/Extensions/destroyoutsideicon16.png")
+        .AddParameter("object", _("Object"))
+        .AddParameter("automatism", _("Automatism"), "DestroyOutside", false)
+        .AddParameter("relationalOperator", _("Sign of the test"))
+        .AddParameter("expression", _("Value to test"))
+        .codeExtraInformation.SetFunctionName("GetExtraBorder").SetIncludeFile("DestroyOutsideAutomatism/DestroyOutsideAutomatism.h");
+
+    aut.AddAction("ExtraBorder",
+                   _("Additional border"),
+                   _("Change the additional border that the object must cross before being deleted."),
+                   _("Do _PARAM2__PARAM3_ to the additional border of _PARAM0_"),
+                   _(""),
+                   "CppPlatform/Extensions/destroyoutsideicon24.png",
+                   "CppPlatform/Extensions/destroyoutsideicon16.png")
+        .AddParameter("object", _("Object"))
+        .AddParameter("automatism", _("Automatism"), "DestroyOutside", false)
+        .AddParameter("operator", _("Modification's sign"))
+        .AddParameter("expression", _("Value"))
+        .codeExtraInformation.SetFunctionName("SetExtraBorder").SetManipulatedType("number")
+        .SetAssociatedGetter("GetExtraBorder").SetIncludeFile("DestroyOutsideAutomatism/DestroyOutsideAutomatism.h");
+    #endif
+
+}
+
 /**
  * \brief This class declares information about the extension.
  */
@@ -41,58 +92,13 @@ public:
      */
     Extension()
     {
-        SetExtensionInformation("DestroyOutsideAutomatism",
-                              _("Destroy Outside Screen Automatism"),
-                              _("Automatism destroying object when they go outside the screen"),
-                              "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
-
-        gd::AutomatismMetadata & aut = AddAutomatism("DestroyOutside",
-              _("Destroy when outside the screen"),
-              _("DestroyOutside"),
-              _("Automatically destroy the object when it goes outside the screen"),
-              "",
-              "CppPlatform/Extensions/destroyoutsideicon.png",
-              "DestroyOutsideAutomatism",
-              boost::shared_ptr<gd::Automatism>(new DestroyOutsideAutomatism),
-              boost::shared_ptr<gd::AutomatismsSharedData>());
-
-        #if defined(GD_IDE_ONLY)
-        aut.SetIncludeFile("DestroyOutsideAutomatism/DestroyOutsideAutomatism.h");
-
-        aut.AddCondition("ExtraBorder",
-                       _("Additional border"),
-                       _("Compare the additional border that the object must cross before being deleted."),
-                       _("The additional border of _PARAM0_ is _PARAM2__PARAM3_"),
-                       _(""),
-                       "CppPlatform/Extensions/destroyoutsideicon24.png",
-                       "CppPlatform/Extensions/destroyoutsideicon16.png")
-            .AddParameter("object", _("Object"))
-            .AddParameter("automatism", _("Automatism"), "DestroyOutside", false)
-            .AddParameter("relationalOperator", _("Sign of the test"))
-            .AddParameter("expression", _("Value to test"))
-            .codeExtraInformation.SetFunctionName("GetExtraBorder").SetIncludeFile("DestroyOutsideAutomatism/DestroyOutsideAutomatism.h");
-
-        aut.AddAction("ExtraBorder",
-                       _("Additional border"),
-                       _("Change the additional border that the object must cross before being deleted."),
-                       _("Do _PARAM2__PARAM3_ to the additional border of _PARAM0_"),
-                       _(""),
-                       "CppPlatform/Extensions/destroyoutsideicon24.png",
-                       "CppPlatform/Extensions/destroyoutsideicon16.png")
-            .AddParameter("object", _("Object"))
-            .AddParameter("automatism", _("Automatism"), "DestroyOutside", false)
-            .AddParameter("operator", _("Modification's sign"))
-            .AddParameter("expression", _("Value"))
-            .codeExtraInformation.SetFunctionName("SetExtraBorder").SetManipulatedType("number")
-            .SetAssociatedGetter("GetExtraBorder").SetIncludeFile("DestroyOutsideAutomatism/DestroyOutsideAutomatism.h");
-        #endif
-
+        DeclareDestroyOutsideAutomatismExtension(*this);
         GD_COMPLETE_EXTENSION_COMPILATION_INFORMATION();
     };
     virtual ~Extension() {};
 };
 
+#if !defined(EMSCRIPTEN)
 /**
  * Used by Game Develop to create the extension class
  * -- Do not need to be modified. --
@@ -108,4 +114,4 @@ extern "C" ExtensionBase * GD_EXTENSION_API CreateGDExtension() {
 extern "C" void GD_EXTENSION_API DestroyGDExtension(ExtensionBase * p) {
     delete p;
 }
-
+#endif

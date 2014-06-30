@@ -30,25 +30,26 @@ freely, subject to the following restrictions:
 #include <boost/version.hpp>
 #include <iostream>
 
+void DeclareDestroyOutsideAutomatismExtension(gd::PlatformExtension & extension);
+
 /**
  * \brief This class declares information about the JS extension.
  */
-class JsExtension : public gd::PlatformExtension
+class DestroyOutsideAutomatismJsExtension : public gd::PlatformExtension
 {
 public:
 
     /**
      * \brief Constructor of an extension declares everything the extension contains : Objects, actions, conditions and expressions.
      */
-    JsExtension()
+    DestroyOutsideAutomatismJsExtension()
     {
         SetExtensionInformation("DestroyOutsideAutomatism",
                               _("Destroy Outside Screen Automatism"),
                               _("Automatism destroying object when they go outside the screen"),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
-
-        CloneExtension("Game Develop C++ platform", "DestroyOutsideAutomatism");
+                              "zlib/libpng License (Open Source)");
+        DeclareDestroyOutsideAutomatismExtension(*this);
 
         GetAutomatismMetadata("DestroyOutsideAutomatism::DestroyOutside").SetIncludeFile("DestroyOutsideAutomatism/destroyoutsideruntimeautomatism.js");
 
@@ -56,16 +57,24 @@ public:
             .SetFunctionName("getExtraBorder").SetIncludeFile("DestroyOutsideAutomatism/destroyoutsideruntimeautomatism.js");
         GetAllActionsForAutomatism("DestroyOutsideAutomatism::DestroyOutside")["DestroyOutsideAutomatism::ExtraBorder"].codeExtraInformation
             .SetFunctionName("setExtraBorder").SetAssociatedGetter("getExtraBorder").SetIncludeFile("DestroyOutsideAutomatism/destroyoutsideruntimeautomatism.js");
+
+        GD_COMPLETE_EXTENSION_COMPILATION_INFORMATION();
     };
-    virtual ~JsExtension() {};
+    virtual ~DestroyOutsideAutomatismJsExtension() {};
 };
 
+//We need a specific function to create the extension with emscripten.
+#if defined(EMSCRIPTEN)
+extern "C" gd::PlatformExtension * CreateGDJSDestroyOutsideAutomatismExtension() {
+    return new DestroyOutsideAutomatismJsExtension;
+}
+#else
 /**
  * Used by Game Develop to create the extension class
  * -- Do not need to be modified. --
  */
 extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
-    return new JsExtension;
+    return new DestroyOutsideAutomatismJsExtension;
 }
 
 /**
@@ -75,4 +84,5 @@ extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
 extern "C" void GD_EXTENSION_API DestroyGDJSExtension(gd::PlatformExtension * p) {
     delete p;
 }
+#endif
 #endif

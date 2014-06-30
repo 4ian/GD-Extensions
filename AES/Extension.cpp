@@ -44,7 +44,7 @@ public:
                               _("AES encryption algorithm"),
                               _("Extension to encrypt files with AES algorithm."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         #if defined(GD_IDE_ONLY)
 

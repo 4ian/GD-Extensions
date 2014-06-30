@@ -30,40 +30,47 @@ freely, subject to the following restrictions:
 #include <boost/version.hpp>
 #include <iostream>
 
+void DeclareDraggableAutomatismExtension(gd::PlatformExtension & extension);
+
 /**
  * \brief This class declares information about the JS extension.
  */
-class JsExtension : public gd::PlatformExtension
+class DraggableAutomatismJsExtension : public gd::PlatformExtension
 {
 public:
 
     /**
      * \brief Constructor of an extension declares everything the extension contains : Objects, actions, conditions and expressions.
      */
-    JsExtension()
+    DraggableAutomatismJsExtension()
     {
         SetExtensionInformation("DraggableAutomatism",
                               _("Draggable Automatism"),
                               _("Automatism allowing to move objects with the mouse"),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
-        CloneExtension("Game Develop C++ platform", "DraggableAutomatism");
+        DeclareDraggableAutomatismExtension(*this);
 
         GetAutomatismMetadata("DraggableAutomatism::Draggable").SetIncludeFile("DraggableAutomatism/draggableruntimeautomatism.js");
-
         GetAllConditionsForAutomatism("DraggableAutomatism::Draggable")["DraggableAutomatism::Dragged"].codeExtraInformation
             .SetFunctionName("isDragged").SetIncludeFile("DraggableAutomatism/draggableruntimeautomatism.js");
+        GD_COMPLETE_EXTENSION_COMPILATION_INFORMATION();
     };
-    virtual ~JsExtension() {};
+    virtual ~DraggableAutomatismJsExtension() {};
 };
 
+#if defined(EMSCRIPTEN)
+extern "C" gd::PlatformExtension * CreateGDJSDraggableAutomatismExtension() {
+    return new DraggableAutomatismJsExtension;
+}
+#else
 /**
  * Used by Game Develop to create the extension class
  * -- Do not need to be modified. --
  */
 extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
-    return new JsExtension;
+    return new DraggableAutomatismJsExtension;
 }
 
 /**
@@ -73,4 +80,5 @@ extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
 extern "C" void GD_EXTENSION_API DestroyGDJSExtension(gd::PlatformExtension * p) {
     delete p;
 }
+#endif
 #endif

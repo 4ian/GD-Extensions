@@ -30,24 +30,26 @@ freely, subject to the following restrictions:
 #include <boost/version.hpp>
 #include <iostream>
 
+void DeclarePlatformAutomatismExtension(gd::PlatformExtension & extension);
+
 /**
  * \brief This class declares information about the JS extension.
  */
-class JsExtension : public gd::PlatformExtension
+class PlatformAutomatismJsExtension : public gd::PlatformExtension
 {
 public:
 
     /**
      * \brief Constructor of an extension declares everything the extension contains : Objects, actions, conditions and expressions.
      */
-    JsExtension()
+    PlatformAutomatismJsExtension()
     {
         SetExtensionInformation("PlatformAutomatism",
                               _("Platform Automatism"),
                               _("Allows to use controllable objects which can run and jump on platforms."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
-        CloneExtension("Game Develop C++ platform", "PlatformAutomatism");
+                              "zlib/libpng License (Open Source)");
+        DeclarePlatformAutomatismExtension(*this);
 
         GetAutomatismMetadata("PlatformAutomatism::PlatformAutomatism")
             .SetIncludeFile("PlatformAutomatism/platformruntimeautomatism.js")
@@ -103,18 +105,23 @@ public:
 
             autActions["PlatformAutomatism::ChangePlatformType"].codeExtraInformation.SetFunctionName("changePlatformType");
         }
-
-        StripUnimplementedInstructionsAndExpressions();
+        GD_COMPLETE_EXTENSION_COMPILATION_INFORMATION();
     };
-    virtual ~JsExtension() {};
+    virtual ~PlatformAutomatismJsExtension() {};
 };
 
+//We need a specific function to create the extension with emscripten.
+#if defined(EMSCRIPTEN)
+extern "C" gd::PlatformExtension * CreateGDJSPlatformAutomatismExtension() {
+    return new PlatformAutomatismJsExtension;
+}
+#else
 /**
  * Used by Game Develop to create the extension class
  * -- Do not need to be modified. --
  */
 extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
-    return new JsExtension;
+    return new PlatformAutomatismJsExtension;
 }
 
 /**
@@ -124,4 +131,6 @@ extern "C" gd::PlatformExtension * GD_EXTENSION_API CreateGDJSExtension() {
 extern "C" void GD_EXTENSION_API DestroyGDJSExtension(gd::PlatformExtension * p) {
     delete p;
 }
+#endif
+
 #endif

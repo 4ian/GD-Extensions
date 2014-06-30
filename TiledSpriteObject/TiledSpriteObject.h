@@ -35,10 +35,10 @@ class RuntimeScene;
 namespace gd { class ImageManager; }
 namespace gd { class InitialInstance; }
 #if defined(GD_IDE_ONLY)
-class wxBitmap;
 namespace gd { class Project; }
-class wxWindow;
 namespace gd { class MainFrameWrapper; }
+class wxBitmap;
+class wxWindow;
 #endif
 
 /**
@@ -53,12 +53,13 @@ public :
     virtual gd::Object * Clone() const { return new TiledSpriteObject(*this);}
 
     #if defined(GD_IDE_ONLY)
+    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
+    virtual void ExposeResources(gd::ArbitraryResourceWorker & worker);
+
+    virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
     virtual void LoadResources(gd::Project & project, gd::Layout & layout);
     virtual void DrawInitialInstance(gd::InitialInstance & instance, sf::RenderTarget & renderTarget, gd::Project & project, gd::Layout & layout);
     virtual sf::Vector2f GetInitialInstanceDefaultSize(gd::InitialInstance & instance, gd::Project & project, gd::Layout & layout) const;
-    virtual bool GenerateThumbnail(const gd::Project & project, wxBitmap & thumbnail) const;
-    virtual void ExposeResources(gd::ArbitraryResourceWorker & worker);
-    virtual void EditObject( wxWindow* parent, gd::Project & game_, gd::MainFrameWrapper & mainFrameWrapper_ );
     #endif
 
     virtual float GetWidth() const { return width; };
@@ -66,6 +67,9 @@ public :
 
     virtual void SetWidth(float newWidth) { width = newWidth; };
     virtual void SetHeight(float newHeight) { height = newHeight; };
+
+    void SetTexture(const std::string & newTextureName) { textureName = newTextureName; };
+    const std::string & GetTexture() const { return textureName; };
 
     std::string textureName;
 
@@ -134,7 +138,4 @@ gd::Object * CreateTiledSpriteObject(std::string name);
 
 void DestroyRuntimeTiledSpriteObject(RuntimeObject * object);
 RuntimeObject * CreateRuntimeTiledSpriteObject(RuntimeScene & scene, const gd::Object & object);
-
-
 #endif // TILEDSPRITEOBJECT_H
-

@@ -45,7 +45,7 @@ public:
                               _("Text entry object"),
                               _("Extension allowing to use an object capturing text entered with keyboard."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         //Declaration of all objects available
         {

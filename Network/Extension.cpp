@@ -48,7 +48,7 @@ public:
                               _("Network features"),
                               _("Built-in extension allowing to exchange data on the network between games."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         #if defined(GD_IDE_ONLY)
 

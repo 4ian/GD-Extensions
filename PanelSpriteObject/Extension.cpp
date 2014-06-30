@@ -49,7 +49,7 @@ public:
                               _("Panel Sprite Object"),
                               _("Extension allowing to use panel sprite objects."),
                               "Victor Levasseur",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         {
             gd::ObjectMetadata & obj = AddObject("PanelSprite",

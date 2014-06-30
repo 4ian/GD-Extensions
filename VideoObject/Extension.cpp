@@ -75,7 +75,7 @@ public:
                               _("Video Object"),
                               _("Extension allowing to use an object displaying a video."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         //Declaration of all objects available
         {

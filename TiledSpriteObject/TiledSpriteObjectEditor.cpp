@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 
 */
 
-#if defined(GD_IDE_ONLY)
+#if defined(GD_IDE_ONLY) && !defined(GD_NO_WX_GUI)
 //(*InternalHeaders(TiledSpriteObjectEditor)
 #include <wx/bitmap.h>
 #include <wx/intl.h>

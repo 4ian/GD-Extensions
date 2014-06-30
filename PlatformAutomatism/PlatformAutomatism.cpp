@@ -152,9 +152,9 @@ bool PlatformAutomatism::UpdateProperty(const std::string & name, const std::str
 {
     if ( name == ToString(_("Type")) )
     {
-        if ( value == "1" ) //1 = Position in the choice list ( See GetProperties ).
+        if ( value == ToString(_("Jumpthru platform")) )
             platformType = Jumpthru;
-        else if ( value == "2" )
+        else if ( value == ToString(_("Ladder")) )
             platformType = Ladder;
         else
             platformType = NormalPlatform;

@@ -47,7 +47,7 @@ public:
                               _("Text object"),
                               _("Extension allowing to use an object displaying a text."),
                               "Compil Games",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         CloneExtension("Game Develop C++ platform", "TextObject");
 

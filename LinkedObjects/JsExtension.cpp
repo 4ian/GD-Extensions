@@ -46,7 +46,7 @@ public:
                               _("Linked objects"),
                               _("Extension allowing to virtually link two objects."),
                               "Florian Rival",
-                              "zlib/libpng License ( Open Source )");
+                              "zlib/libpng License (Open Source)");
 
         CloneExtension("Game Develop C++ platform", "LinkedObjects");
 
